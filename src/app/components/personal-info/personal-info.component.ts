@@ -28,8 +28,9 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
 
     <div class="personal-info-container">
       <div class="personal-info-card">
-        <h2>Personal Information</h2>
         <app-progress-indicator [currentStep]="1"></app-progress-indicator>
+        <h2>Personal Information</h2>
+
         <form [formGroup]="personalInfoForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <label for="forenames">Forenames *</label>
@@ -239,11 +240,11 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
 
       .personal-info-card {
         background: var(--DHAWhite);
-        padding: 40px;
+        padding: 30px;
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         width: 100%;
-        max-width: 500px;
+        max-width: 600px;
         border: 2px solid var(--DHAGreen);
       }
 
@@ -251,7 +252,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         text-align: center;
         color: var(--DHAGreen);
         margin-bottom: 30px;
-        font-size: 28px;
+        font-size: 2rem;
         font-weight: 600;
       }
 
@@ -343,6 +344,41 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
 
       .btn-secondary:hover {
         background: var(--DHAOffBlack);
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          padding: 15px;
+        }
+
+        .personal-info-card {
+          padding: 20px;
+          max-width: 100%;
+        }
+
+        h2 {
+          font-size: 1.5rem;
+          margin-bottom: 20px;
+        }
+
+        .form-group {
+          margin-bottom: 15px;
+        }
+
+        .form-control {
+          padding: 10px;
+          font-size: 16px; /* Prevents zoom on iOS */
+        }
+
+        .button-group {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+          padding: 12px;
+        }
       }
     `,
   ],

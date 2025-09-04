@@ -85,7 +85,7 @@ import { CommonModule } from '@angular/common';
 
       .step-number {
         width: 20px;
-        height:20px;
+        height: 20px;
         border-radius: 50%;
         background: var(--DividerGray);
         color: var(--DHATextGrayDark);
