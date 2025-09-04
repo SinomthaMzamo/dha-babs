@@ -1,59 +1,142 @@
-# DhaClient
+# DHA Online Booking System
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.11.
+A modern, user-friendly online booking system for South Africa's Department of Home Affairs (DHA) services.
 
-## Development server
+## Features
 
-To start a local development server, run:
+### 🔐 Step 1: Authentication
+- ID Type selection (ID Number or Passport Number)
+- 13-digit ID number validation with Luhn algorithm
+- Real-time validation feedback
+- Secure data storage
 
+### 👤 Step 2: Personal Information
+- Forenames and Last Name collection
+- Email and Phone number validation
+- ID number confirmation
+- Data persistence between steps
+
+### 📅 Step 3: Service Booking
+- Multiple service selection (Smart ID, Passport, Certificates, etc.)
+- Hierarchical location selection (Province → Area → Branch)
+- Date range selection for appointments
+- Comprehensive form validation
+
+## Technology Stack
+
+- **Frontend**: Angular 19 with standalone components
+- **Styling**: CSS with modern design principles
+- **State Management**: RxJS BehaviorSubjects
+- **Validation**: Reactive forms with custom validators
+- **Responsive Design**: Mobile-first approach
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v18 or higher)
+- Angular CLI (v19)
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd dha-client
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+4. Open your browser and navigate to `http://localhost:4200`
 
-## Code scaffolding
+## Project Structure
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── authenticate/          # Step 1: ID authentication
+│   │   ├── personal-info/         # Step 2: Personal details
+│   │   ├── book-service/          # Step 3: Service booking
+│   │   └── progress-indicator/    # Progress tracking
+│   ├── services/
+│   │   └── booking.service.ts     # Data management & validation
+│   ├── app.component.ts           # Main app component
+│   ├── app.routes.ts              # Routing configuration
+│   └── app.config.ts              # App configuration
+├── index.html                     # Main HTML file
+└── styles.css                     # Global styles
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Key Features
 
-```bash
-ng generate --help
-```
+### Form Validation
+- Real-time validation feedback
+- Custom validators for South African ID numbers
+- Phone number format validation (SA format)
+- Email format validation
+- Required field validation
 
-## Building
+### User Experience
+- Progress indicator showing current step
+- Responsive design for all devices
+- Clear error messages and validation feedback
+- Smooth navigation between steps
+- Data persistence across steps
 
-To build the project run:
+### Security
+- Client-side validation
+- Session storage for temporary data
+- No sensitive data logging
+- Form data sanitization
 
-```bash
-ng build
-```
+## Validation Rules
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### ID Number
+- Must be exactly 13 digits
+- Must pass Luhn algorithm validation
+- Only numeric characters allowed
 
-## Running unit tests
+### Phone Number
+- Must start with +27 or 0
+- Must be 10-11 digits total
+- Must start with 6, 7, or 8 after country code
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Email
+- Standard email format validation
+- Required field
 
-```bash
-ng test
-```
+## Future Enhancements
 
-## Running end-to-end tests
+- [ ] Backend API integration
+- [ ] User authentication and accounts
+- [ ] Appointment confirmation emails
+- [ ] SMS notifications
+- [ ] Multi-language support
+- [ ] Accessibility improvements
+- [ ] Advanced date/time slot selection
+- [ ] Payment integration
+- [ ] Document upload functionality
 
-For end-to-end (e2e) testing, run:
+## Contributing
 
-```bash
-ng e2e
-```
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## License
 
-## Additional Resources
+This project is licensed under the MIT License.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Support
+
+For support or questions, please contact the development team or create an issue in the repository.
