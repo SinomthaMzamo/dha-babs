@@ -167,11 +167,17 @@ export class BookServiceComponent implements OnInit {
 
     // Switch to results view
     this.showResults = true;
+    
+    // Scroll to top when switching to results
+    window.scrollTo(0, 0);
   }
 
   onEditSearchRequested() {
     // Switch back to form view
     this.showResults = false;
+    
+    // Scroll to top when switching back to form
+    window.scrollTo(0, 0);
   }
 
   goHome() {

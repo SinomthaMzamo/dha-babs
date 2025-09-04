@@ -16,15 +16,10 @@ import { Router } from '@angular/router';
 
         <div class="features-grid">
           <div class="feature-card">
+            <!-- TODO: highlight easy log in with ID or Passport number -->
             <div class="feature-icon">🔐</div>
-            <h3>Secure Authentication</h3>
-            <p>13-digit ID validation with advanced algorithms</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">👤</div>
-            <h3>Personal Information</h3>
-            <p>Streamlined data collection and validation</p>
+            <h3>Easy Login</h3>
+            <p>Sign in with your ID or Passport number</p>
           </div>
 
           <div class="feature-card">
@@ -37,6 +32,16 @@ import { Router } from '@angular/router';
             <div class="feature-icon">📱</div>
             <h3>Mobile Responsive</h3>
             <p>Optimized for all devices and screen sizes</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🛠️</div>
+            <h3>Book multiple services</h3>
+            <p>Get all your affairs in order in one go</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <h3>Group bookings</h3>
+            <p>Book for multiple people at once</p>
           </div>
         </div>
 
