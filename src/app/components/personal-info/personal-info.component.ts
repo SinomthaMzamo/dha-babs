@@ -384,8 +384,8 @@ export class PersonalInfoComponent implements OnInit {
       };
       sessionStorage.setItem('personalData', JSON.stringify(personalData));
 
-      // Navigate to next step
-      this.router.navigate(['/book-service']);
+      // Navigate to menu instead of directly to book service
+      this.router.navigate(['/menu']);
     }
   }
 
