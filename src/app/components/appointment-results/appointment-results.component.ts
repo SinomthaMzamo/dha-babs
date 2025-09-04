@@ -797,28 +797,35 @@ export class AppointmentResultsComponent implements OnInit {
 
     this.availableSlots.forEach((slot) => {
       if (!grouped.has(slot.date)) {
-        // Check if we have stored expansion state, default to true if not
-        const isExpanded = this.dayGroupExpansionState.has(slot.date)
-          ? this.dayGroupExpansionState.get(slot.date)!
-          : true;
-
         grouped.set(slot.date, {
           date: slot.date,
           slots: [],
-          isExpanded: isExpanded,
         });
       }
       grouped.get(slot.date).slots.push(slot);
     });
 
     // Sort by date and convert to array
-    return Array.from(grouped.values()).sort(
+    const sortedGroups = Array.from(grouped.values()).sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
+
+    // Set expansion state: first group expanded, others collapsed by default
+    return sortedGroups.map((group, index) => {
+      const isExpanded = this.dayGroupExpansionState.has(group.date)
+        ? this.dayGroupExpansionState.get(group.date)!
+        : index === 0; // Only first group expanded by default
+
+      return {
+        ...group,
+        isExpanded: isExpanded,
+      };
+    });
   }
 
   toggleDayGroup(date: string): void {
-    const currentState = this.dayGroupExpansionState.get(date) ?? true;
+    // Get the current state, defaulting to collapsed (false) for new groups
+    const currentState = this.dayGroupExpansionState.get(date) ?? false;
     this.dayGroupExpansionState.set(date, !currentState);
 
     // Trigger change detection by updating the availableSlots array reference
