@@ -320,7 +320,6 @@ interface SlotSearchCriteria {
         border: 2px solid var(--DHAWhite);
       }
 
-
       /* Available Slots */
       .slots-container {
         background: var(--DHAWhite);
@@ -729,14 +728,14 @@ export class AppointmentResultsComponent implements OnInit {
   ngOnInit() {
     // Scroll to top when component loads
     window.scrollTo(0, 0);
-    
+
     // Simulate loading and then show results
     this.isLoading = true;
     setTimeout(() => {
       this.isLoading = false;
       this.availableSlots = this.mockSlots;
       this.noSlotsAvailable = this.availableSlots.length === 0;
-      
+
       // Scroll to top again when results are displayed
       window.scrollTo(0, 0);
     }, 2000);
