@@ -28,9 +28,8 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
 
     <div class="personal-info-container">
       <div class="personal-info-card">
-        <app-progress-indicator [currentStep]="1"></app-progress-indicator>
         <h2>Personal Information</h2>
-
+        <app-progress-indicator [currentStep]="1"></app-progress-indicator>
         <form [formGroup]="personalInfoForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <label for="forenames">Forenames *</label>

@@ -46,18 +46,17 @@ import { CommonModule } from '@angular/common';
 
       .progress-container {
         margin-bottom: 20px;
-        padding: 12px 0;
-        background: var(--DHAOffWhite);
-        border-radius: 8px;
-        border: 1px solid var(--DHABackGroundLightGray);
+        padding: 8px 0;
+        // background: var(--DHAOffWhite);
+        // border-radius: 8px;
+        // border: 1px solid var(--DHABackGroundLightGray);
       }
 
       .progress-steps {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        max-width: 500px;
-        margin: 0 auto;
+        width: 100%;
         padding: 0 20px;
       }
 
@@ -72,7 +71,7 @@ import { CommonModule } from '@angular/common';
       .step:not(:last-child)::after {
         content: '';
         position: absolute;
-        top: 14px;
+        top: 10px;
         left: 50%;
         width: 100%;
         height: 1px;
@@ -85,8 +84,8 @@ import { CommonModule } from '@angular/common';
       }
 
       .step-number {
-        width: 28px;
-        height: 28px;
+        width: 20px;
+        height:20px;
         border-radius: 50%;
         background: var(--DividerGray);
         color: var(--DHATextGrayDark);
@@ -140,6 +139,7 @@ import { CommonModule } from '@angular/common';
           flex-direction: column;
           gap: 12px;
           padding: 0 15px;
+          width: 100%;
         }
 
         .step:not(:last-child)::after {
