@@ -29,7 +29,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
     <div class="auth-container">
       <div class="auth-card">
         <app-progress-indicator [currentStep]="0"></app-progress-indicator>
-        <h2>Step 1: Authenticate Applicant</h2>
+        <h2>Authenticate Applicant</h2>
 
         <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
           <div class="form-group">

@@ -45,15 +45,20 @@ import { CommonModule } from '@angular/common';
       }
 
       .progress-container {
-        margin-bottom: 30px;
+        margin-bottom: 20px;
+        padding: 12px 0;
+        background: var(--DHAOffWhite);
+        border-radius: 8px;
+        border: 1px solid var(--DHABackGroundLightGray);
       }
 
       .progress-steps {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        max-width: 600px;
+        max-width: 500px;
         margin: 0 auto;
+        padding: 0 20px;
       }
 
       .step {
@@ -67,10 +72,10 @@ import { CommonModule } from '@angular/common';
       .step:not(:last-child)::after {
         content: '';
         position: absolute;
-        top: 20px;
+        top: 14px;
         left: 50%;
         width: 100%;
-        height: 2px;
+        height: 1px;
         background: var(--DividerGray);
         z-index: 1;
       }
@@ -80,8 +85,8 @@ import { CommonModule } from '@angular/common';
       }
 
       .step-number {
-        width: 40px;
-        height: 40px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
         background: var(--DividerGray);
         color: var(--DHATextGrayDark);
@@ -89,8 +94,8 @@ import { CommonModule } from '@angular/common';
         align-items: center;
         justify-content: center;
         font-weight: 600;
-        font-size: 16px;
-        margin-bottom: 8px;
+        font-size: 12px;
+        margin-bottom: 4px;
         position: relative;
         z-index: 2;
         transition: all 0.3s ease;
@@ -99,7 +104,7 @@ import { CommonModule } from '@angular/common';
       .step.active .step-number {
         background: var(--DHAGreen) !important;
         color: var(--DHAWhite) !important;
-        transform: scale(1.1);
+        transform: scale(1.05);
       }
 
       .step.completed .step-number {
@@ -108,11 +113,12 @@ import { CommonModule } from '@angular/common';
       }
 
       .step-label {
-        font-size: 14px;
+        font-size: 11px;
         color: var(--DHATextGray);
         text-align: center;
         font-weight: 500;
         transition: color 0.3s ease;
+        line-height: 1.2;
       }
 
       .step.active .step-label {
@@ -125,9 +131,15 @@ import { CommonModule } from '@angular/common';
       }
 
       @media (max-width: 600px) {
+        .progress-container {
+          margin-bottom: 15px;
+          padding: 8px 0;
+        }
+
         .progress-steps {
           flex-direction: column;
-          gap: 20px;
+          gap: 12px;
+          padding: 0 15px;
         }
 
         .step:not(:last-child)::after {
@@ -135,13 +147,13 @@ import { CommonModule } from '@angular/common';
         }
 
         .step-number {
-          width: 35px;
-          height: 35px;
-          font-size: 14px;
+          width: 24px;
+          height: 24px;
+          font-size: 11px;
         }
 
         .step-label {
-          font-size: 12px;
+          font-size: 10px;
         }
       }
     `,
