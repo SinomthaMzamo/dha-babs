@@ -110,8 +110,42 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
           </form>
         </div>
 
-        <!-- Step 2: Contact Information -->
+        <!-- Step 2: Verification Success -->
         <div *ngIf="currentStep === 2" class="step-section">
+          <div class="success-message">
+            <div class="success-icon">✅</div>
+            <h2>Verification Successful!</h2>
+            <p class="success-description">
+              Your personal details have been successfully verified against DHA records.
+            </p>
+          </div>
+
+          <div class="verified-details-preview">
+            <h3>Verified Details</h3>
+            <div class="details-grid">
+              <div class="detail-item">
+                <label>ID Number:</label>
+                <span class="detail-value">{{ authData?.idNumber }}</span>
+              </div>
+              <div class="detail-item">
+                <label>Full Name:</label>
+                <span class="detail-value">{{ verificationForm.get('forenames')?.value }} {{ verificationForm.get('lastName')?.value }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button type="button" (click)="goBackToVerification()" class="btn-secondary">
+              Back to Edit
+            </button>
+            <button type="button" (click)="proceedToContact()" class="btn-primary">
+              Continue to Contact Info
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Contact Information -->
+        <div *ngIf="currentStep === 3" class="step-section">
           <h2>Contact Information</h2>
           <p class="step-description">
             Please provide your contact details for appointment notifications
@@ -171,7 +205,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
             <div class="button-group">
               <button
                 type="button"
-                (click)="goBackToVerification()"
+                (click)="goBackToSuccess()"
                 class="btn-secondary"
               >
                 Back
@@ -377,6 +411,92 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         }
       }
 
+      .success-message {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+        border-radius: 12px;
+        border: 2px solid var(--DHAGreen);
+      }
+
+      .success-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+        animation: bounce 0.6s ease-in-out;
+      }
+
+      .success-message h2 {
+        color: var(--DHAGreen);
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+
+      .success-description {
+        color: var(--DHATextGrayDark);
+        font-size: 16px;
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      .verified-details-preview {
+        background: var(--DHAOffWhite);
+        border: 1px solid var(--DHABackGroundLightGray);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+
+      .verified-details-preview h3 {
+        color: var(--DHATextGrayDark);
+        margin-bottom: 15px;
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .details-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--DHABackGroundLightGray);
+      }
+
+      .detail-item:last-child {
+        border-bottom: none;
+      }
+
+      .detail-item label {
+        font-weight: 600;
+        color: var(--DHATextGrayDark);
+        font-size: 14px;
+      }
+
+      .detail-value {
+        color: var(--DHAGreen);
+        font-weight: 500;
+        font-size: 14px;
+        text-align: right;
+        word-break: break-all;
+      }
+
+      @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-10px);
+        }
+        60% {
+          transform: translateY(-5px);
+        }
+      }
+
       .button-group {
         display: flex;
         gap: 15px;
@@ -497,9 +617,12 @@ export class PersonalInfoComponent implements OnInit {
         ...this.authData,
         ...this.verificationForm.value,
       };
-      sessionStorage.setItem('verificationData', JSON.stringify(verificationData));
-      
-      // Move to step 2 (contact information)
+      sessionStorage.setItem(
+        'verificationData',
+        JSON.stringify(verificationData)
+      );
+
+      // Move to step 2 (success message and preview)
       this.currentStep = 2;
     }
   }
@@ -508,34 +631,46 @@ export class PersonalInfoComponent implements OnInit {
     if (this.contactForm.valid) {
       // Get verification data
       const verificationDataStr = sessionStorage.getItem('verificationData');
-      const verificationData = verificationDataStr ? JSON.parse(verificationDataStr) : {};
-      
+      const verificationData = verificationDataStr
+        ? JSON.parse(verificationDataStr)
+        : {};
+
       // Combine all data
       const personalData = {
         ...verificationData,
         ...this.contactForm.value,
       };
-      
+
       // Store complete personal data
       sessionStorage.setItem('personalData', JSON.stringify(personalData));
-      
+
       // Clean up temporary verification data
       sessionStorage.removeItem('verificationData');
-      
+
       // Navigate to menu
       this.router.navigate(['/menu']);
     }
+  }
+
+  proceedToContact() {
+    this.currentStep = 3;
   }
 
   goBackToVerification() {
     this.currentStep = 1;
   }
 
+  goBackToSuccess() {
+    this.currentStep = 2;
+  }
+
   goBack() {
     if (this.currentStep === 1) {
       this.router.navigate(['/authenticate']);
-    } else {
+    } else if (this.currentStep === 2) {
       this.goBackToVerification();
+    } else {
+      this.goBackToSuccess();
     }
   }
 
