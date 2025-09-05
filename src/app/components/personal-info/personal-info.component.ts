@@ -286,6 +286,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       .form-control:focus {
         outline: none;
         border-color: var(--DHAGreen);
+        box-sizing: border-box;
       }
 
       .form-control:disabled {
@@ -293,6 +294,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         cursor: not-allowed;
         color: var(--DHADisabledTextGray);
         border-color: var(--DividerGray);
+        box-sizing: border-box;
       }
 
       .error-message {
