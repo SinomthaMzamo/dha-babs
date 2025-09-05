@@ -27,7 +27,9 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
 
     <div class="personal-info-container">
       <div class="personal-info-card">
-        <app-progress-indicator [currentStep]="currentStep"></app-progress-indicator>
+        <app-progress-indicator
+          [currentStep]="getProgressStep()"
+        ></app-progress-indicator>
 
         <!-- Step 1: Personal Details Verification -->
         <div *ngIf="currentStep === 1" class="step-section">
@@ -692,5 +694,17 @@ export class PersonalInfoComponent implements OnInit {
 
   goHome() {
     this.router.navigate(['/']);
+  }
+
+  getProgressStep(): number {
+    // Map internal steps to progress indicator steps
+    // Step 1 (verification) and Step 2 (success) both show as step 2 (Personal Info)
+    // Step 3 (contact) shows as step 3 (Contact Info)
+    if (this.currentStep === 1 || this.currentStep === 2) {
+      return 1; // Personal Info step
+    } else if (this.currentStep === 3) {
+      return 2; // Contact Info step
+    }
+    return 1; // Default to Personal Info
   }
 }
