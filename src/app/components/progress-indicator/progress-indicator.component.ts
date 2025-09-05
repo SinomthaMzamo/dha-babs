@@ -47,6 +47,8 @@ import { CommonModule } from '@angular/common';
       .progress-container {
         margin-bottom: 20px;
         padding: 8px 0;
+        max-width: 800px;
+        margin: 0 auto;
         // background: var(--DHAOffWhite);
         // border-radius: 8px;
         // border: 1px solid var(--DHABackGroundLightGray);
@@ -130,7 +132,7 @@ import { CommonModule } from '@angular/common';
         color: var(--DHAGreen) !important;
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 274px) {
         .progress-container {
           margin-bottom: 15px;
           padding: 8px 0;
@@ -156,6 +158,7 @@ import { CommonModule } from '@angular/common';
         .step-label {
           font-size: 10px;
         }
+        // do the nav ba
       }
     `,
   ],
@@ -163,5 +166,5 @@ import { CommonModule } from '@angular/common';
 export class ProgressIndicatorComponent {
   @Input() currentStep: number = 0;
 
-  steps = ['Authenticate', 'Personal Info', 'Bookings'];
+  steps = ['Sign In', 'Personal Info', 'Bookings'];
 }

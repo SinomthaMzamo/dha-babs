@@ -13,12 +13,12 @@ import { ReactiveFormsModule } from '@angular/forms';
       <div class="top-bar">
         <div class="top-bar-content">
           <div class="logo-section">
-            <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
-            <span class="logo-text">DHA Online Services</span>
+            <button type="button" (click)="goHome()" class="btn-home-top">
+              ← Return Home
+            </button>
+            <!-- <span class="logo-text">Branch Appointment Booking System</span> -->
           </div>
-          <button (click)="goHome()" class="btn-home-top">
-            🏠 Return Home
-          </button>
+          <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
         </div>
       </div>
 
@@ -126,7 +126,7 @@ import { ReactiveFormsModule } from '@angular/forms';
       }
 
       .logo-icon {
-        height: 32px;
+        height: 60px;
         width: auto;
         object-fit: contain;
       }

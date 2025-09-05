@@ -11,12 +11,20 @@ import { Router } from '@angular/router';
       <div class="demo-card">
         <div class="header-section">
           <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="demo-logo" />
-          <h4>Department of Home Affairs</h4>
+          <!-- <h4>Department of Home Affairs</h4> -->
         </div>
         <h1>Branch Appointment Booking System</h1>
         <p class="subtitle">
           A modern, user-friendly platform for DHA appointment management
         </p>
+
+        <div class="cta-section">
+          <h2>Ready to get started?</h2>
+          <p>Experience the improved DHA booking system</p>
+          <button (click)="startBooking()" class="cta-button">
+            Book Today
+          </button>
+        </div>
 
         <div class="features-grid">
           <div class="feature-card">
@@ -53,14 +61,6 @@ import { Router } from '@angular/router';
             <h3>Avoid long queues with us!</h3>
             <p>Spend less time standing around</p>
           </div>
-        </div>
-
-        <div class="cta-section">
-          <h2>Ready to get started?</h2>
-          <p>Experience the improved DHA booking system</p>
-          <button (click)="startBooking()" class="cta-button">
-            Start Booking Process
-          </button>
         </div>
 
         <div class="info-section">
@@ -134,7 +134,7 @@ import { Router } from '@angular/router';
       }
 
       .demo-logo {
-        height: 40px;
+        height: 80px;
         width: auto;
         object-fit: contain;
       }
@@ -277,7 +277,7 @@ import { Router } from '@angular/router';
         }
 
         .demo-logo {
-          height: 32px;
+          height: 60px;
         }
 
         h4 {

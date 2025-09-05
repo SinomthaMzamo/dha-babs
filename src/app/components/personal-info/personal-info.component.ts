@@ -17,139 +17,175 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
     <div class="top-bar">
       <div class="top-bar-content">
         <div class="logo-section">
-          <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
-          <span class="logo-text">DHA Online Booking</span>
+          <button type="button" (click)="goHome()" class="btn-home-top">
+            ← Return Home
+          </button>
         </div>
-        <button type="button" (click)="goHome()" class="btn-home-top">
-          🏠 Return Home
-        </button>
+        <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
       </div>
     </div>
 
     <div class="personal-info-container">
       <div class="personal-info-card">
         <app-progress-indicator [currentStep]="1"></app-progress-indicator>
-        <h2>Personal Information</h2>
 
-        <form [formGroup]="personalInfoForm" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label for="forenames">Forenames *</label>
-            <input
-              type="text"
-              id="forenames"
-              formControlName="forenames"
-              class="form-control"
-              placeholder="Enter your forenames"
-            />
-            <div
-              *ngIf="
-                personalInfoForm.get('forenames')?.invalid &&
-                personalInfoForm.get('forenames')?.touched
-              "
-              class="error-message"
-            >
-              Forenames are required
-            </div>
-          </div>
+        <!-- Step 1: Personal Details Verification -->
+        <div *ngIf="currentStep === 1" class="step-section">
+          <h2>Verify Personal Information</h2>
+          <p class="step-description">
+            Please verify your personal details against DHA records
+          </p>
 
-          <div class="form-group">
-            <label for="lastName">Last Name *</label>
-            <input
-              type="text"
-              id="lastName"
-              formControlName="lastName"
-              class="form-control"
-              placeholder="Enter your last name"
-            />
-            <div
-              *ngIf="
-                personalInfoForm.get('lastName')?.invalid &&
-                personalInfoForm.get('lastName')?.touched
-              "
-              class="error-message"
-            >
-              Last name is required
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email Address *</label>
-            <input
-              type="email"
-              id="email"
-              formControlName="email"
-              class="form-control"
-              placeholder="Enter your email address"
-            />
-            <div
-              *ngIf="
-                personalInfoForm.get('email')?.invalid &&
-                personalInfoForm.get('email')?.touched
-              "
-              class="error-message"
-            >
-              <div *ngIf="personalInfoForm.get('email')?.errors?.['required']">
-                Email is required
-              </div>
-              <div *ngIf="personalInfoForm.get('email')?.errors?.['email']">
-                Please enter a valid email address
+          <form
+            [formGroup]="verificationForm"
+            (ngSubmit)="onVerificationSubmit()"
+          >
+            <div class="form-group">
+              <label for="idNumber">ID Number</label>
+              <input
+                type="text"
+                id="idNumber"
+                [value]="authData?.idNumber || ''"
+                class="form-control"
+                disabled
+                readonly
+              />
+              <div class="field-info">
+                <small>ID number from previous step</small>
               </div>
             </div>
-          </div>
 
-          <div class="form-group">
-            <label for="phone">Phone Number *</label>
-            <input
-              type="tel"
-              id="phone"
-              formControlName="phone"
-              class="form-control"
-              placeholder="Enter your phone number"
-            />
-            <div
-              *ngIf="
-                personalInfoForm.get('phone')?.invalid &&
-                personalInfoForm.get('phone')?.touched
-              "
-              class="error-message"
-            >
-              <div *ngIf="personalInfoForm.get('phone')?.errors?.['required']">
-                Phone number is required
-              </div>
-              <div *ngIf="personalInfoForm.get('phone')?.errors?.['pattern']">
-                Please enter a valid phone number
+            <div class="form-group">
+              <label for="forenames">Forenames *</label>
+              <input
+                type="text"
+                id="forenames"
+                formControlName="forenames"
+                class="form-control"
+                placeholder="Enter your forenames as they appear on your ID"
+              />
+              <div
+                *ngIf="
+                  verificationForm.get('forenames')?.invalid &&
+                  verificationForm.get('forenames')?.touched
+                "
+                class="error-message"
+              >
+                Forenames are required
               </div>
             </div>
-          </div>
 
-          <div class="form-group">
-            <label for="idNumber">ID Number</label>
-            <input
-              type="text"
-              id="idNumber"
-              [value]="authData?.idNumber || ''"
-              class="form-control"
-              disabled
-              readonly
-            />
-            <div class="field-info">
-              <small>ID number from previous step</small>
+            <div class="form-group">
+              <label for="lastName">Last Name *</label>
+              <input
+                type="text"
+                id="lastName"
+                formControlName="lastName"
+                class="form-control"
+                placeholder="Enter your last name as it appears on your ID"
+              />
+              <div
+                *ngIf="
+                  verificationForm.get('lastName')?.invalid &&
+                  verificationForm.get('lastName')?.touched
+                "
+                class="error-message"
+              >
+                Last name is required
+              </div>
             </div>
-          </div>
 
-          <div class="button-group">
-            <button type="button" (click)="goBack()" class="btn-secondary">
-              Back
-            </button>
-            <button
-              type="submit"
-              [disabled]="personalInfoForm.invalid"
-              class="btn-primary"
-            >
-              Continue
-            </button>
-          </div>
-        </form>
+            <div class="button-group">
+              <button type="button" (click)="goBack()" class="btn-secondary">
+                Back
+              </button>
+              <button
+                type="submit"
+                [disabled]="verificationForm.invalid"
+                class="btn-primary"
+              >
+                Verify Details
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 2: Contact Information -->
+        <div *ngIf="currentStep === 2" class="step-section">
+          <h2>Contact Information</h2>
+          <p class="step-description">
+            Please provide your contact details for appointment notifications
+          </p>
+
+          <form [formGroup]="contactForm" (ngSubmit)="onContactSubmit()">
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                placeholder="Enter your email address"
+              />
+              <div
+                *ngIf="
+                  contactForm.get('email')?.invalid &&
+                  contactForm.get('email')?.touched
+                "
+                class="error-message"
+              >
+                <div *ngIf="contactForm.get('email')?.errors?.['required']">
+                  Email is required
+                </div>
+                <div *ngIf="contactForm.get('email')?.errors?.['email']">
+                  Please enter a valid email address
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input
+                type="tel"
+                id="phone"
+                formControlName="phone"
+                class="form-control"
+                placeholder="Enter your phone number"
+              />
+              <div
+                *ngIf="
+                  contactForm.get('phone')?.invalid &&
+                  contactForm.get('phone')?.touched
+                "
+                class="error-message"
+              >
+                <div *ngIf="contactForm.get('phone')?.errors?.['required']">
+                  Phone number is required
+                </div>
+                <div *ngIf="contactForm.get('phone')?.errors?.['pattern']">
+                  Please enter a valid phone number
+                </div>
+              </div>
+            </div>
+
+            <div class="button-group">
+              <button
+                type="button"
+                (click)="goBackToVerification()"
+                class="btn-secondary"
+              >
+                Back
+              </button>
+              <button
+                type="submit"
+                [disabled]="contactForm.invalid"
+                class="btn-primary"
+              >
+                Complete Registration
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   `,
@@ -207,7 +243,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       }
 
       .logo-icon {
-        height: 32px;
+        height: 60px;
         width: auto;
         object-fit: contain;
       }
@@ -319,6 +355,28 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         font-style: italic;
       }
 
+      .step-section {
+        animation: fadeIn 0.3s ease-in;
+      }
+
+      .step-description {
+        color: var(--DHATextGray);
+        font-size: 16px;
+        margin-bottom: 30px;
+        line-height: 1.5;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
       .button-group {
         display: flex;
         gap: 15px;
@@ -399,13 +457,20 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
   ],
 })
 export class PersonalInfoComponent implements OnInit {
-  personalInfoForm: FormGroup;
+  verificationForm: FormGroup;
+  contactForm: FormGroup;
   authData: any;
+  currentStep: number = 1;
 
   constructor(private fb: FormBuilder, private router: Router) {
-    this.personalInfoForm = this.fb.group({
+    // Form for personal details verification
+    this.verificationForm = this.fb.group({
       forenames: ['', Validators.required],
       lastName: ['', Validators.required],
+    });
+
+    // Form for contact information
+    this.contactForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       phone: [
         '',
@@ -425,22 +490,53 @@ export class PersonalInfoComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    if (this.personalInfoForm.valid) {
-      // Store personal info data in session storage
-      const personalData = {
+  onVerificationSubmit() {
+    if (this.verificationForm.valid) {
+      // Store verification data temporarily
+      const verificationData = {
         ...this.authData,
-        ...this.personalInfoForm.value,
+        ...this.verificationForm.value,
       };
-      sessionStorage.setItem('personalData', JSON.stringify(personalData));
+      sessionStorage.setItem('verificationData', JSON.stringify(verificationData));
+      
+      // Move to step 2 (contact information)
+      this.currentStep = 2;
+    }
+  }
 
-      // Navigate to menu instead of directly to book service
+  onContactSubmit() {
+    if (this.contactForm.valid) {
+      // Get verification data
+      const verificationDataStr = sessionStorage.getItem('verificationData');
+      const verificationData = verificationDataStr ? JSON.parse(verificationDataStr) : {};
+      
+      // Combine all data
+      const personalData = {
+        ...verificationData,
+        ...this.contactForm.value,
+      };
+      
+      // Store complete personal data
+      sessionStorage.setItem('personalData', JSON.stringify(personalData));
+      
+      // Clean up temporary verification data
+      sessionStorage.removeItem('verificationData');
+      
+      // Navigate to menu
       this.router.navigate(['/menu']);
     }
   }
 
+  goBackToVerification() {
+    this.currentStep = 1;
+  }
+
   goBack() {
-    this.router.navigate(['/authenticate']);
+    if (this.currentStep === 1) {
+      this.router.navigate(['/authenticate']);
+    } else {
+      this.goBackToVerification();
+    }
   }
 
   goHome() {

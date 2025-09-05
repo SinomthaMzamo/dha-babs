@@ -25,17 +25,16 @@ interface SlotSearchCriteria {
   template: `
     <div class="appointment-results-container">
       <!-- Top Bar -->
-      <div class="top-bar">
+      <!-- <div class="top-bar">
         <div class="top-bar-content">
           <div class="logo-section">
-            <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
-            <span class="logo-text">DHA Online Services</span>
+            <button type="button" (click)="goHome()" class="btn-home-top">
+              ← Return Home
+            </button>
           </div>
-          <button (click)="goHome()" class="btn-home-top">
-            🏠 Return Home
-          </button>
+          <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
         </div>
-      </div>
+      </div> -->
 
       <!-- Main Content -->
       <div class="results-content">
@@ -214,7 +213,7 @@ interface SlotSearchCriteria {
       }
 
       .logo-icon {
-        height: 32px;
+        height: 60px;
         width: auto;
         object-fit: contain;
       }
