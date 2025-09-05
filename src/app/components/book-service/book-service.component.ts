@@ -73,14 +73,14 @@ interface Service {
                     {{ personalData?.lastName }}</span
                   >
                 </div>
-                <div class="detail-item">
+                <!-- <div class="detail-item">
                   <label>Email:</label>
                   <span class="detail-value">{{ personalData?.email }}</span>
                 </div>
                 <div class="detail-item">
                   <label>Phone:</label>
                   <span class="detail-value">{{ personalData?.phone }}</span>
-                </div>
+                </div> -->
               </div>
             </div>
 
@@ -134,7 +134,7 @@ interface Service {
                 [disabled]="selectedServices.length === 0"
                 class="btn-primary"
               >
-                Continue to Location 
+                Continue to Location
               </button>
             </div>
           </div>
@@ -317,9 +317,9 @@ interface Service {
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         padding: 30px;
-        max-width: 500px;
-        width: fit-content;
-        min-width: 400px;
+        width: 600px;
+        // width: fit-content;
+        // min-width: 400px;
         box-sizing: border-box;
       }
 
@@ -435,20 +435,25 @@ interface Service {
       }
 
       .btn-add-service {
-        background: var(--DHAOrange);
-        color: var(--DHAWhite);
+        background: none;
+        color: var(--DHAOrange);
         border: none;
-        padding: 12px 20px;
-        border-radius: 6px;
-        font-size: 16px;
-        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 0;
+        font-size: 13px;
+        font-weight: 500;
         cursor: pointer;
         transition: all 0.3s ease;
-        width: 100%;
+        width: auto;
+        display: block;
+        margin: 0 auto;
+        text-decoration: underline;
+        text-underline-offset: 4px;
       }
 
       .btn-add-service:hover {
-        background: var(--DHALightOrange);
+        color: var(--DHALightOrange);
+        text-decoration-thickness: 2px;
       }
 
       .action-buttons {

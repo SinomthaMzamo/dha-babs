@@ -14,7 +14,11 @@ import { CommonModule } from '@angular/common';
           [class.active]="i === currentStep"
           [class.completed]="i < currentStep"
         >
-          <div class="step-number">{{ i + 1 }}</div>
+          <div class="step-number">
+            <span *ngIf="i + 1 <= currentStep" class="checkmark">✓</span>
+            <span *ngIf="i + 1 > currentStep">{{ i + 1 }}</span>
+          </div>
+
           <div class="step-label">{{ step }}</div>
         </div>
       </div>
