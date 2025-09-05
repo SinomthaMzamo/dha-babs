@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -43,26 +43,12 @@ interface Branch {
         <h2>Step 3: Book A New Appointment</h2>
 
         <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
-          <!-- Services Selection -->
-          <div class="form-section">
-            <h3>Select Services</h3>
-            <p class="section-description">Choose the services you need:</p>
-            <div class="services-list">
-              <div *ngFor="let service of services" class="service-item">
-                <label class="service-checkbox">
-                  <input
-                    type="checkbox"
-                    [checked]="service.checked"
-                    (change)="toggleService(service)"
-                  />
-                  <span class="checkmark"></span>
-                </label>
-                <div class="service-details">
-                  <div class="service-name">{{ service.name }}</div>
-                  <div class="service-description">
-                    {{ service.description }}
-                  </div>
-                </div>
+          <!-- Selected Services Display -->
+          <div class="form-section" *ngIf="selectedServices && selectedServices.length > 0">
+            <h3>Selected Services</h3>
+            <div class="selected-services-display">
+              <div *ngFor="let service of selectedServices" class="service-badge">
+                {{ service.name }}
               </div>
             </div>
           </div>
@@ -281,6 +267,22 @@ interface Branch {
         font-size: 1rem;
       }
 
+      .selected-services-display {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .service-badge {
+        background: var(--DHAGreen);
+        color: var(--DHAWhite);
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
       .services-list {
         display: flex;
         flex-direction: column;
@@ -479,62 +481,12 @@ interface Branch {
   ],
 })
 export class AppointmentFormComponent implements OnInit {
+  @Input() selectedServices: any[] = [];
   @Output() formSubmitted = new EventEmitter<any>();
 
   appointmentForm: FormGroup;
   today: string;
-  hasSelectedServices = false;
 
-  services: Service[] = [
-    {
-      id: 'smart-id',
-      name: 'Smart ID Card',
-      description: 'Apply for or renew your smart ID card',
-      checked: false,
-    },
-    {
-      id: 'id-book',
-      name: 'ID Book',
-      description: 'Apply for or renew your ID book',
-      checked: false,
-    },
-    {
-      id: 'passport',
-      name: 'Passport',
-      description: 'Apply for or renew your passport',
-      checked: false,
-    },
-    {
-      id: 'birth-cert',
-      name: 'Birth Certificate',
-      description: 'Apply for birth certificate',
-      checked: false,
-    },
-    {
-      id: 'marriage-cert',
-      name: 'Marriage Certificate',
-      description: 'Apply for marriage certificate',
-      checked: false,
-    },
-    {
-      id: 'death-cert',
-      name: 'Death Certificate',
-      description: 'Apply for death certificate',
-      checked: false,
-    },
-    {
-      id: 'citizenship',
-      name: 'Citizenship',
-      description: 'Apply for citizenship or naturalization',
-      checked: false,
-    },
-    {
-      id: 'visa',
-      name: 'Visa Services',
-      description: 'Apply for or extend visas',
-      checked: false,
-    },
-  ];
 
   provinces: Province[] = [
     { id: 'gauteng', name: 'Gauteng' },
@@ -750,14 +702,6 @@ export class AppointmentFormComponent implements OnInit {
     return this.branches.filter((branch) => branch.areaId === areaId);
   }
 
-  toggleService(service: Service) {
-    service.checked = !service.checked;
-    this.updateServicesValidation();
-  }
-
-  updateServicesValidation() {
-    this.hasSelectedServices = this.services.some((service) => service.checked);
-  }
 
   onProvinceChange() {
     this.appointmentForm.patchValue({
@@ -773,18 +717,14 @@ export class AppointmentFormComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    return this.appointmentForm.valid && this.hasSelectedServices;
+    return this.appointmentForm.valid && this.selectedServices.length > 0;
   }
 
   onSubmit() {
     if (this.isFormValid()) {
-      const selectedServices = this.services
-        .filter((service) => service.checked)
-        .map((service) => service.id);
-
       const formData = {
         ...this.appointmentForm.value,
-        selectedServices,
+        selectedServices: this.selectedServices.map(service => service.name),
       };
 
       this.formSubmitted.emit(formData);

@@ -116,7 +116,8 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
             <div class="success-icon">✅</div>
             <h2>Verification Successful!</h2>
             <p class="success-description">
-              Your personal details have been successfully verified against DHA records.
+              Your personal details have been successfully verified against DHA
+              records.
             </p>
           </div>
 
@@ -129,16 +130,27 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
               </div>
               <div class="detail-item">
                 <label>Full Name:</label>
-                <span class="detail-value">{{ verificationForm.get('forenames')?.value }} {{ verificationForm.get('lastName')?.value }}</span>
+                <span class="detail-value"
+                  >{{ verificationForm.get('forenames')?.value }}
+                  {{ verificationForm.get('lastName')?.value }}</span
+                >
               </div>
             </div>
           </div>
 
           <div class="button-group">
-            <button type="button" (click)="goBackToVerification()" class="btn-secondary">
+            <button
+              type="button"
+              (click)="goBackToVerification()"
+              class="btn-secondary"
+            >
               Back to Edit
             </button>
-            <button type="button" (click)="proceedToContact()" class="btn-primary">
+            <button
+              type="button"
+              (click)="proceedToContact()"
+              class="btn-primary"
+            >
               Continue to Contact Info
             </button>
           </div>
@@ -486,7 +498,11 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       }
 
       @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
           transform: translateY(0);
         }
         40% {
