@@ -182,8 +182,8 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       }
 
       .top-bar {
-        background: var(--DHAGreen);
-        color: var(--DHAWhite);
+        background: whitesmoke;
+        color: var(--DHATextGrayDark);
         padding: 15px 0;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         position: sticky;
@@ -215,7 +215,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       .logo-text {
         font-size: 18px;
         font-weight: 600;
-        color: var(--DHAWhite);
+        color: var(--DHATextGrayDark);
       }
 
       .btn-home-top {
