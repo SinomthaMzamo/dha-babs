@@ -17,7 +17,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
     <div class="top-bar">
       <div class="top-bar-content">
         <div class="logo-section">
-          <span class="logo-icon">🏛️</span>
+          <img src="/logo.png" alt="DHA Logo" class="logo-icon" />
           <span class="logo-text">DHA Online Booking</span>
         </div>
         <button type="button" (click)="goHome()" class="btn-home-top">
@@ -170,7 +170,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         --DHAOffBlack: #381a46;
         --DHATextGray: #949494;
         --DHATextGrayDark: #5a5a5a;
-        --DHAErrorColor: #f57c00;
+        --DHAErrorColor: #ea2127;
         --DHADisabledButtonGray: #e6e6e6;
         --DHABackGroundLightGray: #f4f4f4;
         --DividerGray: #949494;
@@ -207,7 +207,9 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       }
 
       .logo-icon {
-        font-size: 24px;
+        height: 32px;
+        width: auto;
+        object-fit: contain;
       }
 
       .logo-text {
@@ -238,7 +240,11 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         justify-content: center;
         align-items: center;
         min-height: calc(100vh - 70px);
-        background: var(--DHABackGroundLightGray);
+        background: linear-gradient(
+          135deg,
+          var(--DHAOffWhite) 0%,
+          #e8f5e8 100%
+        );
         padding: 20px;
       }
 

@@ -9,9 +9,10 @@ import { Router } from '@angular/router';
   template: `
     <div class="demo-container">
       <div class="demo-card">
-        <h1>DHA Online Booking System</h1>
+        <h4>Department of Home Affairs</h4>
+        <h1>Branch Appointment Booking System</h1>
         <p class="subtitle">
-          A modern, user-friendly platform for South African citizens
+          A modern, user-friendly platform for DHA appointment management
         </p>
 
         <div class="features-grid">
@@ -42,6 +43,12 @@ import { Router } from '@angular/router';
             <div class="feature-icon">👥</div>
             <h3>Group bookings</h3>
             <p>Book for multiple people at once</p>
+          </div>
+          <div class="feature-card empty">
+            <!-- TODO: highlight easy log in with ID or Passport number -->
+            <div class="feature-icon">⏱️</div>
+            <h3>Avoid long queues with us!</h3>
+            <p>Spend less time standing around</p>
           </div>
         </div>
 
@@ -96,7 +103,11 @@ import { Router } from '@angular/router';
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        background: var(--DHABackGroundLightGray);
+        background: linear-gradient(
+          135deg,
+          var(--DHAOffWhite) 0%,
+          #e8f5e8 100%
+        );
         padding: 20px;
       }
 
@@ -108,7 +119,7 @@ import { Router } from '@angular/router';
         width: 100%;
         max-width: 800px;
         text-align: center;
-        border: 2px solid var(--DHAGreen);
+        // border: 2px solid var(--DHAGreen);
       }
 
       h1 {
@@ -213,6 +224,7 @@ import { Router } from '@angular/router';
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 10px;
+        padding: 0 20px;
       }
 
       .services-list li {

@@ -25,7 +25,7 @@ interface SlotSearchCriteria {
       <div class="top-bar">
         <div class="top-bar-content">
           <div class="logo-section">
-            <span class="logo-icon">🏛️</span>
+            <img src="/logo.png" alt="DHA Logo" class="logo-icon" />
             <span class="logo-text">DHA Online Services</span>
           </div>
           <button (click)="goHome()" class="btn-home-top">
@@ -60,7 +60,7 @@ interface SlotSearchCriteria {
         --DHAOffWhite: #fbfbfb;
         --DHATextGray: #949494;
         --DHATextGrayDark: #5a5a5a;
-        --DHAErrorColor: #f57c00;
+        --DHAErrorColor: #ea2127;
         --DHADisabledButtonGray: #e6e6e6;
         --DHABackGroundLightGray: #f4f4f4;
         --DividerGray: #949494;
@@ -104,7 +104,9 @@ interface SlotSearchCriteria {
       }
 
       .logo-icon {
-        font-size: 24px;
+        height: 32px;
+        width: auto;
+        object-fit: contain;
       }
 
       .logo-text {

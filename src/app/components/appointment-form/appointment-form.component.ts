@@ -226,7 +226,7 @@ interface Branch {
         --DHAOffWhite: #fbfbfb;
         --DHATextGray: #949494;
         --DHATextGrayDark: #5a5a5a;
-        --DHAErrorColor: #f57c00;
+        --DHAErrorColor: #ea2127;
         --DHADisabledButtonGray: #e6e6e6;
         --DHADisabledTextGray: #c4c4c4;
       }
@@ -248,7 +248,6 @@ interface Branch {
         border-radius: 16px;
         padding: 40px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        border: 2px solid var(--DHAGreen);
         width: 100%;
         max-width: 800px;
       }

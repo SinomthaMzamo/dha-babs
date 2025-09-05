@@ -28,7 +28,7 @@ interface SlotSearchCriteria {
       <div class="top-bar">
         <div class="top-bar-content">
           <div class="logo-section">
-            <span class="logo-icon">🏛️</span>
+            <img src="/logo.png" alt="DHA Logo" class="logo-icon" />
             <span class="logo-text">DHA Online Services</span>
           </div>
           <button (click)="goHome()" class="btn-home-top">
@@ -214,7 +214,9 @@ interface SlotSearchCriteria {
       }
 
       .logo-icon {
-        font-size: 24px;
+        height: 32px;
+        width: auto;
+        object-fit: contain;
       }
 
       .logo-text {
