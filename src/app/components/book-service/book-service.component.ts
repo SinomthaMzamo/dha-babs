@@ -134,7 +134,7 @@ interface Service {
                 [disabled]="selectedServices.length === 0"
                 class="btn-primary"
               >
-                Continue to Location Selection
+                Continue to Location 
               </button>
             </div>
           </div>
@@ -316,49 +316,51 @@ interface Service {
         background: var(--DHAWhite);
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        padding: 40px;
-        max-width: 600px;
-        width: 100%;
+        padding: 30px;
+        max-width: 500px;
+        width: fit-content;
+        min-width: 400px;
+        box-sizing: border-box;
       }
 
       .booking-preview-card h2 {
         color: var(--DHATextGrayDark);
-        font-size: 28px;
-        margin-bottom: 10px;
+        font-size: 24px;
+        margin-bottom: 8px;
         text-align: center;
       }
 
       .preview-description {
         color: var(--DHATextGray);
         text-align: center;
-        margin-bottom: 30px;
-        font-size: 16px;
+        margin-bottom: 20px;
+        font-size: 14px;
       }
 
       .user-details-section,
       .services-section {
-        margin-bottom: 30px;
+        margin-bottom: 20px;
       }
 
       .user-details-section h3,
       .services-section h3 {
         color: var(--DHATextGrayDark);
-        font-size: 20px;
-        margin-bottom: 15px;
-        border-bottom: 2px solid var(--DHAGreen);
-        padding-bottom: 8px;
+        font-size: 18px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--DHAGreen);
+        padding-bottom: 6px;
       }
 
       .details-grid {
         display: grid;
-        gap: 12px;
+        gap: 8px;
       }
 
       .detail-item {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 12px 0;
+        padding: 8px 0;
         border-bottom: 1px solid var(--DHABackGroundLightGray);
       }
 
@@ -369,13 +371,13 @@ interface Service {
       .detail-item label {
         font-weight: 600;
         color: var(--DHATextGrayDark);
-        font-size: 14px;
+        font-size: 13px;
       }
 
       .detail-value {
         color: var(--DHAGreen);
         font-weight: 500;
-        font-size: 14px;
+        font-size: 13px;
         text-align: right;
         word-break: break-all;
       }
@@ -384,13 +386,14 @@ interface Service {
         background: var(--DHAOffWhite);
         border: 1px solid var(--DHABackGroundLightGray);
         border-radius: 8px;
-        padding: 20px;
+        padding: 15px;
       }
 
       .no-services {
         text-align: center;
         color: var(--DHATextGray);
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+        font-size: 13px;
       }
 
       .services-badges {
@@ -403,12 +406,12 @@ interface Service {
       .service-badge {
         background: var(--DHAGreen);
         color: var(--DHAWhite);
-        padding: 8px 12px;
-        border-radius: 20px;
+        padding: 6px 10px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-size: 14px;
+        gap: 6px;
+        font-size: 13px;
       }
 
       .service-badge .remove-btn {
@@ -677,10 +680,13 @@ interface Service {
 
         .booking-preview-card {
           padding: 20px;
+          min-width: unset;
+          max-width: 100%;
+          width: 100%;
         }
 
         .booking-preview-card h2 {
-          font-size: 24px;
+          font-size: 20px;
         }
 
         .action-buttons {
