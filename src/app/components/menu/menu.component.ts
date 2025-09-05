@@ -13,7 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
       <div class="top-bar">
         <div class="top-bar-content">
           <div class="logo-section">
-            <img src="/logo.png" alt="DHA Logo" class="logo-icon" />
+            <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
             <span class="logo-text">DHA Online Services</span>
           </div>
           <button (click)="goHome()" class="btn-home-top">
