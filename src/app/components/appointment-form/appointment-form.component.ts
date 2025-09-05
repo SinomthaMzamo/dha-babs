@@ -39,7 +39,9 @@ interface Branch {
   template: `
     <div class="appointment-form-container">
       <div class="appointment-form-card">
-        <app-booking-step-indicator [currentStep]="2"></app-booking-step-indicator>
+        <app-booking-step-indicator
+          [currentStep]="2"
+        ></app-booking-step-indicator>
         <h2>Step 3: Book A New Appointment</h2>
 
         <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
@@ -240,8 +242,9 @@ interface Branch {
         border-radius: 16px;
         padding: 40px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 800px;
+        width: fit-content;
+        max-width: 600px;
+        min-width: 500px;
       }
 
       h2 {
@@ -461,6 +464,9 @@ interface Branch {
       @media (max-width: 768px) {
         .appointment-form-card {
           padding: 25px 20px;
+          min-width: unset;
+          max-width: 100%;
+          width: 100%;
         }
 
         .form-section {

@@ -50,7 +50,9 @@ interface Service {
           class="booking-preview-container"
         >
           <div class="booking-preview-card">
-            <app-booking-step-indicator [currentStep]="getBookingStep()"></app-booking-step-indicator>
+            <app-booking-step-indicator
+              [currentStep]="getBookingStep()"
+            ></app-booking-step-indicator>
             <h2>Schedule Your Appointment</h2>
             <p class="preview-description">
               Review your details and select the services you need
