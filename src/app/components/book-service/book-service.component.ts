@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 import { AppointmentResultsComponent } from '../appointment-results/appointment-results.component';
+import { BookingStepIndicatorComponent } from '../booking-step-indicator/booking-step-indicator.component';
 
 interface SlotSearchCriteria {
   branch: string;
@@ -25,6 +26,7 @@ interface Service {
     CommonModule,
     AppointmentFormComponent,
     AppointmentResultsComponent,
+    BookingStepIndicatorComponent,
   ],
   template: `
     <div class="book-service-container">
@@ -48,6 +50,7 @@ interface Service {
           class="booking-preview-container"
         >
           <div class="booking-preview-card">
+            <app-booking-step-indicator [currentStep]="getBookingStep()"></app-booking-step-indicator>
             <h2>Schedule Your Appointment</h2>
             <p class="preview-description">
               Review your details and select the services you need
@@ -853,5 +856,17 @@ export class BookServiceComponent implements OnInit {
 
   goHome() {
     this.router.navigate(['/']);
+  }
+
+  getBookingStep(): number {
+    // Map booking flow steps to booking step indicator
+    // Step 1: Add Service(s) - when on preview page
+    // Step 2: Appointment Details - when on form page
+    if (this.currentStep === 'preview') {
+      return 1; // Add Service(s)
+    } else if (this.currentStep === 'form') {
+      return 2; // Appointment Details
+    }
+    return 1; // Default to Add Service(s)
   }
 }

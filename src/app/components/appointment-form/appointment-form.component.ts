@@ -6,7 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
+import { BookingStepIndicatorComponent } from '../booking-step-indicator/booking-step-indicator.component';
 
 interface Service {
   id: string;
@@ -35,11 +35,11 @@ interface Branch {
 @Component({
   selector: 'app-appointment-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent],
+  imports: [CommonModule, ReactiveFormsModule, BookingStepIndicatorComponent],
   template: `
     <div class="appointment-form-container">
       <div class="appointment-form-card">
-        <app-progress-indicator [currentStep]="2"></app-progress-indicator>
+        <app-booking-step-indicator [currentStep]="2"></app-booking-step-indicator>
         <h2>Step 3: Book A New Appointment</h2>
 
         <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
