@@ -177,6 +177,10 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         --DHADisabledTextGray: #c4c4c4;
       }
 
+      * {
+        box-sizing: border-box;
+      }
+
       .top-bar {
         background: var(--DHAGreen);
         color: var(--DHAWhite);
@@ -258,6 +262,8 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
 
       .form-group {
         margin-bottom: 20px;
+        width: 100%;
+        overflow: hidden;
       }
 
       label {
@@ -274,6 +280,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         border-radius: 6px;
         font-size: 16px;
         transition: border-color 0.3s ease;
+        box-sizing: border-box;
       }
 
       .form-control:focus {
