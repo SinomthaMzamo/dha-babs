@@ -27,7 +27,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
 
     <div class="personal-info-container">
       <div class="personal-info-card">
-        <app-progress-indicator [currentStep]="1"></app-progress-indicator>
+        <app-progress-indicator [currentStep]="currentStep"></app-progress-indicator>
 
         <!-- Step 1: Personal Details Verification -->
         <div *ngIf="currentStep === 1" class="step-section">

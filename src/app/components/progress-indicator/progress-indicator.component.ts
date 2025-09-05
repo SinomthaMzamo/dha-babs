@@ -166,5 +166,5 @@ import { CommonModule } from '@angular/common';
 export class ProgressIndicatorComponent {
   @Input() currentStep: number = 0;
 
-  steps = ['Sign In', 'Personal Info', 'Bookings'];
+  steps = ['Sign In', 'Personal Info', 'Contact Info'];
 }

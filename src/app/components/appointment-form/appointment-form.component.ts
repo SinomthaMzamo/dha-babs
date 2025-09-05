@@ -44,10 +44,16 @@ interface Branch {
 
         <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
           <!-- Selected Services Display -->
-          <div class="form-section" *ngIf="selectedServices && selectedServices.length > 0">
+          <div
+            class="form-section"
+            *ngIf="selectedServices && selectedServices.length > 0"
+          >
             <h3>Selected Services</h3>
             <div class="selected-services-display">
-              <div *ngFor="let service of selectedServices" class="service-badge">
+              <div
+                *ngFor="let service of selectedServices"
+                class="service-badge"
+              >
                 {{ service.name }}
               </div>
             </div>
@@ -487,7 +493,6 @@ export class AppointmentFormComponent implements OnInit {
   appointmentForm: FormGroup;
   today: string;
 
-
   provinces: Province[] = [
     { id: 'gauteng', name: 'Gauteng' },
     { id: 'western-cape', name: 'Western Cape' },
@@ -702,7 +707,6 @@ export class AppointmentFormComponent implements OnInit {
     return this.branches.filter((branch) => branch.areaId === areaId);
   }
 
-
   onProvinceChange() {
     this.appointmentForm.patchValue({
       area: '',
@@ -724,7 +728,7 @@ export class AppointmentFormComponent implements OnInit {
     if (this.isFormValid()) {
       const formData = {
         ...this.appointmentForm.value,
-        selectedServices: this.selectedServices.map(service => service.name),
+        selectedServices: this.selectedServices.map((service) => service.name),
       };
 
       this.formSubmitted.emit(formData);

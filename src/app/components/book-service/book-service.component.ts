@@ -43,7 +43,10 @@ interface Service {
       <!-- Main Content -->
       <div class="main-content">
         <!-- Booking Preview Page -->
-        <div *ngIf="currentStep === 'preview'" class="booking-preview-container">
+        <div
+          *ngIf="currentStep === 'preview'"
+          class="booking-preview-container"
+        >
           <div class="booking-preview-card">
             <h2>Schedule Your Appointment</h2>
             <p class="preview-description">
@@ -60,7 +63,10 @@ interface Service {
                 </div>
                 <div class="detail-item">
                   <label>Full Name:</label>
-                  <span class="detail-value">{{ personalData?.forenames }} {{ personalData?.lastName }}</span>
+                  <span class="detail-value"
+                    >{{ personalData?.forenames }}
+                    {{ personalData?.lastName }}</span
+                  >
                 </div>
                 <div class="detail-item">
                   <label>Email:</label>
@@ -80,14 +86,34 @@ interface Service {
                 <div *ngIf="selectedServices.length === 0" class="no-services">
                   <p>No services selected yet</p>
                 </div>
-                <div *ngIf="selectedServices.length > 0" class="services-badges">
-                  <div *ngFor="let service of selectedServices" class="service-badge">
+                <div
+                  *ngIf="selectedServices.length > 0"
+                  class="services-badges"
+                >
+                  <div
+                    *ngFor="let service of selectedServices"
+                    class="service-badge"
+                  >
                     <span class="service-name">{{ service.name }}</span>
-                    <button type="button" (click)="removeService(service)" class="remove-btn">×</button>
+                    <button
+                      type="button"
+                      (click)="removeService(service)"
+                      class="remove-btn"
+                    >
+                      ×
+                    </button>
                   </div>
                 </div>
-                <button type="button" (click)="openServiceModal()" class="btn-add-service">
-                  {{ selectedServices.length === 0 ? 'Add Services' : 'Edit Services' }}
+                <button
+                  type="button"
+                  (click)="openServiceModal()"
+                  class="btn-add-service"
+                >
+                  {{
+                    selectedServices.length === 0
+                      ? 'Add Services'
+                      : 'Edit Services'
+                  }}
                 </button>
               </div>
             </div>
@@ -97,9 +123,9 @@ interface Service {
               <button type="button" (click)="goBack()" class="btn-secondary">
                 Back to Menu
               </button>
-              <button 
-                type="button" 
-                (click)="proceedToLocation()" 
+              <button
+                type="button"
+                (click)="proceedToLocation()"
                 [disabled]="selectedServices.length === 0"
                 class="btn-primary"
               >
@@ -110,16 +136,29 @@ interface Service {
         </div>
 
         <!-- Service Selection Modal -->
-        <div *ngIf="showServiceModal" class="modal-overlay" (click)="closeServiceModal()">
+        <div
+          *ngIf="showServiceModal"
+          class="modal-overlay"
+          (click)="closeServiceModal()"
+        >
           <div class="modal-content" (click)="$event.stopPropagation()">
             <div class="modal-header">
               <h3>Select Services</h3>
-              <button type="button" (click)="closeServiceModal()" class="modal-close">×</button>
+              <button
+                type="button"
+                (click)="closeServiceModal()"
+                class="modal-close"
+              >
+                ×
+              </button>
             </div>
             <div class="modal-body">
               <p class="modal-description">Choose the services you need:</p>
               <div class="services-list">
-                <div *ngFor="let service of availableServices" class="service-item">
+                <div
+                  *ngFor="let service of availableServices"
+                  class="service-item"
+                >
                   <label class="service-checkbox">
                     <input
                       type="checkbox"
@@ -130,16 +169,26 @@ interface Service {
                   </label>
                   <div class="service-details">
                     <div class="service-name">{{ service.name }}</div>
-                    <div class="service-description">{{ service.description }}</div>
+                    <div class="service-description">
+                      {{ service.description }}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" (click)="closeServiceModal()" class="btn-secondary">
+              <button
+                type="button"
+                (click)="closeServiceModal()"
+                class="btn-secondary"
+              >
                 Cancel
               </button>
-              <button type="button" (click)="saveServices()" class="btn-primary">
+              <button
+                type="button"
+                (click)="saveServices()"
+                class="btn-primary"
+              >
                 Save Services
               </button>
             </div>
@@ -725,33 +774,47 @@ export class BookServiceComponent implements OnInit {
 
   saveServices() {
     // Update selected services based on checked items
-    this.selectedServices = this.availableServices.filter(service => service.checked);
-    
+    this.selectedServices = this.availableServices.filter(
+      (service) => service.checked
+    );
+
     // Save to session storage
-    sessionStorage.setItem('selectedServices', JSON.stringify(this.selectedServices));
-    
+    sessionStorage.setItem(
+      'selectedServices',
+      JSON.stringify(this.selectedServices)
+    );
+
     // Close modal
     this.closeServiceModal();
   }
 
   removeService(service: Service) {
     // Remove from selected services
-    this.selectedServices = this.selectedServices.filter(s => s.id !== service.id);
-    
+    this.selectedServices = this.selectedServices.filter(
+      (s) => s.id !== service.id
+    );
+
     // Update available services
-    const availableService = this.availableServices.find(s => s.id === service.id);
+    const availableService = this.availableServices.find(
+      (s) => s.id === service.id
+    );
     if (availableService) {
       availableService.checked = false;
     }
-    
+
     // Save to session storage
-    sessionStorage.setItem('selectedServices', JSON.stringify(this.selectedServices));
+    sessionStorage.setItem(
+      'selectedServices',
+      JSON.stringify(this.selectedServices)
+    );
   }
 
   updateAvailableServices() {
     // Update the checked state of available services based on selected services
-    this.availableServices.forEach(service => {
-      service.checked = this.selectedServices.some(selected => selected.id === service.id);
+    this.availableServices.forEach((service) => {
+      service.checked = this.selectedServices.some(
+        (selected) => selected.id === service.id
+      );
     });
   }
 
@@ -766,7 +829,7 @@ export class BookServiceComponent implements OnInit {
       branch: formData.branch,
       startDate: formData.startDate,
       endDate: formData.endDate,
-      services: this.selectedServices.map(s => s.name),
+      services: this.selectedServices.map((s) => s.name),
     };
 
     // Switch to results view
