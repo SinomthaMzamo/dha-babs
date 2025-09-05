@@ -9,7 +9,10 @@ import { Router } from '@angular/router';
   template: `
     <div class="demo-container">
       <div class="demo-card">
-        <h4>Department of Home Affairs</h4>
+        <div class="header-section">
+          <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="demo-logo" />
+          <h4>Department of Home Affairs</h4>
+        </div>
         <h1>Branch Appointment Booking System</h1>
         <p class="subtitle">
           A modern, user-friendly platform for DHA appointment management
@@ -120,6 +123,27 @@ import { Router } from '@angular/router';
         max-width: 800px;
         text-align: center;
         // border: 2px solid var(--DHAGreen);
+      }
+
+      .header-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .demo-logo {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+      }
+
+      h4 {
+        color: var(--DHAGreen);
+        font-size: 1.5rem;
+        margin: 0;
+        font-weight: 600;
       }
 
       h1 {
@@ -245,6 +269,19 @@ import { Router } from '@angular/router';
       @media (max-width: 768px) {
         .demo-card {
           padding: 20px;
+        }
+
+        .header-section {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .demo-logo {
+          height: 32px;
+        }
+
+        h4 {
+          font-size: 1.3rem;
         }
 
         h1 {
