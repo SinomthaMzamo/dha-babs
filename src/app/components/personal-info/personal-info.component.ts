@@ -41,6 +41,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
           <form
             [formGroup]="verificationForm"
             (ngSubmit)="onVerificationSubmit()"
+            autocomplete="on"
           >
             <div class="form-group">
               <label for="idNumber">ID Number</label>
@@ -65,6 +66,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
                 formControlName="forenames"
                 class="form-control"
                 placeholder="Enter your forenames as they appear on your ID"
+                autocomplete="given-name"
               />
               <div
                 *ngIf="
@@ -85,6 +87,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
                 formControlName="lastName"
                 class="form-control"
                 placeholder="Enter your last name as it appears on your ID"
+                autocomplete="family-name"
               />
               <div
                 *ngIf="
@@ -165,7 +168,11 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
             Please provide your contact details for appointment notifications
           </p>
 
-          <form [formGroup]="contactForm" (ngSubmit)="onContactSubmit()">
+          <form
+            [formGroup]="contactForm"
+            (ngSubmit)="onContactSubmit()"
+            autocomplete="on"
+          >
             <div class="form-group">
               <label for="email">Email Address *</label>
               <input
@@ -174,6 +181,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
                 formControlName="email"
                 class="form-control"
                 placeholder="Enter your email address"
+                autocomplete="email"
               />
               <div
                 *ngIf="
@@ -199,6 +207,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
                 formControlName="phone"
                 class="form-control"
                 placeholder="Enter your phone number"
+                autocomplete="tel"
               />
               <div
                 *ngIf="

@@ -31,7 +31,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         <app-progress-indicator [currentStep]="0"></app-progress-indicator>
         <h2>Sign In</h2>
 
-        <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="authForm" (ngSubmit)="onSubmit()" autocomplete="on">
           <div class="form-group">
             <label for="idType">ID Type *</label>
             <select id="idType" formControlName="idType" class="form-control">
@@ -59,6 +59,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
               class="form-control"
               placeholder="Enter 13-digit ID number"
               maxlength="13"
+              autocomplete="username"
             />
             <div
               *ngIf="

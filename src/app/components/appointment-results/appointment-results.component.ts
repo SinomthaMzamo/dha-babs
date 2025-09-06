@@ -2,13 +2,14 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
+import { SlotService } from '../../services/slot.service';
 
 interface AvailableSlot {
   id: string;
   date: string;
   time: string;
   branch: string;
-  serviceType: string;
 }
 
 interface SlotSearchCriteria {
@@ -21,7 +22,7 @@ interface SlotSearchCriteria {
 @Component({
   selector: 'app-appointment-results',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent],
   template: `
     <div class="appointment-results-container">
       <!-- Top Bar -->
@@ -38,7 +39,6 @@ interface SlotSearchCriteria {
 
       <!-- Main Content -->
       <div class="results-content">
-        <h1>Appointment Results</h1>
         <!-- Loading State -->
         <div *ngIf="isLoading" class="loading-container">
           <div class="loading-spinner"></div>
@@ -48,18 +48,39 @@ interface SlotSearchCriteria {
         <!-- No Slots Available -->
         <div *ngIf="!isLoading && noSlotsAvailable" class="no-slots-container">
           <div class="no-slots-card">
-            <div class="no-slots-icon">📅</div>
+            <app-progress-indicator
+              [currentStep]="2"
+              [steps]="stepTitles"
+            ></app-progress-indicator>
+            <!-- <div class="no-slots-icon">📅</div> -->
             <h3>No Available Slots Found</h3>
             <p>
               We couldn't find any available appointment slots for your selected
               criteria.
             </p>
-            <div class="no-slots-actions">
-              <button (click)="editSearch()" class="btn-primary">
+            <!-- Booking Summary - Always Visible -->
+            <div class="booking-summary">
+              <h3>📋 Booking Summary</h3>
+              <div class="summary-grid">
+                <div class="summary-item">
+                  <span class="summary-label">📍 Branch:</span>
+                  <span class="summary-value">{{
+                    getBranchDisplayName()
+                  }}</span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">📅 Date Range:</span>
+                  <span class="summary-value">{{ getDateRangeDisplay() }}</span>
+                </div>
+                <!-- <div class="summary-item">
+                  <span class="summary-label">🔍 Search Date:</span>
+                  <span class="summary-value">{{
+                    getSearchDateDisplay()
+                  }}</span>
+                </div> -->
+              </div>
+              <button (click)="editSearch()" class="btn-edit-search">
                 ✏️ Edit Search Criteria
-              </button>
-              <button (click)="goBack()" class="btn-secondary">
-                ← Back to Form
               </button>
             </div>
           </div>
@@ -70,6 +91,10 @@ interface SlotSearchCriteria {
           *ngIf="!isLoading && !noSlotsAvailable && availableSlots.length > 0"
           class="slots-container-wrapper"
         >
+          <app-progress-indicator
+            [currentStep]="2"
+            [steps]="stepTitles"
+          ></app-progress-indicator>
           <!-- Booking Summary - Always Visible -->
           <div class="booking-summary">
             <h3>📋 Booking Summary</h3>
@@ -82,10 +107,10 @@ interface SlotSearchCriteria {
                 <span class="summary-label">📅 Date Range:</span>
                 <span class="summary-value">{{ getDateRangeDisplay() }}</span>
               </div>
-              <div class="summary-item">
+              <!-- <div class="summary-item">
                 <span class="summary-label">🔍 Search Date:</span>
                 <span class="summary-value">{{ getSearchDateDisplay() }}</span>
-              </div>
+              </div> -->
             </div>
             <button (click)="editSearch()" class="btn-edit-search">
               ✏️ Edit Search Criteria
@@ -113,7 +138,7 @@ interface SlotSearchCriteria {
 
             <div class="slots-grouped">
               <div
-                *ngFor="let dayGroup of getSlotsGroupedByDay()"
+                *ngFor="let dayGroup of getPaginatedDayGroups()"
                 class="day-group"
               >
                 <div class="day-header" (click)="toggleDayGroup(dayGroup.date)">
@@ -138,9 +163,6 @@ interface SlotSearchCriteria {
                   <div *ngFor="let slot of dayGroup.slots" class="slot-item">
                     <div class="slot-info">
                       <div class="slot-time">{{ slot.time }}</div>
-                      <div class="slot-service">
-                        {{ getServiceDisplayName(slot.serviceType) }}
-                      </div>
                       <div class="slot-branch">
                         {{ getBranchDisplayName() }}
                       </div>
@@ -153,6 +175,30 @@ interface SlotSearchCriteria {
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- Pagination Controls -->
+            <div class="pagination-controls">
+              <!-- Load More Button -->
+              <button
+                *ngIf="hasMoreDays"
+                (click)="loadMoreDays()"
+                class="btn-load-more"
+              >
+                📅 See {{ getRemainingDaysCount() }} more day{{
+                  getRemainingDaysCount() !== 1 ? 's' : ''
+                }}
+                with available slots
+              </button>
+
+              <!-- Show Less Button -->
+              <button
+                *ngIf="currentPage > 1"
+                (click)="showLessDays()"
+                class="btn-show-less"
+              >
+                📅 Show Less ({{ daysPerPage }} days)
+              </button>
             </div>
           </div>
         </div>
@@ -314,11 +360,15 @@ interface SlotSearchCriteria {
       }
 
       .slots-container-wrapper {
-        background: transparent;
+        background: var(--DHAWhite);
         border-radius: 16px;
         padding: 30px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         border: 2px solid var(--DHAWhite);
+        max-width: 600px;
+        box-sizing: border-box;
+        display: block;
+        margin: 0 auto;
       }
 
       /* Available Slots */
@@ -327,68 +377,184 @@ interface SlotSearchCriteria {
         border-radius: 16px;
         padding: 30px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
         // border: 2px solid var(--DHAWhite);
       }
 
       /* Booking Summary */
       .booking-summary {
-        margin-bottom: 30px;
-        background: var(--DHAWhite);
+        margin-bottom: 20px;
+        background: linear-gradient(
+          135deg,
+          var(--DHAOffWhite) 0%,
+          #f8f9fa 100%
+        );
         border-radius: 12px;
-        padding: 25px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        border: 2px solid var(--DHAWhite);
+        padding: 18px;
+        border: 1px solid var(--DHABackGroundLightGray);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        position: relative;
+        overflow: hidden;
       }
+
+      // .booking-summary::before {
+      //   content: '';
+      //   position: absolute;
+      //   top: 0;
+      //   left: 0;
+      //   right: 0;
+      //   height: 3px;
+      //   background: linear-gradient(
+      //     90deg,
+      //     var(--DHAGreen) 0%,
+      //     var(--DHAOrange) 100%
+      //   );
+      // }
 
       .booking-summary h3 {
         color: var(--DHAGreen);
-        margin-bottom: 20px;
-        font-size: 20px;
+        margin-bottom: 15px;
+        margin-top: 0;
+        font-size: 18px;
+        font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       }
 
       .summary-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 15px;
-        margin-bottom: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+        margin-bottom: 15px;
       }
 
       .summary-item {
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 4px;
+        padding: 12px;
+        background: var(--DHAWhite);
+        border-radius: 8px;
+        border: 1px solid var(--DHABackGroundLightGray);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s ease;
+      }
+
+      .summary-item:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border-color: var(--DHAGreen);
       }
 
       .summary-label {
         font-weight: 600;
         color: var(--DHATextGrayDark);
-        font-size: 14px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        margin-bottom: 2px;
       }
 
       .summary-value {
         color: var(--DHAGreen);
-        font-weight: 500;
-        font-size: 16px;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 1.3;
+        word-break: break-word;
       }
 
       .btn-edit-search {
-        background: var(--DHAOrange);
+        background: linear-gradient(
+          135deg,
+          var(--DHAOrange) 0%,
+          var(--DHALightOrange) 100%
+        );
         color: var(--DHAWhite);
         border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(243, 128, 31, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        align-self: flex-start;
       }
 
       .btn-edit-search:hover {
-        background: var(--DHALightOrange);
+        background: linear-gradient(
+          135deg,
+          var(--DHALightOrange) 0%,
+          var(--DHAOrange) 100%
+        );
         transform: translateY(-1px);
+        box-shadow: 0 3px 12px rgba(243, 128, 31, 0.4);
+      }
+
+      .btn-edit-search:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 4px rgba(243, 128, 31, 0.3);
+      }
+
+      /* Pagination Controls */
+      .pagination-controls {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 2px solid var(--DHABackGroundLightGray);
+        flex-wrap: wrap;
+      }
+
+      .btn-load-more {
+        background: var(--DHAOrange);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 12px;
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(243, 128, 31, 0.2);
+      }
+
+      .btn-load-more:hover {
+        background: var(--DHALightOrange);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(243, 128, 31, 0.3);
+      }
+
+      .btn-load-more:active {
+        transform: translateY(0);
+      }
+
+      .btn-show-less {
+        background: var(--DHATextGray);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 12px;
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(90, 90, 90, 0.2);
+      }
+
+      .btn-show-less:hover {
+        background: var(--DHATextGrayDark);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(90, 90, 90, 0.3);
+      }
+
+      .btn-show-less:active {
+        transform: translateY(0);
       }
 
       .slots-header {
@@ -411,15 +577,17 @@ interface SlotSearchCriteria {
 
       .slots-header-right {
         display: flex;
-        align-items: center;
+        justify-content: space-between;
         gap: 20px;
         flex-wrap: wrap;
+        width: 100%;
       }
 
       .slots-count {
         color: var(--DHATextGray);
         font-size: 14px;
         font-weight: 500;
+        padding-top: 1rem;
       }
 
       .btn-return-menu {
@@ -656,6 +824,7 @@ interface SlotSearchCriteria {
 export class AppointmentResultsComponent implements OnInit {
   @Input() searchCriteria: SlotSearchCriteria | null = null;
   @Output() editSearchRequested = new EventEmitter<void>();
+  @Output() slotSelected = new EventEmitter<AvailableSlot>();
 
   availableSlots: AvailableSlot[] = [];
   isLoading = false;
@@ -664,82 +833,41 @@ export class AppointmentResultsComponent implements OnInit {
   // Day group expansion state
   dayGroupExpansionState: Map<string, boolean> = new Map();
 
-  // Mock data for demonstration
-  private mockSlots: AvailableSlot[] = [
-    {
-      id: '1',
-      date: '2024-12-20',
-      time: '09:00',
-      branch: 'ct-bellville',
-      serviceType: 'smart-id',
-    },
-    {
-      id: '2',
-      date: '2024-12-20',
-      time: '10:00',
-      branch: 'ct-bellville',
-      serviceType: 'passport',
-    },
-    {
-      id: '3',
-      date: '2024-12-20',
-      time: '11:00',
-      branch: 'ct-bellville',
-      serviceType: 'smart-id',
-    },
-    {
-      id: '4',
-      date: '2024-12-21',
-      time: '08:00',
-      branch: 'ct-bellville',
-      serviceType: 'id-book',
-    },
-    {
-      id: '5',
-      date: '2024-12-21',
-      time: '09:30',
-      branch: 'ct-bellville',
-      serviceType: 'passport',
-    },
-    {
-      id: '6',
-      date: '2024-12-21',
-      time: '13:00',
-      branch: 'ct-bellville',
-      serviceType: 'smart-id',
-    },
-    {
-      id: '7',
-      date: '2024-12-23',
-      time: '10:00',
-      branch: 'ct-bellville',
-      serviceType: 'birth-cert',
-    },
-    {
-      id: '8',
-      date: '2024-12-23',
-      time: '14:00',
-      branch: 'ct-bellville',
-      serviceType: 'marriage-cert',
-    },
-  ];
+  // Pagination state
+  daysPerPage = 5;
+  currentPage = 1;
+  totalDays = 0;
+  hasMoreDays = false;
 
-  constructor(private router: Router) {}
+  @Input() stepTitles: string[] = [];
+
+  constructor(private router: Router, private slotService: SlotService) {}
 
   ngOnInit() {
     // Scroll to top when component loads
     window.scrollTo(0, 0);
 
-    // Simulate loading and then show results
-    this.isLoading = true;
-    setTimeout(() => {
-      this.isLoading = false;
-      this.availableSlots = this.mockSlots;
-      this.noSlotsAvailable = this.availableSlots.length === 0;
+    // Load slots from the slot service
+    if (this.searchCriteria) {
+      this.isLoading = true;
+      this.slotService.searchAvailableSlots(this.searchCriteria).subscribe({
+        next: (slots) => {
+          this.isLoading = false;
+          this.availableSlots = slots;
+          this.noSlotsAvailable = this.availableSlots.length === 0;
 
-      // Scroll to top again when results are displayed
-      window.scrollTo(0, 0);
-    }, 2000);
+          // Scroll to top again when results are displayed
+          window.scrollTo(0, 0);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.noSlotsAvailable = true;
+          console.error('Error loading slots:', error);
+        },
+      });
+    } else {
+      this.noSlotsAvailable = true;
+    }
   }
 
   getBranchDisplayName(): string {
@@ -824,6 +952,30 @@ export class AppointmentResultsComponent implements OnInit {
     });
   }
 
+  getPaginatedDayGroups(): any[] {
+    const allDayGroups = this.getSlotsGroupedByDay();
+    this.totalDays = allDayGroups.length;
+    this.hasMoreDays = this.currentPage * this.daysPerPage < this.totalDays;
+
+    const startIndex = 0;
+    const endIndex = this.currentPage * this.daysPerPage;
+
+    return allDayGroups.slice(startIndex, endIndex);
+  }
+
+  loadMoreDays(): void {
+    this.currentPage++;
+  }
+
+  showLessDays(): void {
+    this.currentPage = 1;
+  }
+
+  getRemainingDaysCount(): number {
+    const remaining = this.totalDays - this.currentPage * this.daysPerPage;
+    return Math.max(0, remaining);
+  }
+
   toggleDayGroup(date: string): void {
     // Get the current state, defaulting to collapsed (false) for new groups
     const currentState = this.dayGroupExpansionState.get(date) ?? false;
@@ -831,21 +983,6 @@ export class AppointmentResultsComponent implements OnInit {
 
     // Trigger change detection by updating the availableSlots array reference
     this.availableSlots = [...this.availableSlots];
-  }
-
-  getServiceDisplayName(serviceType: string): string {
-    const serviceNames: { [key: string]: string } = {
-      'smart-id': 'Smart ID Card',
-      passport: 'Passport',
-      'id-book': 'ID Book',
-      'birth-cert': 'Birth Certificate',
-      'marriage-cert': 'Marriage Certificate',
-      'death-cert': 'Death Certificate',
-      citizenship: 'Citizenship',
-      visa: 'Visa Services',
-    };
-
-    return serviceNames[serviceType] || serviceType;
   }
 
   shouldShowReturnToMenu(): boolean {
@@ -857,10 +994,7 @@ export class AppointmentResultsComponent implements OnInit {
   }
 
   bookSlot(slot: AvailableSlot) {
-    // Simulate booking process
-    alert(
-      `Slot booked successfully! Your appointment is scheduled for ${slot.date} at ${slot.time}`
-    );
+    this.slotSelected.emit(slot);
   }
 
   returnToMenu() {

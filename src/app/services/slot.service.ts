@@ -13,7 +13,6 @@ export interface AvailableSlot {
   date: string;
   time: string;
   branch: string;
-  serviceType: string;
 }
 
 export interface SlotSearchCriteria {
@@ -27,133 +26,11 @@ export interface SlotSearchCriteria {
   providedIn: 'root',
 })
 export class SlotService {
-  // Mock data for available slots
-  private mockSlots: AvailableSlot[] = [
-    // Johannesburg Central
-    {
-      id: '1',
-      date: '2024-02-15',
-      time: '09:00',
-      branch: 'jhb-central',
-      serviceType: 'smart-id',
-    },
-    {
-      id: '2',
-      date: '2024-02-15',
-      time: '10:00',
-      branch: 'jhb-central',
-      serviceType: 'passport',
-    },
-    {
-      id: '3',
-      date: '2024-02-15',
-      time: '11:00',
-      branch: 'jhb-central',
-      serviceType: 'smart-id',
-    },
-    {
-      id: '4',
-      date: '2024-02-15',
-      time: '14:00',
-      branch: 'jhb-central',
-      serviceType: 'id-book',
-    },
-    {
-      id: '5',
-      date: '2024-02-16',
-      time: '09:00',
-      branch: 'jhb-central',
-      serviceType: 'passport',
-    },
-    {
-      id: '6',
-      date: '2024-02-16',
-      time: '13:00',
-      branch: 'jhb-central',
-      serviceType: 'smart-id',
-    },
-
-    // Sandton
-    {
-      id: '7',
-      date: '2024-02-15',
-      time: '10:30',
-      branch: 'jhb-sandton',
-      serviceType: 'smart-id',
-    },
-    {
-      id: '8',
-      date: '2024-02-15',
-      time: '15:00',
-      branch: 'jhb-sandton',
-      serviceType: 'passport',
-    },
-    {
-      id: '9',
-      date: '2024-02-16',
-      time: '11:00',
-      branch: 'jhb-sandton',
-      serviceType: 'smart-id',
-    },
-
-    // Pretoria Central
-    {
-      id: '10',
-      date: '2024-02-15',
-      time: '08:30',
-      branch: 'pta-central',
-      serviceType: 'smart-id',
-    },
-    {
-      id: '11',
-      date: '2024-02-15',
-      time: '12:00',
-      branch: 'pta-central',
-      serviceType: 'id-book',
-    },
-    {
-      id: '12',
-      date: '2024-02-16',
-      time: '09:30',
-      branch: 'pta-central',
-      serviceType: 'passport',
-    },
-
-    // Cape Town Central
-    {
-      id: '13',
-      date: '2024-02-15',
-      time: '10:00',
-      branch: 'ct-central',
-      serviceType: 'smart-id',
-    },
-    {
-      id: '14',
-      date: '2024-02-16',
-      time: '14:00',
-      branch: 'ct-central',
-      serviceType: 'passport',
-    },
-
-    // Durban Central
-    {
-      id: '15',
-      date: '2024-02-15',
-      time: '11:30',
-      branch: 'dbn-central',
-      serviceType: 'smart-id',
-    },
-    {
-      id: '16',
-      date: '2024-02-16',
-      time: '10:00',
-      branch: 'dbn-central',
-      serviceType: 'id-book',
-    },
-  ];
+  // Mock data for available slots - Only Tygervalley has slots
+  private mockSlots: AvailableSlot[] = [];
 
   constructor() {
-    this.generateBellvilleSlots();
+    this.generateTygervalleySlots();
   }
 
   /**
@@ -177,15 +54,8 @@ export class SlotService {
       const slotDate = new Date(slot.date);
       const branchMatch = slot.branch === criteria.branch;
       const dateMatch = slotDate >= startDate && slotDate <= endDate;
-      const serviceMatch = criteria.services.some(
-        (service) =>
-          slot.serviceType === service ||
-          (service === 'smart-id' && slot.serviceType === 'smart-id') ||
-          (service === 'id-book' && slot.serviceType === 'id-book') ||
-          (service === 'passport' && slot.serviceType === 'passport')
-      );
 
-      return branchMatch && dateMatch && serviceMatch;
+      return branchMatch && dateMatch;
     });
   }
 
@@ -264,30 +134,20 @@ export class SlotService {
   }
 
   /**
-   * Generate Bellville branch slots for the next 20 days
+   * Generate Tygervalley branch slots for the next 20 days
+   * Only 1-3 available 1-hour slots per day
    */
-  private generateBellvilleSlots(): void {
+  private generateTygervalleySlots(): void {
     const timeSlots = [
       '08:00',
-      '08:30',
       '09:00',
-      '09:30',
       '10:00',
-      '10:30',
       '11:00',
-      '11:30',
       '12:00',
-      '12:30',
       '13:00',
-      '13:30',
       '14:00',
-    ];
-    const serviceTypes = [
-      'smart-id',
-      'passport',
-      'id-book',
-      'birth-cert',
-      'marriage-cert',
+      '15:00',
+      '16:00',
     ];
 
     let slotId = 1000; // Start with a unique ID range
@@ -304,21 +164,18 @@ export class SlotService {
         continue;
       }
 
-      // Generate 3-6 random slots per day for better demonstration
-      const slotsPerDay = Math.floor(Math.random() * 4) + 3; // 3-6 slots
+      // Generate 1-3 random slots per day (1-hour slots only)
+      const slotsPerDay = Math.floor(Math.random() * 3) + 1; // 1-3 slots
       const shuffledTimes = [...timeSlots].sort(() => Math.random() - 0.5);
 
       for (let i = 0; i < slotsPerDay; i++) {
         const time = shuffledTimes[i];
-        const serviceType =
-          serviceTypes[Math.floor(Math.random() * serviceTypes.length)];
 
         this.mockSlots.push({
           id: slotId.toString(),
           date: dateStr,
           time: time,
-          branch: 'ct-bellville',
-          serviceType: serviceType,
+          branch: 'ct-tygervalley-main',
         });
 
         slotId++;

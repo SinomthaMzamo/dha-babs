@@ -1,9 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 import { AppointmentResultsComponent } from '../appointment-results/appointment-results.component';
-import { BookingStepIndicatorComponent } from '../booking-step-indicator/booking-step-indicator.component';
+import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
 
 interface SlotSearchCriteria {
   branch: string;
@@ -19,14 +25,23 @@ interface Service {
   checked: boolean;
 }
 
+interface BookingPerson {
+  id: string;
+  name: string;
+  type: 'Main Applicant' | 'Child' | 'Friend' | 'Family Member' | 'Other';
+  idNumber?: string;
+  selectedServices: Service[];
+}
+
 @Component({
   selector: 'app-book-service',
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     AppointmentFormComponent,
     AppointmentResultsComponent,
-    BookingStepIndicatorComponent,
+    ProgressIndicatorComponent,
   ],
   template: `
     <div class="book-service-container">
@@ -50,76 +65,119 @@ interface Service {
           class="booking-preview-container"
         >
           <div class="booking-preview-card">
-            <app-booking-step-indicator
+            <app-progress-indicator
               [currentStep]="getBookingStep()"
-            ></app-booking-step-indicator>
-            <h2>Schedule Your Appointment</h2>
-            <p class="preview-description">
-              Review your details and select the services you need
-            </p>
+              [steps]="stepTitles"
+            ></app-progress-indicator>
+            <h2>Select Services Required</h2>
 
-            <!-- User Details Preview -->
-            <div class="user-details-section">
-              <h3>Your Details</h3>
-              <div class="details-grid">
-                <div class="detail-item">
-                  <label>ID Number:</label>
-                  <span class="detail-value">{{ personalData?.idNumber }}</span>
+            <!-- Applicants List -->
+            <div class="applicants-list">
+              <div class="applicants-header">
+                <div class="header-info">
+                  <h4>Booking Applicants ({{ bookingPersons.length }})</h4>
+                  <p class="header-description">
+                    Manage applicants and their required services
+                  </p>
                 </div>
-                <div class="detail-item">
-                  <label>Full Name:</label>
-                  <span class="detail-value"
-                    >{{ personalData?.forenames }}
-                    {{ personalData?.lastName }}</span
+                <div class="header-actions">
+                  <button
+                    type="button"
+                    (click)="addPersonToBooking()"
+                    class="action-btn std"
+                    title="Add an accompanying applicant to this booking"
                   >
+                    <span class="btn-icon">👤+</span>
+                    <span class="btn-text">Add Applicant</span>
+                  </button>
+                  <button
+                    type="button"
+                    (click)="removePersonFromBooking()"
+                    class="action-btn std"
+                    [disabled]="bookingPersons.length <= 1"
+                    title="Remove an additional applicant from this booking"
+                  >
+                    <span class="btn-icon">👤-</span>
+                    <span class="btn-text">Remove</span>
+                  </button>
+                  <button
+                    type="button"
+                    (click)="clearAllPersons()"
+                    class="action-btn white"
+                    [disabled]="bookingPersons.length <= 1"
+                    title="Remove all additional applicants from this booking"
+                  >
+                    <span class="btn-icon">🗑️</span>
+                    <span class="btn-text">Clear All</span>
+                  </button>
                 </div>
-                <!-- <div class="detail-item">
-                  <label>Email:</label>
-                  <span class="detail-value">{{ personalData?.email }}</span>
-                </div>
-                <div class="detail-item">
-                  <label>Phone:</label>
-                  <span class="detail-value">{{ personalData?.phone }}</span>
-                </div> -->
               </div>
-            </div>
 
-            <!-- Services Section -->
-            <div class="services-section">
-              <h3>Selected Services</h3>
-              <div class="services-preview">
-                <div *ngIf="selectedServices.length === 0" class="no-services">
-                  <p>No services selected yet</p>
-                </div>
+              <div *ngIf="bookingPersons.length > 0" class="applicants-grid">
                 <div
-                  *ngIf="selectedServices.length > 0"
-                  class="services-badges"
+                  *ngFor="let person of bookingPersons; let i = index"
+                  class="applicant-card"
+                  [class.primary-applicant]="person.type === 'Main Applicant'"
                 >
-                  <div
-                    *ngFor="let service of selectedServices"
-                    class="service-badge"
-                  >
-                    <span class="service-name">{{ service.name }}</span>
+                  <div class="applicant-header">
+                    <div class="applicant-info">
+                      <span class="applicant-name"
+                        >{{ person.name }} ({{ person.type }})</span
+                      >
+                      <span class="applicant-type">{{ person.idNumber }}</span>
+                    </div>
                     <button
+                      *ngIf="bookingPersons.length > 1"
                       type="button"
-                      (click)="removeService(service)"
-                      class="remove-btn"
+                      (click)="removeSpecificPerson(i)"
+                      class="remove-applicant-btn"
+                      title="Remove this applicant"
                     >
                       ×
                     </button>
                   </div>
+
+                  <div class="applicant-services">
+                    <div class="services-header">
+                      <span class="services-label">Required Services:</span>
+                      <button
+                        type="button"
+                        (click)="editPersonServices(i)"
+                        class="edit-services-btn"
+                        title="Edit services for this applicant"
+                      >
+                        {{
+                          person.selectedServices.length === 0
+                            ? 'Add Services'
+                            : 'Edit Services'
+                        }}
+                      </button>
+                    </div>
+
+                    <div class="person-services-preview">
+                      <div
+                        *ngIf="person.selectedServices.length === 0"
+                        class="no-services"
+                      >
+                        <span>No services selected</span>
+                      </div>
+                      <div
+                        *ngFor="let service of person.selectedServices"
+                        class="service-badge"
+                      >
+                        <span>{{ service.name }}</span>
+                        <button
+                          type="button"
+                          (click)="removeServiceFromPerson(i, service)"
+                          class="remove-service-btn"
+                          title="Remove this service"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  (click)="openServiceModal()"
-                  class="btn-add-service"
-                >
-                  {{
-                    selectedServices.length === 0
-                      ? 'Add Services'
-                      : 'Edit Services'
-                  }}
-                </button>
               </div>
             </div>
 
@@ -131,7 +189,7 @@ interface Service {
               <button
                 type="button"
                 (click)="proceedToLocation()"
-                [disabled]="selectedServices.length === 0"
+                [disabled]="!hasAnyServicesSelected()"
                 class="btn-primary"
               >
                 Continue to Location
@@ -200,18 +258,465 @@ interface Service {
           </div>
         </div>
 
+        <!-- Add Applicant Modal -->
+        <div
+          *ngIf="showAddApplicantModal"
+          class="modal-overlay"
+          (click)="closeAddApplicantModal()"
+        >
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+              <h3>Add New Applicant</h3>
+              <button
+                type="button"
+                (click)="closeAddApplicantModal()"
+                class="modal-close"
+              >
+                ×
+              </button>
+            </div>
+            <div class="modal-body">
+              <form
+                [formGroup]="addApplicantForm"
+                (ngSubmit)="saveNewApplicant()"
+              >
+                <div class="form-group">
+                  <label>Applicant Type *</label>
+                  <div class="radio-group">
+                    <label class="radio-option">
+                      <input
+                        type="radio"
+                        formControlName="applicantType"
+                        value="Child"
+                        name="applicantType"
+                      />
+                      <span class="radio-label">Child</span>
+                    </label>
+                    <label class="radio-option">
+                      <input
+                        type="radio"
+                        formControlName="applicantType"
+                        value="Friend"
+                        name="applicantType"
+                      />
+                      <span class="radio-label">Friend</span>
+                    </label>
+                    <label class="radio-option">
+                      <input
+                        type="radio"
+                        formControlName="applicantType"
+                        value="Family Member"
+                        name="applicantType"
+                      />
+                      <span class="radio-label">Family Member</span>
+                    </label>
+                    <label class="radio-option">
+                      <input
+                        type="radio"
+                        formControlName="applicantType"
+                        value="Other"
+                        name="applicantType"
+                      />
+                      <span class="radio-label">Other</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Validation Method *</label>
+                  <div class="radio-group">
+                    <label class="radio-option">
+                      <input
+                        type="radio"
+                        formControlName="validationType"
+                        value="id"
+                        name="validationType"
+                        (change)="onValidationTypeChange('id')"
+                      />
+                      <span class="radio-label">ID Number</span>
+                    </label>
+                    <label class="radio-option">
+                      <input
+                        type="radio"
+                        formControlName="validationType"
+                        value="passport"
+                        name="validationType"
+                        (change)="onValidationTypeChange('passport')"
+                      />
+                      <span class="radio-label">Passport Number</span>
+                    </label>
+                    <label class="radio-option">
+                      <input
+                        type="radio"
+                        formControlName="validationType"
+                        value="names"
+                        name="validationType"
+                        (change)="onValidationTypeChange('names')"
+                      />
+                      <span class="radio-label">Full Names</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- ID Number Field -->
+                <div class="form-group" *ngIf="isValidationTypeSelected('id')">
+                  <label for="idNumber">ID Number *</label>
+                  <input
+                    type="text"
+                    id="idNumber"
+                    formControlName="idNumber"
+                    class="form-control"
+                    placeholder="Enter 13-digit ID number"
+                    maxlength="13"
+                    autocomplete="username"
+                  />
+                  <div
+                    *ngIf="
+                      addApplicantForm.get('idNumber')?.invalid &&
+                      addApplicantForm.get('idNumber')?.touched
+                    "
+                    class="error-message"
+                  >
+                    <div
+                      *ngIf="addApplicantForm.get('idNumber')?.errors?.['required']"
+                    >
+                      ID number is required
+                    </div>
+                    <div
+                      *ngIf="addApplicantForm.get('idNumber')?.errors?.['pattern']"
+                    >
+                      ID number must be exactly 13 digits
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Passport Number Field -->
+                <div
+                  class="form-group"
+                  *ngIf="isValidationTypeSelected('passport')"
+                >
+                  <label for="passportNumber">Passport Number *</label>
+                  <input
+                    type="text"
+                    id="passportNumber"
+                    formControlName="passportNumber"
+                    class="form-control"
+                    placeholder="Enter passport number"
+                    maxlength="12"
+                    autocomplete="off"
+                  />
+                  <div
+                    *ngIf="
+                      addApplicantForm.get('passportNumber')?.invalid &&
+                      addApplicantForm.get('passportNumber')?.touched
+                    "
+                    class="error-message"
+                  >
+                    <div
+                      *ngIf="addApplicantForm.get('passportNumber')?.errors?.['required']"
+                    >
+                      Passport number is required
+                    </div>
+                    <div
+                      *ngIf="addApplicantForm.get('passportNumber')?.errors?.['pattern']"
+                    >
+                      Please enter a valid passport number
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Forenames and Last Name Fields -->
+                <div *ngIf="isValidationTypeSelected('names')">
+                  <div class="form-group">
+                    <label for="forenames">Forenames *</label>
+                    <input
+                      type="text"
+                      id="forenames"
+                      formControlName="forenames"
+                      class="form-control"
+                      placeholder="Enter forenames as they appear on ID"
+                      autocomplete="given-name"
+                    />
+                    <div
+                      *ngIf="
+                        addApplicantForm.get('forenames')?.invalid &&
+                        addApplicantForm.get('forenames')?.touched
+                      "
+                      class="error-message"
+                    >
+                      <div
+                        *ngIf="addApplicantForm.get('forenames')?.errors?.['required']"
+                      >
+                        Forenames are required
+                      </div>
+                      <div
+                        *ngIf="addApplicantForm.get('forenames')?.errors?.['minlength']"
+                      >
+                        Forenames must be at least 2 characters
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="lastName">Last Name *</label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      formControlName="lastName"
+                      class="form-control"
+                      placeholder="Enter last name as it appears on ID"
+                      autocomplete="family-name"
+                    />
+                    <div
+                      *ngIf="
+                        addApplicantForm.get('lastName')?.invalid &&
+                        addApplicantForm.get('lastName')?.touched
+                      "
+                      class="error-message"
+                    >
+                      <div
+                        *ngIf="addApplicantForm.get('lastName')?.errors?.['required']"
+                      >
+                        Last name is required
+                      </div>
+                      <div
+                        *ngIf="addApplicantForm.get('lastName')?.errors?.['minlength']"
+                      >
+                        Last name must be at least 2 characters
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                (click)="closeAddApplicantModal()"
+                class="btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                (click)="saveNewApplicant()"
+                [disabled]="addApplicantForm.invalid"
+                class="btn-primary"
+              >
+                Add Applicant
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Person Service Selection Modal -->
+        <div
+          *ngIf="showPersonServiceModal"
+          class="modal-overlay"
+          (click)="closePersonServiceModal()"
+        >
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+              <h3>
+                Select Services for
+                {{ bookingPersons[currentPersonIndex].name }}
+              </h3>
+              <button
+                type="button"
+                (click)="closePersonServiceModal()"
+                class="modal-close"
+              >
+                ×
+              </button>
+            </div>
+            <div class="modal-body">
+              <p class="modal-description">
+                Choose the services required for this applicant:
+              </p>
+              <div class="services-list">
+                <div
+                  *ngFor="let service of tempPersonServices"
+                  class="service-item"
+                >
+                  <label class="service-checkbox">
+                    <input
+                      type="checkbox"
+                      [checked]="service.checked"
+                      (change)="togglePersonService(service.id)"
+                    />
+                    <span class="checkmark"></span>
+                  </label>
+                  <div class="service-details">
+                    <div class="service-name">{{ service.name }}</div>
+                    <div class="service-description">
+                      {{ service.description }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                (click)="closePersonServiceModal()"
+                class="btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                (click)="savePersonServices()"
+                class="btn-primary"
+              >
+                Save Services
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Show Form or Results based on state -->
         <app-appointment-form
           *ngIf="currentStep === 'form'"
+          [stepTitles]="stepTitles"
           [selectedServices]="selectedServices"
+          [bookingPersons]="bookingPersons"
+          [searchCriteria]="searchCriteria"
           (formSubmitted)="onFormSubmitted($event)"
+          (goBackRequested)="onAppointmentFormBackRequested()"
         ></app-appointment-form>
 
         <app-appointment-results
           *ngIf="currentStep === 'results'"
+          [stepTitles]="stepTitles"
           [searchCriteria]="searchCriteria"
           (editSearchRequested)="onEditSearchRequested()"
+          (slotSelected)="onSlotSelected($event)"
         ></app-appointment-results>
+
+        <!-- Confirm Booking Step -->
+        <div
+          *ngIf="currentStep === 'confirm'"
+          class="confirm-booking-container"
+        >
+          <div class="confirm-booking-card">
+            <app-progress-indicator
+              [currentStep]="4"
+              [steps]="stepTitles"
+            ></app-progress-indicator>
+
+            <h2>Confirm Your Booking</h2>
+            <p class="confirm-description">
+              Please review all details before confirming your appointment
+              booking.
+            </p>
+
+            <!-- Personal Information -->
+            <div class="booking-section">
+              <h3>👤 Personal Information</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Full Name:</span>
+                  <span class="info-value">{{
+                    personalData?.fullName || 'N/A'
+                  }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">ID Number:</span>
+                  <span class="info-value">{{
+                    personalData?.idNumber || 'N/A'
+                  }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Phone:</span>
+                  <span class="info-value">{{
+                    personalData?.phone || 'N/A'
+                  }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Email:</span>
+                  <span class="info-value">{{
+                    personalData?.email || 'N/A'
+                  }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Booking Details -->
+            <div class="booking-section">
+              <h3>📋 Booking Details</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Branch:</span>
+                  <span class="info-value">{{ getBranchDisplayName() }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Appointment Date:</span>
+                  <span class="info-value">{{
+                    getFormattedDate(selectedSlot?.date)
+                  }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Appointment Time:</span>
+                  <span class="info-value">{{
+                    selectedSlot?.time || 'N/A'
+                  }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Total Applicants:</span>
+                  <span class="info-value">{{ bookingPersons.length }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Selected Services -->
+            <div class="booking-section">
+              <h3>🔧 Selected Services</h3>
+              <div class="services-summary">
+                <div
+                  *ngFor="let person of bookingPersons"
+                  class="person-services"
+                >
+                  <h4>{{ person.name }} ({{ person.type }})</h4>
+                  <div class="services-list">
+                    <div
+                      *ngFor="let service of person.selectedServices"
+                      class="service-item"
+                    >
+                      {{ service.name }}
+                    </div>
+                    <div
+                      *ngIf="
+                        !person.selectedServices ||
+                        person.selectedServices.length === 0
+                      "
+                      class="no-services"
+                    >
+                      No services selected
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="confirm-actions">
+              <button
+                type="button"
+                (click)="goBackToResults()"
+                class="btn-secondary"
+              >
+                ← Back to Slots
+              </button>
+              <button
+                type="button"
+                (click)="confirmBooking()"
+                class="btn-primary"
+              >
+                ✅ Confirm Booking
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   `,
@@ -219,6 +724,7 @@ interface Service {
     `
       :host {
         --DHAGreen: #016635;
+        --DHAHoverGreen: rgb(1, 73, 38);
         --DHAOrange: #f3801f;
         --DHALightOrange: #f8ab18;
         --DHAWhite: #ffffff;
@@ -229,6 +735,7 @@ interface Service {
         --DHADisabledButtonGray: #e6e6e6;
         --DHABackGroundLightGray: #f4f4f4;
         --DividerGray: #949494;
+        --DHAOffBlack: rgb(42, 41, 41);
       }
 
       .book-service-container {
@@ -318,13 +825,13 @@ interface Service {
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         padding: 30px;
         width: 600px;
-        // width: fit-content;
-        // min-width: 400px;
+        /* width: fit-content; */
+        /* min-width: 400px; */
         box-sizing: border-box;
       }
 
       .booking-preview-card h2 {
-        color: var(--DHATextGrayDark);
+        color: var(--DHAGreen);
         font-size: 24px;
         margin-bottom: 8px;
         text-align: center;
@@ -345,7 +852,7 @@ interface Service {
       .user-details-section h3,
       .services-section h3 {
         color: var(--DHATextGrayDark);
-        font-size: 18px;
+        font-size: 12px;
         margin-bottom: 10px;
         border-bottom: 1px solid var(--DHAGreen);
         padding-bottom: 6px;
@@ -371,13 +878,13 @@ interface Service {
       .detail-item label {
         font-weight: 600;
         color: var(--DHATextGrayDark);
-        font-size: 13px;
+        font-size: 12px;
       }
 
       .detail-value {
         color: var(--DHAGreen);
         font-weight: 500;
-        font-size: 13px;
+        font-size: 10px;
         text-align: right;
         word-break: break-all;
       }
@@ -400,18 +907,18 @@ interface Service {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        margin-bottom: 15px;
+        /* margin-bottom: 15px; */
       }
 
       .service-badge {
         background: var(--DHAGreen);
         color: var(--DHAWhite);
-        padding: 6px 10px;
+        padding: 2px 8px;
         border-radius: 16px;
         display: flex;
         align-items: center;
         gap: 6px;
-        font-size: 13px;
+        font-size: 10px;
       }
 
       .service-badge .remove-btn {
@@ -449,11 +956,397 @@ interface Service {
         margin: 0 auto;
         text-decoration: underline;
         text-underline-offset: 4px;
+        padding-bottom: 0;
       }
 
       .btn-add-service:hover {
         color: var(--DHALightOrange);
         text-decoration-thickness: 2px;
+      }
+
+      /* Integrated Applicants List Styles */
+      .applicants-list {
+        /* background: var(--DHAOffWhite); */
+        /* border: 1px solid var(--DHABackGroundLightGray); */
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 25px;
+      }
+
+      .applicants-header {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 25px;
+        gap: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--DHABackGroundLightGray);
+      }
+
+      .header-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .header-info h4 {
+        color: var(--DHATextGrayDark);
+        font-size: 18px;
+        margin-bottom: 8px;
+        font-weight: 600;
+        line-height: 1.3;
+        margin-top: 0;
+      }
+
+      .header-description {
+        color: var(--DHATextGray);
+        font-size: 13px;
+        margin: 0;
+        line-height: 1.5;
+        max-width: 400px;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        flex-shrink: 0;
+      }
+
+      .action-btn {
+        background: var(--DHAOffWhite);
+        border: 1px solid var(--DHABackGroundLightGray);
+        color: var(--DHATextGrayDark);
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 100px;
+        white-space: nowrap;
+        height: 40px;
+        justify-content: center;
+      }
+      .action-btn.std {
+        background: var(--DHAWhite);
+        color: var(--DHATextGrayDark);
+        border-color: var(--DHABackGroundLightGray);
+      }
+      .action-btn.std:hover:not(:disabled) {
+        background: var(--DHABackGroundLightGray);
+        color: var(--DHATextGrayDark);
+        border-color: var(--DHABackGroundLightGray);
+      }
+
+      .action-btn.primary {
+        background: var(--DHAGreen);
+        color: var(--DHAWhite);
+        border-color: var(--DHAGreen);
+      }
+
+      .action-btn.primary:hover:not(:disabled) {
+        background: var(--DHAHoverGreen);
+        border-color: var(--DHAHoverGreen);
+      }
+
+      .action-btn.secondary:hover:not(:disabled) {
+        background: var(--DHABackGroundLightGray);
+        border-color: var(--DHAGreen);
+        color: var(--DHAGreen);
+      }
+
+      .action-btn.danger {
+        color: var(--DHARed);
+        border-color: var(--DHARed);
+      }
+
+      .action-btn.danger:hover:not(:disabled) {
+        background: var(--DHARed);
+        color: var(--DHAWhite);
+      }
+
+      .action-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .btn-icon {
+        font-size: 14px;
+      }
+
+      .btn-text {
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      /* Responsive styles for applicants header */
+      @media (max-width: 768px) {
+        .applicants-header {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 20px;
+          padding-bottom: 15px;
+        }
+
+        .header-info h4 {
+          font-size: 16px;
+        }
+
+        .header-description {
+          font-size: 12px;
+          max-width: none;
+        }
+
+        .header-actions {
+          justify-content: stretch;
+          gap: 10px;
+        }
+
+        .action-btn {
+          flex: 1;
+          min-width: 0;
+          height: 44px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header-actions {
+          flex-direction: column;
+        }
+
+        .action-btn {
+          width: 100%;
+        }
+      }
+
+      .applicants-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .applicant-card {
+        background: var(--DHAWhite);
+        border: 1px solid var(--DHABackGroundLightGray);
+        border-radius: 10px;
+        padding: 16px;
+        transition: all 0.3s ease;
+      }
+
+      .applicant-card:hover {
+        border-color: var(--DHAGreen);
+        box-shadow: 0 2px 8px rgba(1, 102, 53, 0.1);
+      }
+
+      .applicant-card.primary-applicant {
+        border-color: var(--DHAGreen);
+        background: linear-gradient(
+          135deg,
+          var(--DHAOffWhite) 0%,
+          var(--DHAWhite) 100%
+        );
+      }
+
+      .applicant-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .applicant-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .applicant-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--DHATextGrayDark);
+      }
+
+      .applicant-type {
+        font-size: 11px;
+        color: var(--DHATextGray);
+        font-style: italic;
+        text-transform: capitalize;
+      }
+
+      .remove-applicant-btn {
+        background: var(--DHARed);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .remove-applicant-btn:hover {
+        background: var(--DHAMaroon);
+        transform: scale(1.1);
+      }
+
+      .applicant-services {
+        border-top: 1px solid var(--DHABackGroundLightGray);
+        padding-top: 12px;
+      }
+
+      .services-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .services-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--DHATextGrayDark);
+      }
+
+      .edit-services-btn {
+        background: none;
+        color: var(--DHAOrange);
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
+      .edit-services-btn:hover {
+        color: var(--DHALightOrange);
+        background: rgba(243, 128, 31, 0.1);
+      }
+
+      .person-services-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .person-services-preview .service-badge {
+        background: var(--DHAGreen);
+        color: var(--DHAWhite);
+        padding: 4px 8px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+      }
+
+      .person-services-preview .remove-service-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        font-size: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .person-services-preview .remove-service-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .person-services-preview .no-services {
+        color: var(--DHATextGray);
+        font-size: 11px;
+        font-style: italic;
+      }
+
+      /* Add Applicant Modal Styles */
+      .radio-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+      }
+
+      .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+      }
+
+      .radio-option:hover {
+        background: var(--DHABackGroundLightGray);
+        border-color: var(--DHAGreen);
+      }
+
+      .radio-option input[type='radio'] {
+        margin: 0;
+        width: 16px;
+        height: 16px;
+        accent-color: var(--DHAGreen);
+      }
+
+      .radio-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--DHATextGrayDark);
+      }
+
+      .modal-content .form-group {
+        margin-bottom: 20px;
+      }
+
+      .modal-content .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--DHATextGrayDark);
+        font-size: 14px;
+      }
+
+      .modal-content .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid var(--DHABackGroundLightGray);
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      .modal-content .form-control:focus {
+        outline: none;
+        border-color: var(--DHAGreen);
+      }
+
+      .modal-content .error-message {
+        color: var(--DHARed);
+        font-size: 12px;
+        margin-top: 4px;
+        font-weight: 500;
       }
 
       .action-buttons {
@@ -480,7 +1373,7 @@ interface Service {
       }
 
       .btn-primary:hover:not(:disabled) {
-        background: var(--DHAMaroon);
+        background: var(--DHAHoverGreen);
       }
 
       .btn-primary:disabled {
@@ -519,7 +1412,8 @@ interface Service {
         max-width: 500px;
         width: 100%;
         max-height: 80vh;
-        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       }
 
@@ -559,6 +1453,9 @@ interface Service {
 
       .modal-body {
         padding: 20px;
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
       }
 
       .modal-description {
@@ -567,12 +1464,12 @@ interface Service {
         font-size: 14px;
       }
 
-      .services-list {
+      .modal-body .services-list {
         display: grid;
         gap: 15px;
       }
 
-      .service-item {
+      .modal-body .service-item {
         display: flex;
         align-items: flex-start;
         gap: 12px;
@@ -580,25 +1477,26 @@ interface Service {
         border: 1px solid var(--DHABackGroundLightGray);
         border-radius: 8px;
         transition: all 0.2s;
+        background: var(--DHAWhite);
       }
 
-      .service-item:hover {
+      .modal-body .service-item:hover {
         border-color: var(--DHAGreen);
         background: var(--DHAOffWhite);
       }
 
-      .service-checkbox {
+      .modal-body .service-checkbox {
         position: relative;
         cursor: pointer;
         margin-top: 2px;
       }
 
-      .service-checkbox input {
+      .modal-body .service-checkbox input {
         opacity: 0;
         position: absolute;
       }
 
-      .checkmark {
+      .modal-body .checkmark {
         width: 20px;
         height: 20px;
         border: 2px solid var(--DHATextGray);
@@ -608,12 +1506,12 @@ interface Service {
         transition: all 0.2s;
       }
 
-      .service-checkbox input:checked + .checkmark {
+      .modal-body .service-checkbox input:checked + .checkmark {
         background: var(--DHAGreen);
         border-color: var(--DHAGreen);
       }
 
-      .service-checkbox input:checked + .checkmark::after {
+      .modal-body .service-checkbox input:checked + .checkmark::after {
         content: '✓';
         position: absolute;
         top: 50%;
@@ -624,19 +1522,19 @@ interface Service {
         font-weight: bold;
       }
 
-      .service-details {
+      .modal-body .service-details {
         flex: 1;
       }
 
-      .service-details .service-name {
+      .modal-body .service-details .service-name {
         font-weight: 600;
-        color: var(--DHATextGrayDark);
+        color: var(--DHAGreen);
         margin-bottom: 4px;
         font-size: 16px;
       }
 
-      .service-details .service-description {
-        color: var(--DHATextGray);
+      .modal-body .service-details .service-description {
+        color: var(--DHATextGrayDark);
         font-size: 14px;
         line-height: 1.4;
       }
@@ -646,6 +1544,7 @@ interface Service {
         gap: 15px;
         padding: 20px;
         border-top: 1px solid var(--DHABackGroundLightGray);
+        flex-shrink: 0;
       }
 
       .modal-footer .btn-secondary,
@@ -706,16 +1605,214 @@ interface Service {
         .modal-footer {
           flex-direction: column;
         }
+
+        /* Confirm Booking Styles */
+        .confirm-booking-container {
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          min-height: 100vh;
+          padding: 20px;
+          background: var(--DHABackGroundLightGray);
+        }
+
+        .confirm-booking-card {
+          background: var(--DHAWhite);
+          border-radius: 16px;
+          padding: 40px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+          border: 2px solid var(--DHAWhite);
+          max-width: 800px;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .confirm-booking-card h2 {
+          color: var(--DHAGreen);
+          margin-bottom: 10px;
+          font-size: 28px;
+          font-weight: 700;
+          text-align: center;
+        }
+
+        .confirm-description {
+          color: var(--DHATextGrayDark);
+          text-align: center;
+          margin-bottom: 40px;
+          font-size: 16px;
+          line-height: 1.5;
+        }
+
+        .booking-section {
+          margin-bottom: 30px;
+          padding: 25px;
+          background: var(--DHAOffWhite);
+          border-radius: 12px;
+          border: 1px solid var(--DHABackGroundLightGray);
+        }
+
+        .booking-section h3 {
+          color: var(--DHAGreen);
+          margin-bottom: 20px;
+          font-size: 20px;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 15px;
+        }
+
+        .info-item {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          padding: 15px;
+          background: var(--DHAWhite);
+          border-radius: 8px;
+          border: 1px solid var(--DHABackGroundLightGray);
+        }
+
+        .info-label {
+          font-weight: 600;
+          color: var(--DHATextGrayDark);
+          font-size: 13px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .info-value {
+          color: var(--DHAGreen);
+          font-weight: 600;
+          font-size: 15px;
+          word-break: break-word;
+        }
+
+        .services-summary {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .person-services h4 {
+          color: var(--DHAGreen);
+          margin-bottom: 10px;
+          font-size: 16px;
+          font-weight: 600;
+        }
+
+        .services-summary .services-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .services-summary .service-item {
+          background: var(--DHAGreen);
+          color: var(--DHAWhite);
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 13px;
+          font-weight: 500;
+        }
+
+        .no-services {
+          color: var(--DHATextGray);
+          font-style: italic;
+          font-size: 14px;
+        }
+
+        .confirm-actions {
+          display: flex;
+          justify-content: space-between;
+          gap: 20px;
+          margin-top: 40px;
+          padding-top: 30px;
+          border-top: 2px solid var(--DHABackGroundLightGray);
+        }
+
+        .btn-secondary {
+          background: var(--DHATextGray);
+          color: var(--DHAWhite);
+          border: none;
+          border-radius: 10px;
+          padding: 15px 30px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          flex: 1;
+        }
+
+        .btn-secondary:hover {
+          background: var(--DHATextGrayDark);
+          transform: translateY(-2px);
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, var(--DHAGreen) 0%, #018a3a 100%);
+          color: var(--DHAWhite);
+          border: none;
+          border-radius: 10px;
+          padding: 15px 30px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          flex: 1;
+          box-shadow: 0 4px 15px rgba(1, 102, 53, 0.3);
+        }
+
+        .btn-primary:hover {
+          background: linear-gradient(135deg, #018a3a 0%, var(--DHAGreen) 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(1, 102, 53, 0.4);
+        }
+
+        @media (max-width: 768px) {
+          .confirm-booking-container {
+            padding: 10px;
+          }
+
+          .confirm-booking-card {
+            padding: 20px;
+          }
+
+          .info-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .confirm-actions {
+            flex-direction: column;
+          }
+        }
       }
     `,
   ],
 })
 export class BookServiceComponent implements OnInit {
-  currentStep: 'preview' | 'form' | 'results' = 'preview';
+  currentStep: 'preview' | 'form' | 'results' | 'confirm' = 'preview';
+  stepTitles: string[] = [
+    'Add Service(s)',
+    'Appointment Details',
+    'Available Slots',
+    'Confirm Booking',
+  ];
   showServiceModal = false;
   searchCriteria: SlotSearchCriteria | null = null;
+  selectedSlot: any = null;
   personalData: any = null;
   selectedServices: Service[] = [];
+  bookingPersons: BookingPerson[] = [];
+  showPersonServiceModal = false;
+  currentPersonIndex = -1;
+  tempPersonServices: Service[] = [];
+  showAddApplicantModal = false;
+  addApplicantForm: FormGroup;
   availableServices: Service[] = [
     {
       id: 'id-card',
@@ -755,13 +1852,33 @@ export class BookServiceComponent implements OnInit {
     },
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private fb: FormBuilder) {
+    this.addApplicantForm = this.fb.group({
+      applicantType: ['', Validators.required],
+      validationType: ['', Validators.required],
+      idNumber: [''],
+      passportNumber: [''],
+      forenames: [''],
+      lastName: [''],
+    });
+  }
 
   ngOnInit() {
     // Load personal data from session storage
     const personalDataStr = sessionStorage.getItem('personalData');
     if (personalDataStr) {
       this.personalData = JSON.parse(personalDataStr);
+
+      // Initialize booking persons with the current user
+      this.bookingPersons = [
+        {
+          id: 'self',
+          name: `${this.personalData.forenames} ${this.personalData.lastName}`,
+          type: 'Main Applicant',
+          idNumber: this.personalData.idNumber,
+          selectedServices: [...this.selectedServices], // Copy current services
+        },
+      ];
     } else {
       // Redirect to menu if no personal data
       this.router.navigate(['/menu']);
@@ -835,6 +1952,17 @@ export class BookServiceComponent implements OnInit {
   }
 
   proceedToLocation() {
+    // Collect all services from all persons
+    this.selectedServices = [];
+    this.bookingPersons.forEach((person) => {
+      person.selectedServices.forEach((service) => {
+        // Avoid duplicates
+        if (!this.selectedServices.some((s) => s.id === service.id)) {
+          this.selectedServices.push(service);
+        }
+      });
+    });
+
     this.currentStep = 'form';
     window.scrollTo(0, 0);
   }
@@ -863,6 +1991,64 @@ export class BookServiceComponent implements OnInit {
     window.scrollTo(0, 0);
   }
 
+  onAppointmentFormBackRequested(): void {
+    this.currentStep = 'preview';
+  }
+
+  onSlotSelected(slot: any): void {
+    this.selectedSlot = slot;
+    this.currentStep = 'confirm';
+    window.scrollTo(0, 0);
+  }
+
+  goBackToResults(): void {
+    this.currentStep = 'results';
+    window.scrollTo(0, 0);
+  }
+
+  confirmBooking(): void {
+    // Here you would typically send the booking data to your backend
+    const bookingData = {
+      personalData: this.personalData,
+      selectedSlot: this.selectedSlot,
+      bookingPersons: this.bookingPersons,
+      searchCriteria: this.searchCriteria,
+    };
+
+    // For now, show a success message
+    alert(
+      `Booking confirmed successfully! Your appointment is scheduled for ${this.getFormattedDate(
+        this.selectedSlot.date
+      )} at ${this.selectedSlot.time}`
+    );
+
+    // Navigate back to menu or home
+    this.router.navigate(['/menu']);
+  }
+
+  getFormattedDate(dateString: string): string {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-ZA', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  }
+
+  getBranchDisplayName(): string {
+    if (!this.searchCriteria?.branch) return 'N/A';
+
+    // This would typically come from your branch data
+    // For now, return a formatted version of the branch ID
+    const branchId = this.searchCriteria.branch;
+    if (branchId === 'ct-tygervalley-main') {
+      return 'Tygervalley Main Branch';
+    }
+    return branchId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+  }
+
   goBack() {
     this.router.navigate(['/menu']);
   }
@@ -876,10 +2062,208 @@ export class BookServiceComponent implements OnInit {
     // Step 1: Add Service(s) - when on preview page
     // Step 2: Appointment Details - when on form page
     if (this.currentStep === 'preview') {
-      return 1; // Add Service(s)
+      return 0; // Add Service(s)
     } else if (this.currentStep === 'form') {
-      return 2; // Appointment Details
+      return 1; // Appointment Details
     }
-    return 1; // Default to Add Service(s)
+    return 0; // Default to Add Service(s)
+  }
+
+  // Booking Person Management Methods
+  addPersonToBooking(): void {
+    this.addApplicantForm.reset();
+    this.showAddApplicantModal = true;
+  }
+
+  removePersonFromBooking(): void {
+    if (this.bookingPersons.length <= 1) return;
+
+    const personNames = this.bookingPersons
+      .map((p, i) => `${i + 1}. ${p.name} (${p.type})`)
+      .join('\n');
+    const selection = prompt(
+      `Select person to remove:\n${personNames}\n\nEnter number (1-${this.bookingPersons.length}):`
+    );
+    const index = parseInt(selection || '0') - 1;
+
+    if (index >= 0 && index < this.bookingPersons.length) {
+      this.bookingPersons.splice(index, 1);
+    }
+  }
+
+  removeSpecificPerson(index: number): void {
+    if (
+      this.bookingPersons.length > 1 &&
+      index >= 0 &&
+      index < this.bookingPersons.length
+    ) {
+      this.bookingPersons.splice(index, 1);
+    }
+  }
+
+  clearAllPersons(): void {
+    if (this.bookingPersons.length <= 1) return;
+
+    if (
+      confirm(
+        'Are you sure you want to remove all additional applicants from this booking?'
+      )
+    ) {
+      // Keep only the primary applicant (Self)
+      this.bookingPersons = this.bookingPersons.filter(
+        (person) => person.type === 'Main Applicant'
+      );
+    }
+  }
+
+  // Person Service Management Methods
+  editPersonServices(personIndex: number): void {
+    const person = this.bookingPersons[personIndex];
+    if (!person) return;
+
+    // Create a copy of available services with current selections
+    const availableServices = this.availableServices.map((service) => ({
+      ...service,
+      checked: person.selectedServices.some(
+        (selected) => selected.id === service.id
+      ),
+    }));
+
+    // Show service selection modal for this person
+    this.showPersonServiceModal = true;
+    this.currentPersonIndex = personIndex;
+    this.tempPersonServices = [...availableServices];
+  }
+
+  savePersonServices(): void {
+    if (
+      this.currentPersonIndex >= 0 &&
+      this.currentPersonIndex < this.bookingPersons.length
+    ) {
+      const selectedServices = this.tempPersonServices.filter(
+        (service) => service.checked
+      );
+      this.bookingPersons[this.currentPersonIndex].selectedServices =
+        selectedServices;
+    }
+    this.closePersonServiceModal();
+  }
+
+  closePersonServiceModal(): void {
+    this.showPersonServiceModal = false;
+    this.currentPersonIndex = -1;
+    this.tempPersonServices = [];
+  }
+
+  togglePersonService(serviceId: string): void {
+    const service = this.tempPersonServices.find((s) => s.id === serviceId);
+    if (service) {
+      service.checked = !service.checked;
+    }
+  }
+
+  removeServiceFromPerson(personIndex: number, service: Service): void {
+    if (personIndex >= 0 && personIndex < this.bookingPersons.length) {
+      const person = this.bookingPersons[personIndex];
+      person.selectedServices = person.selectedServices.filter(
+        (s) => s.id !== service.id
+      );
+    }
+  }
+
+  // Validation method for Continue button
+  hasAnyServicesSelected(): boolean {
+    // Ensure all applicants have at least one service selected
+    return (
+      this.bookingPersons.length > 0 &&
+      this.bookingPersons.every((person) => person.selectedServices.length > 0)
+    );
+  }
+
+  // Add Applicant Modal Methods
+  closeAddApplicantModal(): void {
+    this.showAddApplicantModal = false;
+    this.addApplicantForm.reset();
+  }
+
+  onValidationTypeChange(type: string): void {
+    // Clear all validation fields
+    this.addApplicantForm.get('idNumber')?.setValue('');
+    this.addApplicantForm.get('passportNumber')?.setValue('');
+    this.addApplicantForm.get('forenames')?.setValue('');
+    this.addApplicantForm.get('lastName')?.setValue('');
+
+    // Clear all validators first
+    this.addApplicantForm.get('idNumber')?.clearValidators();
+    this.addApplicantForm.get('passportNumber')?.clearValidators();
+    this.addApplicantForm.get('forenames')?.clearValidators();
+    this.addApplicantForm.get('lastName')?.clearValidators();
+
+    // Set validators based on type
+    if (type === 'id') {
+      this.addApplicantForm
+        .get('idNumber')
+        ?.setValidators([Validators.required, Validators.pattern(/^\d{13}$/)]);
+    } else if (type === 'passport') {
+      this.addApplicantForm
+        .get('passportNumber')
+        ?.setValidators([
+          Validators.required,
+          Validators.pattern(/^[A-Z0-9]{6,12}$/),
+        ]);
+    } else if (type === 'names') {
+      this.addApplicantForm
+        .get('forenames')
+        ?.setValidators([Validators.required, Validators.minLength(2)]);
+      this.addApplicantForm
+        .get('lastName')
+        ?.setValidators([Validators.required, Validators.minLength(2)]);
+    }
+
+    // Update validity for all fields
+    this.addApplicantForm.get('idNumber')?.updateValueAndValidity();
+    this.addApplicantForm.get('passportNumber')?.updateValueAndValidity();
+    this.addApplicantForm.get('forenames')?.updateValueAndValidity();
+    this.addApplicantForm.get('lastName')?.updateValueAndValidity();
+  }
+
+  isValidationTypeSelected(type: string): boolean {
+    const validationType = this.addApplicantForm.get('validationType')?.value;
+    return validationType === type;
+  }
+
+  saveNewApplicant(): void {
+    if (this.addApplicantForm.valid) {
+      const formValue = this.addApplicantForm.value;
+
+      // Determine the name and ID number based on validation type
+      let personName: string;
+      let idNumber: string | undefined;
+
+      if (formValue.validationType === 'id') {
+        personName = formValue.idNumber; // Use ID number as name for display
+        idNumber = formValue.idNumber;
+      } else if (formValue.validationType === 'passport') {
+        personName = formValue.passportNumber; // Use passport number as name for display
+        idNumber = undefined;
+      } else if (formValue.validationType === 'names') {
+        personName = `${formValue.forenames} ${formValue.lastName}`.trim();
+        idNumber = undefined;
+      } else {
+        personName = 'Unknown';
+        idNumber = undefined;
+      }
+
+      const newPerson: BookingPerson = {
+        id: Date.now().toString(),
+        name: personName,
+        type: formValue.applicantType,
+        idNumber: idNumber,
+        selectedServices: [],
+      };
+
+      this.bookingPersons.push(newPerson);
+      this.closeAddApplicantModal();
+    }
   }
 }

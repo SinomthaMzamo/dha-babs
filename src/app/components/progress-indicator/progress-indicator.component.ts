@@ -82,19 +82,19 @@ import { CommonModule } from '@angular/common';
         left: 50%;
         width: 100%;
         height: 1px;
-        background: var(--DividerGray);
+        background: gainsboro;
         z-index: 1;
       }
 
       .step.completed:not(:last-child)::after {
-        background: var(--DHAGreen);
+        background: var(--DividerGray);
       }
 
       .step-number {
         width: 20px;
         height: 20px;
         border-radius: 50%;
-        background: var(--DividerGray);
+        background: gainsboro;
         color: var(--DHATextGrayDark);
         display: flex;
         align-items: center;
@@ -108,7 +108,7 @@ import { CommonModule } from '@angular/common';
       }
 
       .step.active .step-number {
-        background: var(--DHAGreen) !important;
+        background: var(--DHAOrange) !important;
         color: var(--DHAWhite) !important;
         transform: scale(1.05);
       }
@@ -128,7 +128,7 @@ import { CommonModule } from '@angular/common';
       }
 
       .step.active .step-label {
-        color: var(--DHAGreen) !important;
+        color: var(--DHAOrange) !important;
         font-weight: 600;
       }
 
@@ -169,6 +169,5 @@ import { CommonModule } from '@angular/common';
 })
 export class ProgressIndicatorComponent {
   @Input() currentStep: number = 0;
-
-  steps = ['Sign In', 'Personal Info', 'Contact Info'];
+  @Input() steps: string[] = ['Sign In', 'Personal Info', 'Contact Info'];
 }
