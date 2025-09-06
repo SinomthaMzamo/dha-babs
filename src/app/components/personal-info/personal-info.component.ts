@@ -118,7 +118,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         <!-- Step 2: Verification Success -->
         <div *ngIf="currentStep === 2" class="step-section">
           <div class="success-message">
-            <div class="success-icon">✅</div>
+            <!-- <div class="success-icon">✅</div> -->
             <h2>Verification Successful!</h2>
             <p class="success-description">
               Your personal details have been successfully verified against DHA
@@ -598,6 +598,10 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         .btn-primary,
         .btn-secondary {
           padding: 12px;
+        }
+
+        .logo-icon {
+          height: 32px
         }
       }
     `,

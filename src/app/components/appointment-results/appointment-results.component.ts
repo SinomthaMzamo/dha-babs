@@ -169,7 +169,7 @@ interface SlotSearchCriteria {
                     </div>
                     <div class="slot-actions">
                       <button (click)="bookSlot(slot)" class="btn-book-slot">
-                        Book This Slot
+                        Select
                       </button>
                     </div>
                   </div>
@@ -816,6 +816,9 @@ interface SlotSearchCriteria {
         .btn-secondary {
           width: 100%;
           max-width: 200px;
+        }
+        .logo-icon {
+          height: 32px
         }
       }
     `,

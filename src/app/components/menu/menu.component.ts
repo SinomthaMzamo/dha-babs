@@ -290,6 +290,9 @@ import { ReactiveFormsModule } from '@angular/forms';
         .menu-item {
           padding: 25px;
         }
+        .logo-icon {
+          height: 32px
+        }
       }
     `,
   ],

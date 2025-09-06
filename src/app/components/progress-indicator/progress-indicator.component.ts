@@ -63,7 +63,7 @@ import { CommonModule } from '@angular/common';
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        padding: 0 20px;
+        padding: 0;
         box-sizing: border-box;
       }
 

@@ -474,6 +474,7 @@ interface Branch {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
+        flex-wrap: wrap;
         margin-bottom: 15px;
         padding-bottom: 15px;
         border-bottom: 1px solid var(--DHABackGroundLightGray);
@@ -752,7 +753,10 @@ interface Branch {
       }
 
       @media (max-width: 768px) {
-        .appointment-form-card {
+        .appointment-form-container{
+          padding: 24px 2px;
+        }
+         .appointment-form-card {
           padding: 25px 20px;
           min-width: unset;
           max-width: 100%;

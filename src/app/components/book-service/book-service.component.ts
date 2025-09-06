@@ -1112,6 +1112,10 @@ interface BookingPerson {
           min-width: 0;
           height: 44px;
         }
+
+        .logo-icon {
+          height: 32px
+        }
       }
 
       @media (max-width: 480px) {
@@ -1579,7 +1583,7 @@ interface BookingPerson {
 
       @media (max-width: 768px) {
         .main-content {
-          padding: 15px;
+          padding: 10px;
         }
 
         .booking-preview-card {

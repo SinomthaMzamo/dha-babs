@@ -257,6 +257,12 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         color: var(--DHADisabledTextGray);
         cursor: not-allowed;
       }
+
+      @media (max-width: 768px){
+        .logo-icon {
+          height: 32px
+        }
+      }
     `,
   ],
 })
