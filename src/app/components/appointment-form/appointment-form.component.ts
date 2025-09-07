@@ -57,16 +57,20 @@ interface Branch {
         <form
           [formGroup]="appointmentForm"
           (ngSubmit)="onSubmit()"
+          (click)="onDocumentClick($event)"
           autocomplete="on"
         >
           <!-- Selected Services Display -->
           <div
             class="form-section collapsible"
             *ngIf="selectedServices && selectedServices.length > 0"
+            data-section="selectedServices"
           >
             <div
               class="section-header"
               (click)="toggleSection('selectedServices')"
+              (focus)="onSectionFocus('selectedServices')"
+              tabindex="0"
             >
               <h3>Applicants & Selected Services</h3>
               <span
@@ -154,8 +158,13 @@ interface Branch {
           </div>
 
           <!-- Location Selection -->
-          <div class="form-section collapsible">
-            <div class="section-header" (click)="toggleSection('location')">
+          <div class="form-section collapsible" data-section="location">
+            <div
+              class="section-header"
+              (click)="toggleSection('location')"
+              (focus)="onSectionFocus('location')"
+              tabindex="0"
+            >
               <h3>Branch Selection</h3>
               <span class="expand-icon" [class.expanded]="locationExpanded"
                 >▼</span
@@ -171,6 +180,8 @@ interface Branch {
                     id="province"
                     formControlName="province"
                     (change)="onProvinceChange()"
+                    (focus)="onSectionFocus('location')"
+                    (blur)="onSectionBlur('location')"
                   >
                     <option value="">Select Province</option>
                     <option
@@ -200,6 +211,8 @@ interface Branch {
                     id="area"
                     formControlName="area"
                     (change)="onAreaChange()"
+                    (focus)="onSectionFocus('location')"
+                    (blur)="onSectionBlur('location')"
                   >
                     <option value="">Select Area</option>
                     <option
@@ -225,7 +238,12 @@ interface Branch {
                   *ngIf="appointmentForm.get('area')?.value"
                 >
                   <label for="branch">Branch *</label>
-                  <select id="branch" formControlName="branch">
+                  <select
+                    id="branch"
+                    formControlName="branch"
+                    (focus)="onSectionFocus('location')"
+                    (blur)="onSectionBlur('location')"
+                  >
                     <option value="">Select Branch</option>
                     <option
                       *ngFor="let branch of filteredBranches"
@@ -249,8 +267,13 @@ interface Branch {
           </div>
 
           <!-- Date Range Selection -->
-          <div class="form-section collapsible">
-            <div class="section-header" (click)="toggleSection('dateRange')">
+          <div class="form-section collapsible" data-section="dateRange">
+            <div
+              class="section-header"
+              (click)="toggleSection('dateRange')"
+              (focus)="onSectionFocus('dateRange')"
+              tabindex="0"
+            >
               <h3>Select Booking Date Range</h3>
               <span class="expand-icon" [class.expanded]="dateRangeExpanded"
                 >▼</span
@@ -269,6 +292,8 @@ interface Branch {
                     id="startDate"
                     formControlName="startDate"
                     [min]="today"
+                    (focus)="onSectionFocus('dateRange')"
+                    (blur)="onSectionBlur('dateRange')"
                   />
                   <div
                     *ngIf="
@@ -288,6 +313,8 @@ interface Branch {
                     id="endDate"
                     formControlName="endDate"
                     [min]="appointmentForm.get('startDate')?.value || today"
+                    (focus)="onSectionFocus('dateRange')"
+                    (blur)="onSectionBlur('dateRange')"
                   />
                   <div
                     *ngIf="
@@ -753,10 +780,10 @@ interface Branch {
       }
 
       @media (max-width: 768px) {
-        .appointment-form-container{
+        .appointment-form-container {
           padding: 24px 2px;
         }
-         .appointment-form-card {
+        .appointment-form-card {
           padding: 25px 20px;
           min-width: unset;
           max-width: 100%;
@@ -1125,6 +1152,119 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
       case 'dateRange':
         this.dateRangeExpanded = !this.dateRangeExpanded;
         break;
+    }
+  }
+
+  onSectionFocus(section: string) {
+    // Collapse other sections when focusing on a new section
+    switch (section) {
+      case 'selectedServices':
+        this.selectedServicesExpanded = true;
+        this.locationExpanded = false;
+        this.dateRangeExpanded = false;
+        break;
+      case 'location':
+        this.selectedServicesExpanded = false;
+        this.locationExpanded = true;
+        this.dateRangeExpanded = false;
+        break;
+      case 'dateRange':
+        this.selectedServicesExpanded = false;
+        this.locationExpanded = false;
+        this.dateRangeExpanded = true;
+        break;
+    }
+  }
+
+  onSectionBlur(section: string) {
+    // Auto-collapse sections after a short delay to allow for navigation
+    setTimeout(() => {
+      // Check if any form controls in this specific section are still focused
+      const activeElement = document.activeElement;
+      let shouldCollapse = true;
+
+      if (activeElement) {
+        // Check if the active element is within the specific section
+        const sectionElement = document.querySelector(
+          `[data-section="${section}"]`
+        );
+        if (sectionElement && sectionElement.contains(activeElement)) {
+          shouldCollapse = false;
+        }
+
+        // Also check if the active element is the section header itself (to prevent collapse on header click)
+        const sectionHeader = sectionElement?.querySelector('.section-header');
+        if (sectionHeader && sectionHeader.contains(activeElement)) {
+          shouldCollapse = false;
+        }
+      }
+
+      // Auto-collapse all sections when out of focus
+      if (shouldCollapse) {
+        switch (section) {
+          case 'selectedServices':
+            this.selectedServicesExpanded = false;
+            break;
+          case 'location':
+            this.locationExpanded = false;
+            break;
+          case 'dateRange':
+            this.dateRangeExpanded = false;
+            break;
+        }
+      }
+    }, 200); // Reduced delay to make it more responsive
+  }
+
+  // Handle clicks outside sections to auto-collapse
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+
+    // Check if click is on a section header (don't collapse in this case)
+    const clickedHeader = target.closest('.section-header');
+    if (clickedHeader) {
+      return; // Let the click event handle the toggle
+    }
+
+    // Check if click is on a form control within a section
+    const clickedFormControl = target.closest('select, input');
+    if (clickedFormControl) {
+      const section = clickedFormControl.closest('[data-section]');
+      if (section) {
+        const sectionName = section.getAttribute('data-section');
+        if (sectionName) {
+          // Expand the section when clicking on its form controls and collapse others
+          switch (sectionName) {
+            case 'selectedServices':
+              this.selectedServicesExpanded = true;
+              this.locationExpanded = false;
+              this.dateRangeExpanded = false;
+              break;
+            case 'location':
+              this.selectedServicesExpanded = false;
+              this.locationExpanded = true;
+              this.dateRangeExpanded = false;
+              break;
+            case 'dateRange':
+              this.selectedServicesExpanded = false;
+              this.locationExpanded = false;
+              this.dateRangeExpanded = true;
+              break;
+          }
+        }
+      }
+      return;
+    }
+
+    // Check if click is outside any section
+    const clickedSection = target.closest('[data-section]');
+    if (!clickedSection) {
+      // Clicked outside all sections, collapse all sections
+      setTimeout(() => {
+        this.selectedServicesExpanded = false;
+        this.locationExpanded = false;
+        this.dateRangeExpanded = false;
+      }, 100);
     }
   }
 }

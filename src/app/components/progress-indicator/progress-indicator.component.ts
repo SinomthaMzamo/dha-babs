@@ -53,9 +53,6 @@ import { CommonModule } from '@angular/common';
         padding: 8px 0;
         max-width: 800px;
         margin: 0 auto;
-        // background: var(--DHAOffWhite);
-        // border-radius: 8px;
-        // border: 1px solid var(--DHABackGroundLightGray);
       }
 
       .progress-steps {
@@ -162,7 +159,6 @@ import { CommonModule } from '@angular/common';
         .step-label {
           font-size: 10px;
         }
-        // do the nav ba
       }
     `,
   ],

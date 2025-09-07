@@ -122,7 +122,6 @@ import { Router } from '@angular/router';
         width: 100%;
         max-width: 800px;
         text-align: center;
-        // border: 2px solid var(--DHAGreen);
       }
 
       .header-section {

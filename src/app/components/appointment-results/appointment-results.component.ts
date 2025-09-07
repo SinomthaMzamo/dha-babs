@@ -216,7 +216,6 @@ interface SlotSearchCriteria {
           var(--DHAOffWhite) 0%,
           #e8f5e8 100%
         );
-        // padding-top: 70px;
       }
 
       .top-bar {
@@ -366,7 +365,6 @@ interface SlotSearchCriteria {
         padding: 30px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
-        // border: 2px solid var(--DHAWhite);
       }
 
       /* Booking Summary */

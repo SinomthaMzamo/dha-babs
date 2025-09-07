@@ -617,7 +617,8 @@ interface BookingPerson {
                 <div class="info-item">
                   <span class="info-label">Full Name:</span>
                   <span class="info-value">{{
-                    personalData?.fullName || 'N/A'
+                    personalData?.forenames + ' ' + personalData?.lastName ||
+                      'N/A'
                   }}</span>
                 </div>
                 <div class="info-item">
@@ -1084,6 +1085,181 @@ interface BookingPerson {
         font-weight: 500;
       }
 
+      .book-service-container .main-content .confirm-booking-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        padding: 20px;
+        background: var(--DHABackGroundLightGray);
+      }
+
+      .book-service-container .confirm-booking-card {
+        background: var(--DHAWhite);
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        border: 1px solid var(--DHABackGroundLightGray);
+        max-width: 600px;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0 auto;
+      }
+
+      .book-service-container .confirm-booking-card h2 {
+        color: var(--DHAGreen);
+        margin-bottom: 4px;
+        font-size: 18px;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .book-service-container .confirm-description {
+        color: var(--DHATextGrayDark);
+        text-align: center;
+        margin-bottom: 16px;
+        font-size: 12px;
+        line-height: 1.3;
+      }
+
+      .book-service-container .booking-section {
+        margin-bottom: 12px;
+        padding: 12px;
+        background: var(--DHAOffWhite);
+        border-radius: 6px;
+        border: 1px solid var(--DHABackGroundLightGray);
+      }
+
+      .booking-section h3 {
+        color: var(--DHAGreen);
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 8px;
+      }
+
+      .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 8px;
+        background: var(--DHAWhite);
+        border-radius: 4px;
+        border: 1px solid var(--DHABackGroundLightGray);
+      }
+
+      .info-label {
+        font-weight: 600;
+        color: var(--DHATextGrayDark);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.2px;
+      }
+
+      .info-value {
+        color: var(--DHAGreen);
+        font-weight: 600;
+        font-size: 11px;
+        word-break: break-word;
+      }
+
+      .services-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .person-services h4 {
+        color: var(--DHAGreen);
+        margin-bottom: 4px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .services-summary .services-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .services-summary .service-item {
+        background: var(--DHAGreen);
+        color: var(--DHAWhite);
+        padding: 3px 6px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 500;
+      }
+
+      .no-services {
+        color: var(--DHATextGray);
+        font-style: italic;
+        font-size: 10px;
+      }
+
+      .confirm-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid var(--DHABackGroundLightGray);
+      }
+
+      .btn-secondary {
+        background: var(--DHATextGray);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 10px;
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex: 1;
+      }
+
+      .btn-secondary:hover {
+        background: var(--DHATextGrayDark);
+        transform: translateY(-2px);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--DHAGreen) 0%, #018a3a 100%);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 10px;
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex: 1;
+        box-shadow: 0 4px 15px rgba(1, 102, 53, 0.3);
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #018a3a 0%, var(--DHAGreen) 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(1, 102, 53, 0.4);
+      }
+
+      .confirm-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 2px solid var(--DHABackGroundLightGray);
+      }
       /* Responsive styles for applicants header */
       @media (max-width: 768px) {
         .applicants-header {
@@ -1618,133 +1794,125 @@ interface BookingPerson {
           flex-direction: column;
         }
 
-        /* Confirm Booking Styles */
-        .confirm-booking-container {
-          display: flex;
-          justify-content: center;
-          align-items: flex-start;
-          min-height: 100vh;
-          padding: 0;
-          background: var(--DHABackGroundLightGray);
-        }
-
-        .confirm-booking-card {
+        .book-service-container .confirm-booking-card {
           background: var(--DHAWhite);
-          border-radius: 16px;
-          padding: 40px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-          border: 2px solid var(--DHAWhite);
-          max-width: 800px;
+          border-radius: 8px;
+          padding: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+          border: 1px solid var(--DHABackGroundLightGray);
+          max-width: 500px;
           width: 100%;
           box-sizing: border-box;
+          margin: 0 auto;
         }
 
-        .confirm-booking-card h2 {
+        .book-service-container .confirm-booking-card h2 {
           color: var(--DHAGreen);
-          margin-bottom: 10px;
-          font-size: 28px;
-          font-weight: 700;
+          margin-bottom: 4px;
+          font-size: 16px;
+          font-weight: 600;
           text-align: center;
         }
 
-        .confirm-description {
+        .book-service-container .confirm-description {
           color: var(--DHATextGrayDark);
           text-align: center;
-          margin-bottom: 40px;
-          font-size: 16px;
-          line-height: 1.5;
+          margin-bottom: 16px;
+          font-size: 12px;
+          line-height: 1.3;
         }
 
-        .booking-section {
-          margin-bottom: 30px;
-          padding: 25px;
+        .book-service-container .booking-section {
+          margin-bottom: 12px;
+          padding: 12px;
           background: var(--DHAOffWhite);
-          border-radius: 12px;
+          border-radius: 6px;
           border: 1px solid var(--DHABackGroundLightGray);
         }
 
         .booking-section h3 {
           color: var(--DHAGreen);
-          margin-bottom: 20px;
-          font-size: 20px;
+          margin-bottom: 8px;
+          font-size: 14px;
           font-weight: 600;
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 6px;
         }
 
         .info-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 15px;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 8px;
         }
 
         .info-item {
           display: flex;
           flex-direction: column;
-          gap: 5px;
-          padding: 15px;
+          gap: 2px;
+          padding: 8px;
           background: var(--DHAWhite);
-          border-radius: 8px;
+          border-radius: 4px;
           border: 1px solid var(--DHABackGroundLightGray);
         }
 
         .info-label {
           font-weight: 600;
           color: var(--DHATextGrayDark);
-          font-size: 13px;
+          font-size: 10px;
           text-transform: uppercase;
-          letter-spacing: 0.5px;
+          letter-spacing: 0.2px;
         }
 
         .info-value {
           color: var(--DHAGreen);
           font-weight: 600;
-          font-size: 15px;
+          font-size: 11px;
           word-break: break-word;
         }
 
         .services-summary {
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 8px;
         }
 
         .person-services h4 {
           color: var(--DHAGreen);
-          margin-bottom: 10px;
-          font-size: 16px;
+          margin-bottom: 4px;
+          font-size: 12px;
           font-weight: 600;
         }
 
         .services-summary .services-list {
           display: flex;
           flex-wrap: wrap;
-          gap: 8px;
+          gap: 4px;
         }
 
         .services-summary .service-item {
           background: var(--DHAGreen);
           color: var(--DHAWhite);
-          padding: 6px 12px;
-          border-radius: 20px;
-          font-size: 13px;
+          padding: 3px 6px;
+          border-radius: 12px;
+          font-size: 10px;
           font-weight: 500;
         }
 
         .no-services {
           color: var(--DHATextGray);
           font-style: italic;
-          font-size: 14px;
+          font-size: 10px;
         }
 
         .confirm-actions {
           display: flex;
           justify-content: space-between;
-          gap: 20px;
-          margin-top: 40px;
-          padding-top: 30px;
-          border-top: 2px solid var(--DHABackGroundLightGray);
+          flex-direction: column;
+          gap: 8px;
+          margin-top: 16px;
+          padding-top: 12px;
+          border-top: 1px solid var(--DHABackGroundLightGray);
         }
 
         .btn-secondary {
@@ -1786,8 +1954,8 @@ interface BookingPerson {
         }
 
         @media (max-width: 768px) {
-          .confirm-booking-container {
-            padding: 0;
+          .book-service-container .main-content .confirm-booking-container {
+            padding: 16px 12px;
           }
 
           .confirm-booking-card {
@@ -1797,9 +1965,11 @@ interface BookingPerson {
           .info-grid {
             grid-template-columns: 1fr;
           }
+        }
 
-          .confirm-actions {
-            flex-direction: column;
+        @media (max-width: 480px) {
+          .book-service-container .main-content .confirm-booking-container {
+            padding: 8px 6px;
           }
         }
       }
