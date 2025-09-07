@@ -14,7 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         <div class="top-bar-content">
           <div class="logo-section">
             <button type="button" (click)="goHome()" class="btn-home-top">
-              ← Return Home
+              ← Home
             </button>
             <!-- <span class="logo-text">Branch Appointment Booking System</span> -->
           </div>
@@ -291,7 +291,11 @@ import { ReactiveFormsModule } from '@angular/forms';
           padding: 25px;
         }
         .logo-icon {
-          height: 32px
+          height: 32px;
+        }
+        .btn-home-top {
+          padding: 4px 10px;
+          font-size: 12px;
         }
       }
     `,

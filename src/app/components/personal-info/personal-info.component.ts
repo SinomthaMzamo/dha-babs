@@ -18,7 +18,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       <div class="top-bar-content">
         <div class="logo-section">
           <button type="button" (click)="goHome()" class="btn-home-top">
-            ← Return Home
+            ← Home
           </button>
         </div>
         <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
@@ -605,7 +605,12 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         }
 
         .logo-icon {
-          height: 32px
+          height: 32px;
+        }
+
+        .btn-home-top {
+          padding: 4px 10px;
+          font-size: 12px;
         }
       }
     `,

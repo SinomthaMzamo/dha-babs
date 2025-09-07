@@ -25,18 +25,6 @@ interface SlotSearchCriteria {
   imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent],
   template: `
     <div class="appointment-results-container">
-      <!-- Top Bar -->
-      <!-- <div class="top-bar">
-        <div class="top-bar-content">
-          <div class="logo-section">
-            <button type="button" (click)="goHome()" class="btn-home-top">
-              ← Return Home
-            </button>
-          </div>
-          <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
-        </div>
-      </div> -->
-
       <!-- Main Content -->
       <div class="results-content">
         <!-- Loading State -->
@@ -396,20 +384,6 @@ interface SlotSearchCriteria {
         position: relative;
         overflow: hidden;
       }
-
-      // .booking-summary::before {
-      //   content: '';
-      //   position: absolute;
-      //   top: 0;
-      //   left: 0;
-      //   right: 0;
-      //   height: 3px;
-      //   background: linear-gradient(
-      //     90deg,
-      //     var(--DHAGreen) 0%,
-      //     var(--DHAOrange) 100%
-      //   );
-      // }
 
       .booking-summary h3 {
         color: var(--DHAGreen);
@@ -822,7 +796,12 @@ interface SlotSearchCriteria {
           max-width: 200px;
         }
         .logo-icon {
-          height: 32px
+          height: 32px;
+        }
+
+        .btn-home-top {
+          padding: 4px 10px;
+          font-size: 12px;
         }
       }
     `,

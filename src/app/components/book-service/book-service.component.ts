@@ -50,7 +50,7 @@ interface BookingPerson {
         <div class="top-bar-content">
           <div class="logo-section">
             <button type="button" (click)="goHome()" class="btn-home-top">
-              ← Return Home
+              ← Home
             </button>
           </div>
           <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
@@ -1086,7 +1086,6 @@ interface BookingPerson {
 
       /* Responsive styles for applicants header */
       @media (max-width: 768px) {
-
         .applicants-header {
           flex-direction: column;
           align-items: stretch;
@@ -1115,7 +1114,12 @@ interface BookingPerson {
         }
 
         .logo-icon {
-          height: 32px
+          height: 32px;
+        }
+
+        .btn-home-top {
+          padding: 4px 10px;
+          font-size: 12px;
         }
       }
 
@@ -1804,12 +1808,7 @@ interface BookingPerson {
 })
 export class BookServiceComponent implements OnInit {
   currentStep: 'preview' | 'form' | 'results' | 'confirm' = 'preview';
-  stepTitles: string[] = [
-    'Services',
-    'Details',
-    'Timeslots',
-    'Confirm',
-  ];
+  stepTitles: string[] = ['Services', 'Details', 'Timeslots', 'Confirm'];
   showServiceModal = false;
   searchCriteria: SlotSearchCriteria | null = null;
   selectedSlot: any = null;

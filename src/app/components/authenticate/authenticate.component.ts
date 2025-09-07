@@ -18,7 +18,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       <div class="top-bar-content">
         <div class="logo-section">
           <button type="button" (click)="goHome()" class="btn-home-top">
-            ← Return Home
+            ← Home
           </button>
           <!-- <span class="logo-text">Branch Appointment Booking System</span> -->
         </div>
@@ -258,15 +258,20 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         cursor: not-allowed;
       }
 
-      @media (max-width: 768px){
+      @media (max-width: 768px) {
         .logo-icon {
-          height: 32px
+          height: 32px;
         }
         .auth-container {
           padding: 0;
         }
         .auth-card {
           padding: 20px;
+        }
+
+        .btn-home-top {
+          padding: 4px 10px;
+          font-size: 12px;
         }
       }
     `,
