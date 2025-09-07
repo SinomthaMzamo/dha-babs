@@ -571,6 +571,10 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
           padding: 15px;
         }
 
+        .personal-info-container {
+          padding: 0;
+        }
+
         .personal-info-card {
           padding: 20px;
           max-width: 100%;

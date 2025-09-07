@@ -789,7 +789,11 @@ interface SlotSearchCriteria {
 
       @media (max-width: 768px) {
         .results-content {
-          padding: 20px 15px;
+          padding: 0;
+        }
+
+        .slots-container-wrapper {
+          padding: 8px;
         }
 
         .slots-container {

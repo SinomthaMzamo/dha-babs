@@ -267,6 +267,9 @@ import { Router } from '@angular/router';
       }
 
       @media (max-width: 768px) {
+        .demo-container{
+          padding: 0;
+        }
         .demo-card {
           padding: 20px;
         }

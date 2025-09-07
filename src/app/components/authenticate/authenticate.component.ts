@@ -262,6 +262,12 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         .logo-icon {
           height: 32px
         }
+        .auth-container {
+          padding: 0;
+        }
+        .auth-card {
+          padding: 20px;
+        }
       }
     `,
   ],

@@ -271,7 +271,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
       @media (max-width: 768px) {
         .menu-content {
-          padding: 20px 15px;
+          padding: 0;
         }
 
         .menu-card {

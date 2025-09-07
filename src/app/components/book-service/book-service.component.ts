@@ -1086,6 +1086,7 @@ interface BookingPerson {
 
       /* Responsive styles for applicants header */
       @media (max-width: 768px) {
+
         .applicants-header {
           flex-direction: column;
           align-items: stretch;
@@ -1583,7 +1584,10 @@ interface BookingPerson {
 
       @media (max-width: 768px) {
         .main-content {
-          padding: 10px;
+          padding: 0;
+        }
+        .booking-preview-container {
+          padding: 0;
         }
 
         .booking-preview-card {
@@ -1616,7 +1620,7 @@ interface BookingPerson {
           justify-content: center;
           align-items: flex-start;
           min-height: 100vh;
-          padding: 20px;
+          padding: 0;
           background: var(--DHABackGroundLightGray);
         }
 
@@ -1779,7 +1783,7 @@ interface BookingPerson {
 
         @media (max-width: 768px) {
           .confirm-booking-container {
-            padding: 10px;
+            padding: 0;
           }
 
           .confirm-booking-card {
@@ -1801,10 +1805,10 @@ interface BookingPerson {
 export class BookServiceComponent implements OnInit {
   currentStep: 'preview' | 'form' | 'results' | 'confirm' = 'preview';
   stepTitles: string[] = [
-    'Add Service(s)',
-    'Appointment Details',
-    'Available Slots',
-    'Confirm Booking',
+    'Services',
+    'Details',
+    'Timeslots',
+    'Confirm',
   ];
   showServiceModal = false;
   searchCriteria: SlotSearchCriteria | null = null;
