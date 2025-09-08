@@ -26,7 +26,9 @@ import { ReactiveFormsModule } from '@angular/forms';
       <div class="menu-content">
         <div class="menu-card">
           <div class="welcome-section">
-            <h1>Welcome, {{ getPersonalInfo().forenames }}!</h1>
+            <h1 class="capitalised">
+              Welcome, {{ getPersonalInfo().forenames }}!
+            </h1>
             <p class="subtitle">What would you like to do today?</p>
           </div>
 
@@ -98,6 +100,10 @@ import { ReactiveFormsModule } from '@angular/forms';
         --DividerGray: #949494;
       }
 
+      .capitalised {
+        text-transform: capitalize;
+      }
+
       .menu-container {
         min-height: 100vh;
         background: linear-gradient(
@@ -165,7 +171,7 @@ import { ReactiveFormsModule } from '@angular/forms';
       }
 
       .menu-content {
-        max-width: 1200px;
+        max-width: 600px;
         margin: 0 auto;
         padding: 40px 20px;
       }
@@ -175,7 +181,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         border-radius: 16px;
         padding: 40px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        border: 2px solid var(--DHAGreen);
+        border: 2px solid var(--DHAWhite);
       }
 
       .welcome-section {
@@ -296,27 +302,109 @@ import { ReactiveFormsModule } from '@angular/forms';
         }
 
         .menu-card {
-          padding: 30px 20px;
+          padding: 20px 15px;
+          border-radius: 12px;
+        }
+
+        .welcome-section {
+          margin-bottom: 25px;
         }
 
         .welcome-section h1 {
-          font-size: 2rem;
+          font-size: 1.8rem;
+          margin-bottom: 8px;
+        }
+
+        .subtitle {
+          font-size: 1rem;
         }
 
         .menu-grid {
           grid-template-columns: 1fr;
-          gap: 20px;
+          gap: 15px;
+          margin-bottom: 25px;
         }
 
         .menu-item {
-          padding: 25px;
+          padding: 18px;
+          border-radius: 10px;
         }
+
+        .menu-icon {
+          font-size: 2.2rem;
+          margin-bottom: 12px;
+        }
+
+        .menu-item h3 {
+          font-size: 1.1rem;
+          margin-bottom: 8px;
+        }
+
+        .menu-item p {
+          font-size: 0.9rem;
+          line-height: 1.4;
+        }
+
+        .menu-arrow {
+          top: 18px;
+          right: 18px;
+          font-size: 1.2rem;
+        }
+
+        .menu-footer {
+          padding-top: 20px;
+        }
+
+        .btn-secondary {
+          padding: 10px 24px;
+          font-size: 14px;
+        }
+
         .logo-icon {
-          height: 32px;
+          height: 28px;
         }
         .btn-home-top {
-          padding: 4px 10px;
-          font-size: 12px;
+          padding: 4px 8px;
+          font-size: 11px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .menu-card {
+          padding: 15px 12px;
+          margin: 10px;
+        }
+
+        .welcome-section h1 {
+          font-size: 1.6rem;
+        }
+
+        .subtitle {
+          font-size: 0.9rem;
+        }
+
+        .menu-item {
+          padding: 15px;
+        }
+
+        .menu-icon {
+          font-size: 2rem;
+          margin-bottom: 10px;
+        }
+
+        .menu-item h3 {
+          font-size: 1rem;
+          margin-bottom: 6px;
+        }
+
+        .menu-item p {
+          font-size: 0.85rem;
+        }
+
+        .menu-arrow {
+          top: 15px;
+          right: 15px;
+          font-size: 1.1rem;
         }
       }
     `,

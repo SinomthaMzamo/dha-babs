@@ -121,7 +121,7 @@ interface BookingPerson {
                 >
                   <div class="applicant-header">
                     <div class="applicant-info">
-                      <span class="applicant-name"
+                      <span class="applicant-name "
                         >{{ person.name }} ({{ person.type }})</span
                       >
                       <span class="applicant-type">{{ person.idNumber }}</span>
@@ -2040,6 +2040,14 @@ export class BookServiceComponent implements OnInit {
     });
   }
 
+  capitaliseWords(str: string) {
+    if (!str) return '';
+    return str
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }
+
   ngOnInit() {
     // Load personal data from session storage
     const personalDataStr = sessionStorage.getItem('personalData');
@@ -2050,7 +2058,7 @@ export class BookServiceComponent implements OnInit {
       this.bookingPersons = [
         {
           id: 'self',
-          name: `${this.personalData.forenames} ${this.personalData.lastName}`,
+          name: `${this.capitaliseWords(this.personalData.forenames)} ${this.capitaliseWords(this.personalData.lastName)}`,
           type: 'Main Applicant',
           idNumber: this.personalData.idNumber,
           selectedServices: [...this.selectedServices], // Copy current services
@@ -2458,7 +2466,7 @@ export class BookServiceComponent implements OnInit {
 
       const newPerson: BookingPerson = {
         id: Date.now().toString(),
-        name: personName,
+        name: this.capitaliseWords(personName),
         type: formValue.applicantType,
         idNumber: idNumber,
         selectedServices: [],

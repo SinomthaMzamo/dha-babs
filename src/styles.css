@@ -37,3 +37,6 @@ th {
 }
 
 /* Keep button fonts as they are (they should inherit from their component styles) */
+.capitalised {
+  text-transform: capitalize;
+}

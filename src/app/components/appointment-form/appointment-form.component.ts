@@ -92,7 +92,7 @@ interface Branch {
                   *ngFor="let person of bookingPersons; let i = index"
                   class="applicant-card"
                 >
-                  <div class="applicant-header">
+                  <div class="applicant-header capitalised">
                     <div class="applicant-info">
                       <h4 class="applicant-name">{{ person.name }}</h4>
                       <span class="applicant-type">{{ person.type }}</span>
