@@ -348,7 +348,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         width: 100%;
         max-width: 600px;
-        border: 2px solid var(--DHAGreen);
+        border: 2px solid var(--DHAWhite);
       }
 
       h2 {

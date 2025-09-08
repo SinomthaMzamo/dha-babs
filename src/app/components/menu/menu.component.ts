@@ -48,11 +48,21 @@ import { ReactiveFormsModule } from '@angular/forms';
             </div>
 
             <!-- View Appointment -->
-            <div class="menu-item" (click)="viewAppointment()">
+            <div
+              class="menu-item"
+              [class.disabled]="!hasAppointment()"
+              (click)="hasAppointment() ? viewAppointment() : null"
+            >
               <div class="menu-icon">👁️</div>
               <h3>View Appointment</h3>
-              <p>Check details of your current appointment</p>
-              <div class="menu-arrow">→</div>
+              <p>
+                {{
+                  hasAppointment()
+                    ? 'Check details of your current appointment'
+                    : 'No appointment scheduled'
+                }}
+              </p>
+              <div class="menu-arrow" *ngIf="hasAppointment()">→</div>
             </div>
 
             <!-- All Active Appointments -->
@@ -204,11 +214,22 @@ import { ReactiveFormsModule } from '@angular/forms';
         overflow: hidden;
       }
 
-      .menu-item:hover {
+      .menu-item:hover:not(.disabled) {
         border-color: var(--DHAOrange);
         background: var(--DHAWhite);
         transform: translateY(-5px);
         box-shadow: 0 15px 35px rgba(243, 128, 31, 0.15);
+      }
+
+      .menu-item.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: var(--DHABackGroundLightGray);
+      }
+
+      .menu-item.disabled:hover {
+        transform: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       }
 
       .menu-item:hover .menu-arrow {
@@ -315,6 +336,10 @@ export class MenuComponent implements OnInit {
       // If no personal data, redirect to authenticate
       this.router.navigate(['/authenticate']);
     }
+
+    // Debug: Log appointment status
+    console.log('Menu loaded - Has appointment:', this.hasAppointment());
+    console.log('Personal data:', this.personalData);
   }
 
   getPersonalInfo() {
@@ -333,9 +358,26 @@ export class MenuComponent implements OnInit {
     this.router.navigate(['/personal-info']);
   }
 
+  hasAppointment(): boolean {
+    // Check if there's a confirmed appointment in session storage
+    const appointmentData = sessionStorage.getItem('confirmedAppointment');
+
+    // Also check using ID number if personal data is available
+    if (!appointmentData && this.personalData?.idNumber) {
+      const appointmentByID = sessionStorage.getItem(
+        `appointment_${this.personalData.idNumber}`
+      );
+      return appointmentByID !== null;
+    }
+
+    return appointmentData !== null;
+  }
+
   viewAppointment() {
-    // TODO: Implement view appointment functionality
-    alert('View Appointment feature coming soon!');
+    if (this.hasAppointment()) {
+      // Navigate to view appointment component
+      this.router.navigate(['/view-appointment']);
+    }
   }
 
   viewAllAppointments() {

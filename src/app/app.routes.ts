@@ -32,5 +32,12 @@ export const routes: Routes = [
         (m) => m.BookServiceComponent
       ),
   },
+  {
+    path: 'view-appointment',
+    loadComponent: () =>
+      import('./components/view-appointment/view-appointment.component').then(
+        (m) => m.ViewAppointmentComponent
+      ),
+  },
   { path: '**', redirectTo: '/' },
 ];

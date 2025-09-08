@@ -2184,13 +2184,28 @@ export class BookServiceComponent implements OnInit {
   }
 
   confirmBooking(): void {
+    // Clear any existing appointments for this user (one appointment at a time)
+    this.clearExistingAppointments();
+
     // Here you would typically send the booking data to your backend
     const bookingData = {
+      id: this.personalData.idNumber, // Use ID number as unique identifier
       personalData: this.personalData,
       selectedSlot: this.selectedSlot,
       bookingPersons: this.bookingPersons,
       searchCriteria: this.searchCriteria,
+      confirmedAt: new Date().toISOString(),
     };
+
+    // Save the confirmed appointment to session storage
+    // User can only have one appointment at a time, so we overwrite any existing appointment
+    sessionStorage.setItem('confirmedAppointment', JSON.stringify(bookingData));
+
+    // Also save with ID number as key for easy retrieval
+    sessionStorage.setItem(
+      `appointment_${this.personalData.idNumber}`,
+      JSON.stringify(bookingData)
+    );
 
     // For now, show a success message
     alert(
@@ -2201,6 +2216,16 @@ export class BookServiceComponent implements OnInit {
 
     // Navigate back to menu or home
     this.router.navigate(['/menu']);
+  }
+
+  private clearExistingAppointments(): void {
+    // Clear any existing appointment data
+    sessionStorage.removeItem('confirmedAppointment');
+
+    // Clear appointment by ID if it exists
+    if (this.personalData?.idNumber) {
+      sessionStorage.removeItem(`appointment_${this.personalData.idNumber}`);
+    }
   }
 
   getFormattedDate(dateString: string): string {
