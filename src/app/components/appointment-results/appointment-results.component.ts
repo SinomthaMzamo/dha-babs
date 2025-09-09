@@ -67,8 +67,16 @@ interface SlotSearchCriteria {
                   }}</span>
                 </div> -->
               </div>
-              <button (click)="editSearch()" class="btn-edit-search">
-                ✏️ Edit Search Criteria
+              <button
+                type="button"
+                (click)="editSearch()"
+                class="action-btn std"
+                title="Add an accompanying applicant to this booking"
+              >
+                <div class="btn-contents">
+                  <span class="btn-icon">✏️</span>
+                  <span class="btn-text">Edit Search Criteria</span>
+                </div>
               </button>
             </div>
           </div>
@@ -100,8 +108,16 @@ interface SlotSearchCriteria {
                 <span class="summary-value">{{ getSearchDateDisplay() }}</span>
               </div> -->
             </div>
-            <button (click)="editSearch()" class="btn-edit-search">
-              ✏️ Edit Search Criteria
+            <button
+              type="button"
+              (click)="editSearch()"
+              class="action-btn std"
+              title="Add an accompanying applicant to this booking"
+            >
+              <div class="btn-contents">
+                <span class="btn-icon">✏️</span>
+                <span class="btn-text">Edit Search Criteria</span>
+              </div>
             </button>
           </div>
 
@@ -219,15 +235,17 @@ interface SlotSearchCriteria {
       }
 
       .top-bar {
-        background: whitesmoke;
-        color: var(--DHATextGrayDark);
-        padding: 15px 0;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
+        background: whitesmoke;
+        border-bottom: 2px solid var(--DHAGreen);
         z-index: 1000;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
 
       .top-bar-content {
@@ -258,19 +276,19 @@ interface SlotSearchCriteria {
       }
 
       .btn-home-top {
-        background: var(--DHAOrange);
+        background: var(--DHAGreen);
         color: var(--DHAWhite);
         border: none;
+        padding: 8px 16px;
         border-radius: 6px;
-        padding: 10px 20px;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
       }
 
       .btn-home-top:hover {
-        background: var(--DHALightOrange);
+        background: var(--DHAOrange);
         transform: translateY(-1px);
       }
 
@@ -364,7 +382,6 @@ interface SlotSearchCriteria {
         border-radius: 16px;
         padding: 30px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-
       }
 
       /* Booking Summary */
@@ -437,39 +454,43 @@ interface SlotSearchCriteria {
         word-break: break-word;
       }
 
-      .btn-edit-search {
-        background: linear-gradient(
-          135deg,
-          var(--DHAOrange) 0%,
-          var(--DHALightOrange) 100%
-        );
-        color: var(--DHAWhite);
+      
+
+      .btn-contents {
+        display: flex;
+        gap: 4px;
+      }
+
+      .action-btn {
+        background: none;
+        color: var(--DHAOrange);
         border: none;
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 500;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(243, 128, 31, 0.3);
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
-        align-self: flex-start;
+        // text-decoration: underline;
+        text-underline-offset: 2px;
+        display: block;
+        margin: 0 auto;
       }
 
-      .btn-edit-search:hover {
-        background: linear-gradient(
-          135deg,
-          var(--DHALightOrange) 0%,
-          var(--DHAOrange) 100%
-        );
-        transform: translateY(-1px);
-        box-shadow: 0 3px 12px rgba(243, 128, 31, 0.4);
+      .action-btn:hover {
+        color: var(--DHALightOrange);
+        background: rgba(243, 128, 31, 0.1);
       }
 
-      .btn-edit-search:active {
-        transform: translateY(0);
-        box-shadow: 0 1px 4px rgba(243, 128, 31, 0.3);
+      .btn-icon {
+        font-size: 14px;
+        // text-decoration: none;
+      }
+
+      .btn-text {
+        font-size: 12px;
+        font-weight: 500;
+        text-decoration: underline;
       }
 
       /* Pagination Controls */

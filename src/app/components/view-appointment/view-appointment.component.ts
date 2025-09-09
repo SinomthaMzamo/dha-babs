@@ -12,8 +12,8 @@ import { CommonModule } from '@angular/common';
       <div class="top-bar">
         <div class="top-bar-content">
           <div class="logo-section">
-            <button type="button" (click)="goBack()" class="btn-home-top">
-              ← Back to Menu
+            <button type="button" (click)="goHome()" class="btn-home-top">
+              ← Home
             </button>
           </div>
           <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
@@ -124,9 +124,6 @@ import { CommonModule } from '@angular/common';
             <button type="button" (click)="goBack()" class="btn-secondary">
               ← Back to Menu
             </button>
-            <button type="button" (click)="goHome()" class="btn-primary">
-              🏠 Home
-            </button>
           </div>
         </div>
       </div>
@@ -167,13 +164,12 @@ import { CommonModule } from '@angular/common';
         top: 0;
         left: 0;
         right: 0;
-        height: 60px;
-        background: var(--DHAWhite);
+        background: whitesmoke;
         border-bottom: 2px solid var(--DHAGreen);
         z-index: 1000;
         display: flex;
         align-items: center;
-        padding: 0 20px;
+        padding: 20px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
 
@@ -210,7 +206,7 @@ import { CommonModule } from '@angular/common';
       }
 
       .logo-icon {
-        height: 40px;
+        height: 60px;
         width: auto;
       }
 
@@ -260,6 +256,7 @@ import { CommonModule } from '@angular/common';
 
       .appointment-section h3 {
         color: var(--DHAGreen);
+        margin: 0;
         margin-bottom: 8px;
         font-size: 14px;
         font-weight: 600;
@@ -271,7 +268,7 @@ import { CommonModule } from '@angular/common';
       .info-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 8px;
+        gap: 4px;
       }
 
       .info-item {
@@ -307,6 +304,7 @@ import { CommonModule } from '@angular/common';
 
       .person-services h4 {
         color: var(--DHAGreen);
+        margin: 0;
         margin-bottom: 4px;
         font-size: 12px;
         font-weight: 600;
@@ -379,6 +377,14 @@ import { CommonModule } from '@angular/common';
       }
 
       @media (max-width: 768px) {
+        .logo-icon {
+          height: 40px;
+        }
+        .btn-home-top {
+          padding: 4px 8px;
+          font-size: 11px;
+        }
+
         .view-appointment-content {
           padding: 16px 12px;
         }

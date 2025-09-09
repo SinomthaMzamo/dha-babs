@@ -275,22 +275,26 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       }
 
       .top-bar {
-        background: whitesmoke;
-        color: var(--DHATextGrayDark);
-        padding: 15px 0;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        position: sticky;
+        position: fixed;
         top: 0;
+        left: 0;
+        right: 0;
+        background: whitesmoke;
+        border-bottom: 2px solid var(--DHAGreen);
         z-index: 1000;
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
 
       .top-bar-content {
-        max-width: 1200px;
-        margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 20px;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
       }
 
       .logo-section {
@@ -312,19 +316,19 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       }
 
       .btn-home-top {
-        background: var(--DHAOrange);
+        background: var(--DHAGreen);
         color: var(--DHAWhite);
         border: none;
+        padding: 8px 16px;
         border-radius: 6px;
-        padding: 10px 20px;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
       }
 
       .btn-home-top:hover {
-        background: var(--DHALightOrange);
+        background: var(--DHAOrange);
         transform: translateY(-1px);
       }
 
@@ -436,7 +440,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
 
       .success-message {
         text-align: center;
-        margin-bottom: 30px;
+        margin: 30px 0;
         padding: 20px;
         background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
         border-radius: 12px;
@@ -572,9 +576,14 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         }
 
         .personal-info-container {
-          padding: 0;
+          padding:  0 8px;
+          margin: 73px 0;
         }
 
+        input {
+          font-size: 14px;
+        }
+        
         .personal-info-card {
           padding: 20px;
           max-width: 100%;
@@ -639,6 +648,14 @@ export class PersonalInfoComponent implements OnInit {
     });
   }
 
+  capitaliseWords(str: string) {
+    if (!str) return '';
+    return str
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }
+
   ngOnInit() {
     // Get auth data from session storage
     const authDataStr = sessionStorage.getItem('authData');
@@ -648,15 +665,39 @@ export class PersonalInfoComponent implements OnInit {
       // Redirect back to authentication if no auth data
       this.router.navigate(['/authenticate']);
     }
+
+    // Automatically capitalise forenames and lastName
+    ['forenames', 'lastName'].forEach((field) => {
+      this.verificationForm.get(field)?.valueChanges.subscribe((value) => {
+        if (value) {
+          const capitalised = this.capitaliseWords(value);
+          // Only update if the value actually changed to avoid cursor jump
+          if (value !== capitalised) {
+            this.verificationForm
+              .get(field)
+              ?.setValue(capitalised, { emitEvent: false });
+          }
+        }
+      });
+    });
   }
 
   onVerificationSubmit() {
     if (this.verificationForm.valid) {
-      // Store verification data temporarily
+      // Capitalise the names before storing/submitting
+      const capitalisedData = {
+        ...this.verificationForm.value,
+        forenames: this.capitaliseWords(this.verificationForm.value.forenames),
+        lastName: this.capitaliseWords(this.verificationForm.value.lastName),
+      };
+
+      // Merge with authData
       const verificationData = {
         ...this.authData,
-        ...this.verificationForm.value,
+        ...capitalisedData,
       };
+
+      console.log(verificationData);
       sessionStorage.setItem(
         'verificationData',
         JSON.stringify(verificationData)

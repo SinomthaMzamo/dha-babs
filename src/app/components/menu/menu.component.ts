@@ -115,24 +115,27 @@ import { ReactiveFormsModule } from '@angular/forms';
       }
 
       .top-bar {
-        background: whitesmoke;
-        color: var(--DHATextGrayDark);
-        padding: 15px 0;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
+        background: whitesmoke;
+        border-bottom: 2px solid var(--DHAGreen);
         z-index: 1000;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
 
       .top-bar-content {
-        max-width: 1200px;
-        margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 20px;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
       }
 
       .logo-section {
@@ -154,19 +157,19 @@ import { ReactiveFormsModule } from '@angular/forms';
       }
 
       .btn-home-top {
-        background: var(--DHAOrange);
+        background: var(--DHAGreen);
         color: var(--DHAWhite);
         border: none;
+        padding: 8px 16px;
         border-radius: 6px;
-        padding: 10px 20px;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
       }
 
       .btn-home-top:hover {
-        background: var(--DHALightOrange);
+        background: var(--DHAOrange);
         transform: translateY(-1px);
       }
 
