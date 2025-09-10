@@ -20,6 +20,13 @@ export const routes: Routes = [
         (m) => m.PersonalInfoComponent
       ),
   },
+  // {
+  //   path: 'contact-info',
+  //   loadComponent: () =>
+  //     import('./components/contact-info/contact-info.component').then(
+  //       (m) => m.ContactInfoComponent
+  //     ),
+  // },
   {
     path: 'menu',
     loadComponent: () =>

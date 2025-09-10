@@ -78,7 +78,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
           <div class="menu-footer">
             <button (click)="goBack()" class="btn-secondary">
-              ← Back to Personal Info
+              ← Back to Contact Info
             </button>
           </div>
         </div>
@@ -429,7 +429,7 @@ export class MenuComponent implements OnInit {
       // If no personal data, redirect to authenticate
       this.router.navigate(['/authenticate']);
     }
-
+    window.scrollTo(0, 0);
     // Debug: Log appointment status
     console.log('Menu loaded - Has appointment:', this.hasAppointment());
     console.log('Personal data:', this.personalData);
@@ -479,7 +479,7 @@ export class MenuComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/personal-info']);
+    this.router.navigate(['/contact-info']);
   }
 
   goHome() {

@@ -95,8 +95,8 @@ interface Branch {
                   >
                     <div class="applicant-header capitalised">
                       <div class="applicant-info">
-                        <h4 class="applicant-name">{{ person.name }}</h4>
                         <span class="applicant-type">{{ person.type }}</span>
+                        <h4 class="applicant-name">{{ person.name }}</h4>
                       </div>
                       <div class="applicant-identifier" *ngIf="person.idNumber">
                         <span class="identifier-label">ID Number</span>
@@ -519,6 +519,7 @@ interface Branch {
         margin-bottom: 15px;
         padding-bottom: 15px;
         border-bottom: 1px solid var(--DHABackGroundLightGray);
+        row-gap: 4px;
       }
 
       .applicant-info {
@@ -556,6 +557,7 @@ interface Branch {
         color: var(--DHATextGray);
         font-size: 0.8rem;
         font-weight: 500;
+        align-self: baseline;
       }
 
       .identifier-value {
