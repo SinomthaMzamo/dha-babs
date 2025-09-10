@@ -87,7 +87,6 @@ interface SlotSearchCriteria {
         </div>
 
         <!-- Available Slots -->
-
         <div
           *ngIf="!isLoading && !noSlotsAvailable && availableSlots.length > 0"
         >
@@ -348,11 +347,17 @@ interface SlotSearchCriteria {
         }
       }
 
-      /* No Slots Available */
       .no-slots-container {
         display: flex;
         justify-content: center;
-        padding: 40px 20px;
+        align-items: center;
+        min-height: calc(100vh - 70px);
+        background: linear-gradient(
+          135deg,
+          var(--DHAOffWhite) 0%,
+          #e8f5e8 100%
+        );
+        padding: 20px;
       }
 
       .no-slots-card {
@@ -362,7 +367,11 @@ interface SlotSearchCriteria {
         text-align: center;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         border: 2px solid var(--DHAOrange);
-        max-width: 500px;
+        max-width: var(--form-width);
+        height: var(--mobile-form-height);
+        overflow-y: auto;
+        width: 100%; /* fill the wrapper */
+        box-sizing: border-box;
       }
 
       .no-slots-icon {
@@ -395,17 +404,21 @@ interface SlotSearchCriteria {
         padding: 30px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         border: 2px solid var(--DHAWhite);
-        max-width: 600px;
+        max-width: var(--form-width);
+        height: var(--mobile-form-height);
+        overflow-y: auto;
+        width: 100%; /* fill the wrapper */
         box-sizing: border-box;
-        display: block;
-        margin: 0 auto;
+  
       }
 
       .content-wrapper {
         display: flex;
         flex-direction: column;
         gap: var(--step-form-gap);
-        width: var(--form-width);
+        width: 100%;
+        max-width: var(--form-width);
+        box-sizing: border-box;
       }
 
       /* Available Slots */
@@ -813,8 +826,26 @@ interface SlotSearchCriteria {
           padding: 0;
         }
 
+        .no-slots-container {
+          padding: 24px 2px;
+          flex-direction: column;
+        }
+
+        .content-wrapper {
+          padding: 0 8px;
+        }
+
+        .no-slots-card {
+          padding: 25px 20px;
+          min-width: unset;
+          height: var(--mobile-form-height);
+          overflow-y: auto;
+          width: 100%;
+        }
+
         .slots-container-wrapper {
           padding: 8px;
+          height: var(--mobile-form-height);
         }
 
         .slots-container {

@@ -381,7 +381,9 @@ interface Branch {
         display: flex;
         flex-direction: column;
         gap: var(--step-form-gap);
-        width: var(--form-width);
+        width: 100%;
+        max-width: var(--form-width);
+        box-sizing: border-box;
       }
 
       .appointment-form-card {
@@ -390,9 +392,10 @@ interface Branch {
         padding: 40px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         max-width: var(--form-width);
-        box-sizing: border-box;
         height: var(--mobile-form-height);
         overflow-y: auto;
+        width: 100%; /* fill the wrapper */
+        box-sizing: border-box;
       }
 
       h2 {
@@ -800,6 +803,11 @@ interface Branch {
           padding: 24px 2px;
           flex-direction: column;
         }
+
+        .appointment-form-content-wrapper {
+          padding: 0 8px;
+        }
+
         .appointment-form-card {
           padding: 25px 20px;
           min-width: unset;
@@ -819,13 +827,12 @@ interface Branch {
 
         .button-group {
           flex-direction: column;
-          align-items: center;
+          align-items: space-between;
         }
 
         .btn-primary,
         .btn-secondary {
           width: 100%;
-          max-width: 300px;
         }
       }
     `,

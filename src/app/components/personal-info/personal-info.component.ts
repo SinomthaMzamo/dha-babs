@@ -359,7 +359,10 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         width: 100%;
-        max-width: 600px;
+        max-width: var(--form-width);
+        height: var(--mobile-form-height);
+        overflow-y: auto;
+        box-sizing: border-box;
         border: 2px solid var(--DHAWhite);
       }
 
