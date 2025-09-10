@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -299,7 +299,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
     `,
   ],
 })
-export class AuthenticateComponent {
+export class AuthenticateComponent implements OnInit {
   authForm: FormGroup;
 
   constructor(private fb: FormBuilder, private router: Router) {
@@ -307,6 +307,10 @@ export class AuthenticateComponent {
       idType: ['', Validators.required],
       idNumber: ['', [Validators.required, Validators.pattern(/^\d{13}$/)]],
     });
+  }
+  ngOnInit() {
+    // Scroll to top when component loads
+    window.scrollTo(0, 0);
   }
 
   onSubmit() {

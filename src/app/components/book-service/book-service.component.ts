@@ -2067,6 +2067,7 @@ export class BookServiceComponent implements OnInit {
   }
 
   ngOnInit() {
+    window.scrollTo(0, 0);
     // Load personal data from session storage
     const personalDataStr = sessionStorage.getItem('personalData');
     if (personalDataStr) {

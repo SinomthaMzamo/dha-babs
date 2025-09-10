@@ -1055,6 +1055,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    window.scrollTo(0, 0);
     // Set default end date to 30 days from today
     const defaultEndDate = new Date();
     defaultEndDate.setDate(defaultEndDate.getDate() + 30);

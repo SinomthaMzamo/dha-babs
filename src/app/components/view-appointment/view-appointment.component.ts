@@ -428,6 +428,7 @@ export class ViewAppointmentComponent implements OnInit {
 
     if (appointmentDataStr) {
       this.appointmentData = JSON.parse(appointmentDataStr);
+      window.scrollTo(0, 0);
     } else {
       // If no appointment data, redirect to menu
       this.router.navigate(['/menu']);

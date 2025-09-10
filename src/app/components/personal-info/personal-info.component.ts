@@ -673,6 +673,7 @@ export class PersonalInfoComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     // Get auth data from session storage
     const authDataStr = sessionStorage.getItem('authData');
     if (authDataStr) {
@@ -681,6 +682,8 @@ export class PersonalInfoComponent implements OnInit {
       // Redirect back to authentication if no auth data
       this.router.navigate(['/authenticate']);
     }
+
+    window.scrollTo(0, 0);
 
     // Automatically capitalise forenames and lastName
     ['forenames', 'lastName'].forEach((field) => {
