@@ -446,9 +446,8 @@ export class MenuComponent implements OnInit {
   }
 
   editContactDetails() {
-    // Navigate to personal info with return path
-    sessionStorage.setItem('returnToMenu', 'true');
-    this.router.navigate(['/personal-info']);
+    // Navigate to contact info component
+    this.router.navigate(['/contact-info']);
   }
 
   hasAppointment(): boolean {

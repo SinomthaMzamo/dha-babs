@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
 
 @Component({
-  selector: 'app-personal-info',
+  selector: 'app-contact-info',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent],
   template: `
@@ -25,140 +25,88 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       </div>
     </div>
 
-    <div class="personal-info-container">
-      <div class="personal-info-content-wrapper">
+    <div class="contact-info-container">
+      <div class="contact-info-content-wrapper">
         <app-progress-indicator
           [currentStep]="getProgressStep()"
         ></app-progress-indicator>
-        <div class="personal-info-card">
-          <!-- Step 1: Personal Details Verification -->
-          <div *ngIf="currentStep === 1" class="step-section">
-            <h2>Verify Personal Information</h2>
+        <div class="contact-info-card">
+          <div class="step-section">
+            <h2>Contact Information</h2>
             <p class="step-description">
-              Please verify your personal details against DHA records
+              Please provide your contact details for appointment notifications
             </p>
 
             <form
-              [formGroup]="verificationForm"
-              (ngSubmit)="onVerificationSubmit()"
+              [formGroup]="contactForm"
+              (ngSubmit)="onContactSubmit()"
               autocomplete="on"
             >
               <div class="form-group">
-                <label for="idNumber">ID Number</label>
+                <label for="email">Email Address *</label>
                 <input
-                  type="text"
-                  id="idNumber"
-                  [value]="authData?.idNumber || ''"
+                  type="email"
+                  id="email"
+                  formControlName="email"
                   class="form-control"
-                  disabled
-                  readonly
+                  placeholder="Enter your email address"
+                  autocomplete="email"
                 />
-                <div class="field-info">
-                  <small>ID number from previous step</small>
+                <div
+                  *ngIf="
+                    contactForm.get('email')?.invalid &&
+                    contactForm.get('email')?.touched
+                  "
+                  class="error-message"
+                >
+                  <div *ngIf="contactForm.get('email')?.errors?.['required']">
+                    Email is required
+                  </div>
+                  <div *ngIf="contactForm.get('email')?.errors?.['email']">
+                    Please enter a valid email address
+                  </div>
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="forenames">Forenames *</label>
+                <label for="phone">Phone Number *</label>
                 <input
-                  type="text"
-                  id="forenames"
-                  formControlName="forenames"
+                  type="tel"
+                  id="phone"
+                  formControlName="phone"
                   class="form-control"
-                  placeholder="Enter your forenames as they appear on your ID"
-                  autocomplete="given-name"
+                  placeholder="Enter your phone number"
+                  autocomplete="tel"
                 />
                 <div
                   *ngIf="
-                    verificationForm.get('forenames')?.invalid &&
-                    verificationForm.get('forenames')?.touched
+                    contactForm.get('phone')?.invalid &&
+                    contactForm.get('phone')?.touched
                   "
                   class="error-message"
                 >
-                  Forenames are required
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="lastName">Last Name *</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  formControlName="lastName"
-                  class="form-control"
-                  placeholder="Enter your last name as it appears on your ID"
-                  autocomplete="family-name"
-                />
-                <div
-                  *ngIf="
-                    verificationForm.get('lastName')?.invalid &&
-                    verificationForm.get('lastName')?.touched
-                  "
-                  class="error-message"
-                >
-                  Last name is required
+                  <div *ngIf="contactForm.get('phone')?.errors?.['required']">
+                    Phone number is required
+                  </div>
+                  <div *ngIf="contactForm.get('phone')?.errors?.['pattern']">
+                    Please enter a valid phone number
+                  </div>
                 </div>
               </div>
 
               <div class="button-group">
                 <button type="button" (click)="goBack()" class="btn-secondary">
-                  ← Sign Out
+                  Back
                 </button>
                 <button
                   type="submit"
-                  [disabled]="verificationForm.invalid"
+                  [disabled]="contactForm.invalid"
                   class="btn-primary"
                 >
-                  Verify Details
+                  Submit
                 </button>
               </div>
             </form>
-          </div>
-
-          <!-- Step 2: Verification Success -->
-          <div *ngIf="currentStep === 2" class="step-section">
-            <div class="success-message">
-              <!-- <div class="success-icon">✅</div> -->
-              <h2>Verification Successful!</h2>
-              <p class="success-description">
-                Your personal details have been successfully verified against
-                DHA records.
-              </p>
-            </div>
-
-            <div class="verified-details-preview">
-              <h3>Verified Details</h3>
-              <div class="details-grid">
-                <div class="detail-item">
-                  <label>ID Number:</label>
-                  <span class="detail-value">{{ authData?.idNumber }}</span>
-                </div>
-                <div class="detail-item">
-                  <label>Full Name:</label>
-                  <span class="detail-value"
-                    >{{ verificationForm.get('forenames')?.value }}
-                    {{ verificationForm.get('lastName')?.value }}</span
-                  >
-                </div>
-              </div>
-            </div>
-
-            <div class="button-group">
-              <button
-                type="button"
-                (click)="goBackToVerification()"
-                class="btn-secondary"
-              >
-                Back to Edit
-              </button>
-              <button
-                type="button"
-                (click)="proceedToContact()"
-                class="btn-primary"
-              >
-                Continue
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -250,7 +198,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         transform: translateY(-1px);
       }
 
-      .personal-info-container {
+      .contact-info-container {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -263,14 +211,14 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         padding: 20px;
       }
 
-      .personal-info-content-wrapper {
+      .contact-info-content-wrapper {
         display: flex;
         flex-direction: column;
         gap: var(--step-form-gap);
         width: var(--form-width);
       }
 
-      .personal-info-card {
+      .contact-info-card {
         background: var(--DHAWhite);
         padding: 30px;
         border-radius: 12px;
@@ -367,97 +315,6 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         }
       }
 
-      .success-message {
-        text-align: center;
-        margin: 30px 0;
-        padding: 20px;
-        background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
-        border-radius: 12px;
-        border: 2px solid var(--DHAGreen);
-        margin-top: 0;
-      }
-
-      .success-icon {
-        font-size: 48px;
-        margin-bottom: 15px;
-        animation: bounce 0.6s ease-in-out;
-      }
-
-      .success-message h2 {
-        color: var(--DHAGreen);
-        margin-bottom: 10px;
-        font-size: 24px;
-      }
-
-      .success-description {
-        color: var(--DHATextGrayDark);
-        font-size: 16px;
-        margin: 0;
-        line-height: 1.5;
-      }
-
-      .verified-details-preview {
-        background: var(--DHAOffWhite);
-        border: 1px solid var(--DHABackGroundLightGray);
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 30px;
-      }
-
-      .verified-details-preview h3 {
-        color: var(--DHATextGrayDark);
-        margin-bottom: 15px;
-        font-size: 18px;
-        font-weight: 600;
-      }
-
-      .details-grid {
-        display: grid;
-        gap: 12px;
-      }
-
-      .detail-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px solid var(--DHABackGroundLightGray);
-      }
-
-      .detail-item:last-child {
-        border-bottom: none;
-      }
-
-      .detail-item label {
-        font-weight: 600;
-        color: var(--DHATextGrayDark);
-        font-size: 14px;
-      }
-
-      .detail-value {
-        color: var(--DHAGreen);
-        font-weight: 500;
-        font-size: 14px;
-        text-align: right;
-        word-break: break-all;
-      }
-
-      @keyframes bounce {
-        0%,
-        20%,
-        50%,
-        80%,
-        100% {
-          transform: translateY(0);
-        }
-        40% {
-          transform: translateY(-10px);
-        }
-        60% {
-          transform: translateY(-5px);
-        }
-      }
-
       .button-group {
         display: flex;
         gap: 15px;
@@ -505,7 +362,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
           padding: 15px;
         }
 
-        .personal-info-container {
+        .contact-info-container {
           padding: 0 8px;
           margin: 73px 0;
         }
@@ -514,7 +371,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
           font-size: 14px;
         }
 
-        .personal-info-card {
+        .contact-info-card {
           padding: 20px;
           max-width: 100%;
           height: var(--mobile-form-height);
@@ -558,111 +415,80 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
     `,
   ],
 })
-export class PersonalInfoComponent implements OnInit {
-  verificationForm: FormGroup;
-  authData: any;
-  currentStep: number = 1;
+export class ContactInfoComponent implements OnInit {
+  contactForm: FormGroup;
+  personalData: any;
 
   constructor(private fb: FormBuilder, private router: Router) {
-    // Form for personal details verification
-    this.verificationForm = this.fb.group({
-      forenames: ['', Validators.required],
-      lastName: ['', Validators.required],
+    // Form for contact information
+    this.contactForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      phone: [
+        '',
+        [Validators.required, Validators.pattern(/^(\+27|0)[6-8][0-9]{8}$/)],
+      ],
     });
-  }
-
-  capitaliseWords(str: string) {
-    if (!str) return '';
-    return str
-      .split(' ')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
   }
 
   ngOnInit() {
-    // Get auth data from session storage
-    const authDataStr = sessionStorage.getItem('authData');
-    if (authDataStr) {
-      this.authData = JSON.parse(authDataStr);
+    // Load data from session storage - check both verificationData and personalData
+    const verificationDataStr = sessionStorage.getItem('verificationData');
+    const personalDataStr = sessionStorage.getItem('personalData');
+
+    if (verificationDataStr) {
+      // Coming from personal-info component
+      this.personalData = JSON.parse(verificationDataStr);
+    } else if (personalDataStr) {
+      // Coming from menu (back to contact info)
+      this.personalData = JSON.parse(personalDataStr);
     } else {
-      // Redirect back to authentication if no auth data
+      // If no data found, redirect to authenticate
       this.router.navigate(['/authenticate']);
+      return;
     }
 
-    window.scrollTo(0, 0);
-
-    // Automatically capitalise forenames and lastName
-    ['forenames', 'lastName'].forEach((field) => {
-      this.verificationForm.get(field)?.valueChanges.subscribe((value) => {
-        if (value) {
-          const capitalised = this.capitaliseWords(value);
-          // Only update if the value actually changed to avoid cursor jump
-          if (value !== capitalised) {
-            this.verificationForm
-              .get(field)
-              ?.setValue(capitalised, { emitEvent: false });
-          }
-        }
+    // Pre-fill form if data exists
+    if (this.personalData.email) {
+      this.contactForm.patchValue({
+        email: this.personalData.email,
+        phone: this.personalData.phone,
       });
-    });
+    }
   }
 
-  onVerificationSubmit() {
-    if (this.verificationForm.valid) {
-      // Capitalise the names before storing/submitting
-      const capitalisedData = {
-        ...this.verificationForm.value,
-        forenames: this.capitaliseWords(this.verificationForm.value.forenames),
-        lastName: this.capitaliseWords(this.verificationForm.value.lastName),
+  getProgressStep(): number {
+    return 2; // Contact info is step 3
+  }
+
+  onContactSubmit() {
+    if (this.contactForm.valid) {
+      // Combine existing data with contact info
+      const completePersonalData = {
+        ...this.personalData,
+        email: this.contactForm.value.email,
+        phone: this.contactForm.value.phone,
       };
 
-      // Merge with authData
-      const verificationData = {
-        ...this.authData,
-        ...capitalisedData,
-      };
-
-      console.log(verificationData);
+      // Save to session storage
       sessionStorage.setItem(
-        'verificationData',
-        JSON.stringify(verificationData)
+        'personalData',
+        JSON.stringify(completePersonalData)
       );
 
-      // Move to step 2 (success message and preview)
-      this.currentStep = 2;
+      // Clean up temporary verification data if it exists
+      sessionStorage.removeItem('verificationData');
+
+      // Navigate to menu
+      this.router.navigate(['/menu']);
     }
-  }
-
-  proceedToContact() {
-    // Navigate to contact info component
-    this.router.navigate(['/contact-info']);
-  }
-
-  goBackToVerification() {
-    this.currentStep = 1;
   }
 
   goBack() {
-    if (this.currentStep === 1) {
-      this.router.navigate(['/authenticate']);
-    } else if (this.currentStep === 2) {
-      this.goBackToVerification();
-    }
+    // Navigate back to personal info verification
+    this.router.navigate(['/personal-info']);
   }
 
   goHome() {
     this.router.navigate(['/']);
-  }
-
-  getProgressStep(): number {
-    // Map internal steps to progress indicator steps
-    // Step 1 (verification) and Step 2 (success) both show as step 2 (Personal Info)
-    // Step 3 (contact) shows as step 3 (Contact Info)
-    if (this.currentStep === 1 || this.currentStep === 2) {
-      return 1; // Personal Info step
-    } else if (this.currentStep === 3) {
-      return 2; // Contact Info step
-    }
-    return 1; // Default to Personal Info
   }
 }

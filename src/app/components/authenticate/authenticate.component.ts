@@ -88,7 +88,7 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
                 [disabled]="authForm.invalid"
                 class="btn-primary"
               >
-                Continue
+                Sign In
               </button>
             </div>
           </form>
