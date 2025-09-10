@@ -18,14 +18,6 @@ import { Router } from '@angular/router';
           A modern, user-friendly platform for DHA appointment management
         </p>
 
-        <div class="cta-section">
-          <h2>Ready to get started?</h2>
-          <p>Experience the improved DHA booking system</p>
-          <button (click)="startBooking()" class="cta-button">
-            Book Today
-          </button>
-        </div>
-
         <div class="features-grid">
           <div class="feature-card">
             <!-- TODO: highlight easy log in with ID or Passport number -->
@@ -37,19 +29,19 @@ import { Router } from '@angular/router';
           <div class="feature-card">
             <div class="feature-icon">📅</div>
             <h3>Service Booking</h3>
-            <p>Easy appointment scheduling and location selection</p>
+            <p>Easily book appointments for single or multiple services</p>
           </div>
 
-          <div class="feature-card">
+          <!-- <div class="feature-card">
             <div class="feature-icon">📱</div>
             <h3>Mobile Responsive</h3>
             <p>Optimized for all devices and screen sizes</p>
-          </div>
-          <div class="feature-card">
+          </div> -->
+          <!-- <div class="feature-card">
             <div class="feature-icon">🛠️</div>
             <h3>Book multiple services</h3>
             <p>Get all your affairs in order in one go</p>
-          </div>
+          </div> -->
           <div class="feature-card">
             <div class="feature-icon">👥</div>
             <h3>Group bookings</h3>
@@ -61,6 +53,14 @@ import { Router } from '@angular/router';
             <h3>Avoid long queues with us!</h3>
             <p>Spend less time standing around</p>
           </div>
+        </div>
+
+        <div class="cta-section">
+          <h2>Ready to get started?</h2>
+          <p>Experience the improved DHA booking system</p>
+          <button (click)="startBooking()" class="cta-button">
+            Book Today
+          </button>
         </div>
 
         <div class="info-section">
@@ -160,9 +160,14 @@ import { Router } from '@angular/router';
 
       .features-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 20px;
         margin-bottom: 40px;
+      }
+
+      /* Make the last item fill the row */
+      .features-grid > :last-child {
+        grid-column: 1 / -1;
       }
 
       .feature-card {
@@ -265,37 +270,157 @@ import { Router } from '@angular/router';
         left: 0;
       }
 
-      @media (max-width: 768px) {
-        .demo-container{
-          padding: 0;
+      @media (max-width: 780px) {
+        .demo-container {
+          padding: 10px;
         }
         .demo-card {
-          padding: 20px;
+          padding: 20px 15px;
         }
 
         .header-section {
           flex-direction: column;
           gap: 10px;
+          margin-bottom: 15px;
         }
 
         .demo-logo {
-          height: 60px;
+          height: 50px;
         }
 
         h4 {
-          font-size: 1.3rem;
+          font-size: 1.2rem;
         }
 
         h1 {
-          font-size: 2rem;
+          font-size: 1.8rem;
+          margin-bottom: 8px;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+          margin-bottom: 25px;
         }
 
         .features-grid {
-          grid-template-columns: 1fr;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+          margin-bottom: 25px;
+        }
+
+        .feature-card {
+          padding: 12px;
+          border-radius: 8px;
+        }
+
+        .feature-icon {
+          font-size: 2rem;
+          margin-bottom: 8px;
+        }
+
+        .feature-card h3 {
+          font-size: 0.9rem;
+          margin-bottom: 6px;
+          line-height: 1.2;
+        }
+
+        .feature-card p {
+          font-size: 0.75rem;
+          line-height: 1.3;
+        }
+
+        .cta-section {
+          padding: 20px;
+          margin-bottom: 20px;
+        }
+
+        .cta-section h2 {
+          font-size: 1.4rem;
+        }
+
+        .cta-section p {
+          font-size: 0.9rem;
+          margin-bottom: 15px;
+        }
+
+        .cta-button {
+          padding: 12px 24px;
+          font-size: 1rem;
         }
 
         .services-list {
           grid-template-columns: 1fr;
+          padding: 0 10px;
+        }
+
+        .services-list li {
+          font-size: 0.9rem;
+          padding: 6px 0 6px 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .demo-container {
+          padding: 5px;
+        }
+
+        .demo-card {
+          padding: 15px 10px;
+        }
+
+        h1 {
+          font-size: 1.6rem;
+        }
+
+        .subtitle {
+          font-size: 0.9rem;
+          margin-bottom: 20px;
+        }
+
+        .features-grid {
+          gap: 8px;
+          margin-bottom: 20px;
+          grid-template-columns: repeat(2, 1fr);
+        }
+        /* unset grid-column: 1 / -1; */
+        .features-grid > :last-child {
+          grid-column: auto;
+        }
+
+        .feature-card {
+          padding: 10px;
+        }
+
+        .feature-icon {
+          font-size: 1.8rem;
+          margin-bottom: 6px;
+        }
+
+        .feature-card h3 {
+          font-size: 0.8rem;
+          margin-bottom: 4px;
+        }
+
+        .feature-card p {
+          font-size: 0.7rem;
+        }
+
+        .cta-section {
+          padding: 15px;
+        }
+
+        .cta-section h2 {
+          font-size: 1.2rem;
+        }
+
+        .cta-button {
+          padding: 10px 20px;
+          font-size: 0.9rem;
+        }
+
+        .services-list li {
+          padding: 6px 0 6px 20px;
+          font-size: 0.85rem;
         }
       }
     `,

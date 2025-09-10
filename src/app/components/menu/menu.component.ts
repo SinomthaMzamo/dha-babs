@@ -35,7 +35,7 @@ import { ReactiveFormsModule } from '@angular/forms';
           <div class="menu-grid">
             <!-- Schedule Appointment -->
             <div class="menu-item" (click)="scheduleAppointment()">
-              <div class="menu-icon">📅</div>
+              <!-- <div class="menu-icon">📅</div> -->
               <h3>Schedule Appointment</h3>
               <p>Book a new appointment for DHA services</p>
               <div class="menu-arrow">→</div>
@@ -43,7 +43,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
             <!-- Edit Contact Details -->
             <div class="menu-item" (click)="editContactDetails()">
-              <div class="menu-icon">✏️</div>
+              <!-- <div class="menu-icon">✏️</div> -->
               <h3>Edit Contact Details</h3>
               <p>Update your personal information and contact details</p>
               <div class="menu-arrow">→</div>
@@ -55,7 +55,7 @@ import { ReactiveFormsModule } from '@angular/forms';
               [class.disabled]="!hasAppointment()"
               (click)="hasAppointment() ? viewAppointment() : null"
             >
-              <div class="menu-icon">👁️</div>
+              <!-- <div class="menu-icon">👁️</div> -->
               <h3>View Appointment</h3>
               <p>
                 {{
@@ -69,7 +69,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
             <!-- All Active Appointments -->
             <div class="menu-item" (click)="viewAllAppointments()">
-              <div class="menu-icon">📋</div>
+              <!-- <div class="menu-icon">📋</div> -->
               <h3>All Active Appointments</h3>
               <p>View and manage all your scheduled appointments</p>
               <div class="menu-arrow">→</div>
@@ -279,7 +279,6 @@ import { ReactiveFormsModule } from '@angular/forms';
       .menu-footer {
         text-align: center;
         padding-top: 30px;
-        border-top: 2px solid var(--DividerGray);
       }
 
       .btn-secondary {
@@ -305,8 +304,11 @@ import { ReactiveFormsModule } from '@angular/forms';
         }
 
         .menu-card {
-          padding: 20px 15px;
+          padding: 10px 8px;
           border-radius: 12px;
+          height: 660px;
+          overflow-y: auto;
+          box-sizing: border-box;
         }
 
         .welcome-section {
@@ -324,18 +326,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 
         .menu-grid {
           grid-template-columns: 1fr;
-          gap: 15px;
-          margin-bottom: 25px;
+          gap: 8px;
+          margin-bottom: 16px;
         }
 
         .menu-item {
-          padding: 18px;
+          padding: 8px;
           border-radius: 10px;
         }
 
         .menu-icon {
-          font-size: 2.2rem;
-          margin-bottom: 12px;
+          font-size: 1.5rem;
+          margin-bottom: 0;
         }
 
         .menu-item h3 {
@@ -355,7 +357,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         }
 
         .menu-footer {
-          padding-top: 20px;
+          padding-top: 10px;
         }
 
         .btn-secondary {
@@ -374,7 +376,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
       @media (max-width: 480px) {
         .menu-card {
-          padding: 15px 12px;
+          padding: 10px 8px;
           margin: 10px;
         }
 
@@ -391,8 +393,8 @@ import { ReactiveFormsModule } from '@angular/forms';
         }
 
         .menu-icon {
-          font-size: 2rem;
-          margin-bottom: 10px;
+          font-size: 1.5rem;
+          margin-bottom: 0;
         }
 
         .menu-item h3 {

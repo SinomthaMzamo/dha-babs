@@ -27,66 +27,72 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
     </div>
 
     <div class="auth-container">
-      <div class="auth-card">
+      <div class="auth-content-wrapper">
         <app-progress-indicator [currentStep]="0"></app-progress-indicator>
-        <h2>Sign In</h2>
+        <div class="auth-card">
+          <h2>Sign In</h2>
 
-        <form [formGroup]="authForm" (ngSubmit)="onSubmit()" autocomplete="on">
-          <div class="form-group">
-            <label for="idType">ID Type *</label>
-            <select id="idType" formControlName="idType" class="form-control">
-              <option value="">Select ID Type</option>
-              <option value="id">ID Number</option>
-              <option value="passport">Passport Number</option>
-            </select>
-            <div
-              *ngIf="
-                authForm.get('idType')?.invalid &&
-                authForm.get('idType')?.touched
-              "
-              class="error-message"
-            >
-              Please select an ID type
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="idNumber">ID Number *</label>
-            <input
-              type="text"
-              id="idNumber"
-              formControlName="idNumber"
-              class="form-control"
-              placeholder="Enter 13-digit ID number"
-              maxlength="13"
-              autocomplete="username"
-            />
-            <div
-              *ngIf="
-                authForm.get('idNumber')?.invalid &&
-                authForm.get('idNumber')?.touched
-              "
-              class="error-message"
-            >
-              <div *ngIf="authForm.get('idNumber')?.errors?.['required']">
-                ID number is required
-              </div>
-              <div *ngIf="authForm.get('idNumber')?.errors?.['pattern']">
-                ID number must be exactly 13 digits
+          <form
+            [formGroup]="authForm"
+            (ngSubmit)="onSubmit()"
+            autocomplete="on"
+          >
+            <div class="form-group">
+              <label for="idType">ID Type *</label>
+              <select id="idType" formControlName="idType" class="form-control">
+                <option value="">Select ID Type</option>
+                <option value="id">ID Number</option>
+                <option value="passport">Passport Number</option>
+              </select>
+              <div
+                *ngIf="
+                  authForm.get('idType')?.invalid &&
+                  authForm.get('idType')?.touched
+                "
+                class="error-message"
+              >
+                Please select an ID type
               </div>
             </div>
-          </div>
 
-          <div class="button-group">
-            <button
-              type="submit"
-              [disabled]="authForm.invalid"
-              class="btn-primary"
-            >
-              Continue
-            </button>
-          </div>
-        </form>
+            <div class="form-group">
+              <label for="idNumber">ID Number *</label>
+              <input
+                type="text"
+                id="idNumber"
+                formControlName="idNumber"
+                class="form-control"
+                placeholder="Enter 13-digit ID number"
+                maxlength="13"
+                autocomplete="username"
+              />
+              <div
+                *ngIf="
+                  authForm.get('idNumber')?.invalid &&
+                  authForm.get('idNumber')?.touched
+                "
+                class="error-message"
+              >
+                <div *ngIf="authForm.get('idNumber')?.errors?.['required']">
+                  ID number is required
+                </div>
+                <div *ngIf="authForm.get('idNumber')?.errors?.['pattern']">
+                  ID number must be exactly 13 digits
+                </div>
+              </div>
+            </div>
+
+            <div class="button-group">
+              <button
+                type="submit"
+                [disabled]="authForm.invalid"
+                class="btn-primary"
+              >
+                Continue
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   `,
@@ -185,13 +191,21 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         padding: 20px;
       }
 
+      .auth-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: var(--step-form-gap);
+        width: var(--form-width);
+      }
+
       .auth-card {
         background: var(--DHAWhite);
         padding: 40px;
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         width: 100%;
-        max-width: 500px;
+        box-sizing: border-box;
+        height: var(--mobile-form-height);
       }
 
       h2 {
@@ -268,9 +282,13 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         }
         .auth-container {
           padding: 0 8px;
+          margin-top: 73px;
         }
         .auth-card {
           padding: 20px;
+          height: var(--mobile-form-height);
+          overflow-y: auto;
+          box-sizing: border-box;
         }
 
         .btn-home-top {

@@ -64,196 +64,158 @@ interface BookingPerson {
           *ngIf="currentStep === 'preview'"
           class="booking-preview-container"
         >
-          <div class="booking-preview-card">
+          <div class="booking-preview-content-wrapper">
             <app-progress-indicator
               [currentStep]="getBookingStep()"
               [steps]="stepTitles"
             ></app-progress-indicator>
-            <h2>Select Services Required</h2>
-
-            <!-- Applicants List -->
-            <div class="applicants-list">
-              <div class="applicants-header">
-                <div class="header-info">
-                  <h4>Booking Applicants ({{ bookingPersons.length }})</h4>
-                  <p class="header-description">
-                    Manage applicants and their required services
-                  </p>
-                </div>
-                <div class="header-actions">
-                  <button
-                    type="button"
-                    (click)="addPersonToBooking()"
-                    class="action-btn std"
-                    title="Add an accompanying applicant to this booking"
-                  >
-                    <span class="btn-icon">👤+</span>
-                    <span class="btn-text">Add Applicant</span>
-                  </button>
-                  <button
-                    type="button"
-                    (click)="removePersonFromBooking()"
-                    class="action-btn std"
-                    [disabled]="bookingPersons.length <= 1"
-                    title="Remove an additional applicant from this booking"
-                  >
-                    <span class="btn-icon">👤-</span>
-                    <span class="btn-text">Remove</span>
-                  </button>
-                  <button
-                    type="button"
-                    (click)="clearAllPersons()"
-                    class="action-btn white"
-                    [disabled]="bookingPersons.length <= 1"
-                    title="Remove all additional applicants from this booking"
-                  >
-                    <span class="btn-icon">🗑️</span>
-                    <span class="btn-text">Clear All</span>
-                  </button>
-                </div>
-              </div>
-
-              <div *ngIf="bookingPersons.length > 0" class="applicants-grid">
-                <div
-                  *ngFor="let person of bookingPersons; let i = index"
-                  class="applicant-card"
-                  [class.primary-applicant]="person.type === 'Main Applicant'"
-                >
-                  <div class="applicant-header">
-                    <div class="applicant-info">
-                      <span class="applicant-name "
-                        >{{ person.name }} ({{ person.type }})</span
-                      >
-                      <span class="applicant-type">{{ person.idNumber }}</span>
-                    </div>
-                    <button
-                      *ngIf="bookingPersons.length > 1"
-                      type="button"
-                      (click)="removeSpecificPerson(i)"
-                      class="remove-applicant-btn"
-                      title="Remove this applicant"
+            <div class="booking-preview-card">
+              <h2>Select Services Required</h2>
+              <div class="card-wrapper">
+                <div class="registered-applicants">
+                  <h6>
+                    Manage booking applicants and their required services ({{
+                      bookingPersons.length
+                    }})
+                  </h6>
+                  <!-- Applicants List -->
+                  <div class="applicants-list">
+                    <div
+                      *ngIf="bookingPersons.length > 0"
+                      class="applicants-grid"
                     >
-                      ×
+                      <div
+                        *ngFor="let person of bookingPersons; let i = index"
+                        class="applicant-card"
+                        [class.primary-applicant]="
+                          person.type === 'Main Applicant'
+                        "
+                      >
+                        <div class="applicant-header">
+                          <div class="applicant-info">
+                            <span class="applicant-name "
+                              >{{ person.name }} ({{ person.type }})</span
+                            >
+                            <span class="applicant-type">{{
+                              person.idNumber
+                            }}</span>
+                          </div>
+                          <button
+                            *ngIf="bookingPersons.length > 1"
+                            type="button"
+                            (click)="removeSpecificPerson(i)"
+                            class="remove-applicant-btn"
+                            title="Remove this applicant"
+                          >
+                            ×
+                          </button>
+                        </div>
+
+                        <div class="applicant-services">
+                          <div class="services-header">
+                            <span class="services-label"
+                              >Required Services:</span
+                            >
+                            <button
+                              type="button"
+                              (click)="editPersonServices(i)"
+                              class="edit-services-btn"
+                              title="Edit services for this applicant"
+                            >
+                              {{
+                                person.selectedServices.length === 0
+                                  ? 'Add Services'
+                                  : 'Edit Services'
+                              }}
+                            </button>
+                          </div>
+
+                          <div class="person-services-preview">
+                            <div
+                              *ngIf="person.selectedServices.length === 0"
+                              class="no-services"
+                            >
+                              <span>No services selected</span>
+                            </div>
+                            <div
+                              *ngFor="let service of person.selectedServices"
+                              class="service-badge"
+                            >
+                              <span>{{ service.name }}</span>
+                              <button
+                                type="button"
+                                (click)="removeServiceFromPerson(i, service)"
+                                class="remove-service-btn"
+                                title="Remove this service"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="applicants-header">
+                  <div class="header-info">
+                    <p class="header-description">
+                      Add additional applicants to this booking
+                    </p>
+                  </div>
+                  <div class="header-actions">
+                    <button
+                      type="button"
+                      (click)="addPersonToBooking()"
+                      class="action-btn std"
+                      title="Add an accompanying applicant to this booking"
+                    >
+                      <!-- <span class="btn-icon">👤+</span> -->
+                      <span class="btn-text">Add Applicant</span>
+                    </button>
+                    <button
+                      type="button"
+                      (click)="removePersonFromBooking()"
+                      class="action-btn std"
+                      [disabled]="bookingPersons.length <= 1"
+                      title="Remove an additional applicant from this booking"
+                    >
+                      <!-- <span class="btn-icon">👤-</span> -->
+                      <span class="btn-text">Remove</span>
+                    </button>
+                    <button
+                      type="button"
+                      (click)="clearAllPersons()"
+                      class="action-btn white"
+                      [disabled]="bookingPersons.length <= 1"
+                      title="Remove all additional applicants from this booking"
+                    >
+                      <!-- <span class="btn-icon">🗑️</span> -->
+                      <span class="btn-text">Clear All</span>
                     </button>
                   </div>
+                </div>
 
-                  <div class="applicant-services">
-                    <div class="services-header">
-                      <span class="services-label">Required Services:</span>
-                      <button
-                        type="button"
-                        (click)="editPersonServices(i)"
-                        class="edit-services-btn"
-                        title="Edit services for this applicant"
-                      >
-                        {{
-                          person.selectedServices.length === 0
-                            ? 'Add Services'
-                            : 'Edit Services'
-                        }}
-                      </button>
-                    </div>
-
-                    <div class="person-services-preview">
-                      <div
-                        *ngIf="person.selectedServices.length === 0"
-                        class="no-services"
-                      >
-                        <span>No services selected</span>
-                      </div>
-                      <div
-                        *ngFor="let service of person.selectedServices"
-                        class="service-badge"
-                      >
-                        <span>{{ service.name }}</span>
-                        <button
-                          type="button"
-                          (click)="removeServiceFromPerson(i, service)"
-                          class="remove-service-btn"
-                          title="Remove this service"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                  <button
+                    type="button"
+                    (click)="goBack()"
+                    class="btn-secondary"
+                  >
+                    Back to Menu
+                  </button>
+                  <button
+                    type="button"
+                    (click)="proceedToLocation()"
+                    [disabled]="!hasAnyServicesSelected()"
+                    class="btn-primary"
+                  >
+                    Continue to Location
+                  </button>
                 </div>
               </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="action-buttons">
-              <button type="button" (click)="goBack()" class="btn-secondary">
-                Back to Menu
-              </button>
-              <button
-                type="button"
-                (click)="proceedToLocation()"
-                [disabled]="!hasAnyServicesSelected()"
-                class="btn-primary"
-              >
-                Continue to Location
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Service Selection Modal -->
-        <div
-          *ngIf="showServiceModal"
-          class="modal-overlay"
-          (click)="closeServiceModal()"
-        >
-          <div class="modal-content" (click)="$event.stopPropagation()">
-            <div class="modal-header">
-              <h3>Select Services</h3>
-              <button
-                type="button"
-                (click)="closeServiceModal()"
-                class="modal-close"
-              >
-                ×
-              </button>
-            </div>
-            <div class="modal-body">
-              <p class="modal-description">Choose the services you need:</p>
-              <div class="services-list">
-                <div
-                  *ngFor="let service of availableServices"
-                  class="service-item"
-                >
-                  <label class="service-checkbox">
-                    <input
-                      type="checkbox"
-                      [checked]="service.checked"
-                      (change)="toggleService(service)"
-                    />
-                    <span class="checkmark"></span>
-                  </label>
-                  <div class="service-details">
-                    <div class="service-name">{{ service.name }}</div>
-                    <div class="service-description">
-                      {{ service.description }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                (click)="closeServiceModal()"
-                class="btn-secondary"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                (click)="saveServices()"
-                class="btn-primary"
-              >
-                Save Services
-              </button>
             </div>
           </div>
         </div>
@@ -519,7 +481,7 @@ interface BookingPerson {
             <div class="modal-header">
               <h3>
                 Select Services for
-                {{ bookingPersons[currentPersonIndex].name }}
+                {{ bookingPersons[currentPersonIndex].name.split(' ')[0] }}
               </h3>
               <button
                 type="button"
@@ -600,7 +562,7 @@ interface BookingPerson {
         >
           <div class="confirm-booking-card">
             <app-progress-indicator
-              [currentStep]="4"
+              [currentStep]="3"
               [steps]="stepTitles"
             ></app-progress-indicator>
 
@@ -816,11 +778,23 @@ interface BookingPerson {
 
       /* Booking Preview Styles */
       .booking-preview-container {
-        min-height: calc(100vh - 70px);
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 70px);
+        background: linear-gradient(
+          135deg,
+          var(--DHAOffWhite) 0%,
+          #e8f5e8 100%
+        );
         padding: 20px;
+      }
+
+      .booking-preview-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: var(--step-form-gap);
+        width: var(--form-width);
       }
 
       .booking-preview-card {
@@ -828,7 +802,8 @@ interface BookingPerson {
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         padding: 30px;
-        width: 600px;
+        width: 100%;
+        height: var(--mobile-form-height);
         /* width: fit-content; */
         /* min-width: 400px; */
         box-sizing: border-box;
@@ -837,7 +812,7 @@ interface BookingPerson {
       .booking-preview-card h2 {
         color: var(--DHAGreen);
         font-size: 24px;
-        margin-bottom: 8px;
+        margin: 16px 0;
         text-align: center;
       }
 
@@ -970,11 +945,7 @@ interface BookingPerson {
 
       /* Integrated Applicants List Styles */
       .applicants-list {
-        /* background: var(--DHAOffWhite); */
-        /* border: 1px solid var(--DHABackGroundLightGray); */
         border-radius: 12px;
-        padding: 20px;
-        margin-top: 25px;
       }
 
       .applicants-header {
@@ -982,8 +953,7 @@ interface BookingPerson {
         flex-direction: column;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 25px;
-        gap: 20px;
+        gap: 8px;
         padding-bottom: 20px;
         border-bottom: 1px solid var(--DHABackGroundLightGray);
       }
@@ -993,13 +963,23 @@ interface BookingPerson {
         min-width: 0;
       }
 
-      .header-info h4 {
+      .header-info h4,
+      h4,
+      h6 {
         color: var(--DHATextGrayDark);
         font-size: 18px;
         margin-bottom: 8px;
         font-weight: 600;
         line-height: 1.3;
         margin-top: 0;
+      }
+
+      h6 {
+        font-size: 16px;
+        color: var(--DHATextGray);
+        font-weight: normal;
+        margin-bottom: 30px;
+        margin-top: 10px;
       }
 
       .header-description {
@@ -1013,9 +993,7 @@ interface BookingPerson {
       .header-actions {
         display: flex;
         gap: 12px;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        flex-shrink: 0;
+        width: 100%;
       }
 
       .action-btn {
@@ -1031,10 +1009,11 @@ interface BookingPerson {
         display: flex;
         align-items: center;
         gap: 8px;
-        min-width: 100px;
+        min-width: 0;
+        height: 44px;
         white-space: nowrap;
-        height: 40px;
         justify-content: center;
+        flex: 1;
       }
       .action-btn.std {
         background: var(--DHAWhite);
@@ -1081,11 +1060,13 @@ interface BookingPerson {
 
       .btn-icon {
         font-size: 14px;
+        white-space: nowrap;
       }
 
       .btn-text {
         font-size: 12px;
         font-weight: 500;
+        white-space: normal;
       }
 
       .book-service-container .main-content .confirm-booking-container {
@@ -1266,9 +1247,8 @@ interface BookingPerson {
       /* Responsive styles for applicants header */
       @media (max-width: 768px) {
         .applicants-header {
-          flex-direction: column;
           align-items: stretch;
-          gap: 20px;
+          gap: 8px;
           padding-bottom: 15px;
         }
 
@@ -1277,7 +1257,7 @@ interface BookingPerson {
         }
 
         .header-description {
-          font-size: 12px;
+          font-size: 14px;
           max-width: none;
         }
 
@@ -1286,8 +1266,19 @@ interface BookingPerson {
           gap: 10px;
         }
 
+        .applicant-card {
+          padding: 8px;
+        }
+
+        .applicant-services {
+          padding-top: 8px;
+        }
+
+        .services-header {
+          margin-bottom: 6px;
+        }
+
         .action-btn {
-          flex: 1;
           min-width: 0;
           height: 44px;
         }
@@ -1304,7 +1295,6 @@ interface BookingPerson {
 
       @media (max-width: 480px) {
         .header-actions {
-          flex-direction: column;
         }
 
         .action-btn {
@@ -1315,14 +1305,14 @@ interface BookingPerson {
       .applicants-grid {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
       }
 
       .applicant-card {
         background: var(--DHAWhite);
         border: 1px solid var(--DHABackGroundLightGray);
         border-radius: 10px;
-        padding: 16px;
+        padding: 8px;
         transition: all 0.3s ease;
       }
 
@@ -1332,12 +1322,23 @@ interface BookingPerson {
       }
 
       .applicant-card.primary-applicant {
-        border-color: var(--DHAGreen);
+        box-shadow: 0 2px 8p xrgba(248, 170, 24, 0.36);
         background: linear-gradient(
           135deg,
           var(--DHAOffWhite) 0%,
           var(--DHAWhite) 100%
         );
+      }
+
+      .card-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .registered-applicants {
+        border-bottom: 1px solid var(--DHABackGroundLightGray);
+        padding-bottom: 20px;
       }
 
       .applicant-header {
@@ -1540,7 +1541,6 @@ interface BookingPerson {
       .action-buttons {
         display: flex;
         gap: 15px;
-        margin-top: 30px;
       }
 
       .btn-primary,
@@ -1770,14 +1770,17 @@ interface BookingPerson {
           padding: 0;
         }
         .booking-preview-container {
-          padding: 0;
+          padding: 1rem auto;
         }
 
         .booking-preview-card {
           padding: 20px;
           min-width: unset;
-          max-width: 100%;
+          max-width: 600px;
           width: 100%;
+          height: var(--mobile-form-height);
+          overflow-y: auto;
+          box-sizing: border-box;
         }
 
         .booking-preview-card h2 {
@@ -1787,9 +1790,10 @@ interface BookingPerson {
         .action-buttons {
           flex-direction: column;
         }
-
+        .modal-overlay {
+          padding: 10px;
+        }
         .modal-content {
-          margin: 10px;
           max-height: 90vh;
         }
 
@@ -1967,6 +1971,18 @@ interface BookingPerson {
 
           .info-grid {
             grid-template-columns: 1fr;
+          }
+
+          .applicant-header {
+            margin-bottom: 8px;
+          }
+
+          .applicant-services {
+            padding-top: 8px;
+          }
+
+          .services-header[_ngcontent-ng-c3851277952] {
+            margin-bottom: 6px;
           }
         }
 

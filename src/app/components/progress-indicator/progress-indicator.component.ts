@@ -46,12 +46,12 @@ import { CommonModule } from '@angular/common';
         --DHABackGroundLightGray: #f4f4f4;
         --DividerGray: #949494;
         --DHADisabledTextGray: #c4c4c4;
+        max-width: 600px;
       }
 
       .progress-container {
         margin-bottom: 20px;
         padding: 8px 0;
-        max-width: 800px;
         margin: 0 auto;
       }
 

@@ -47,303 +47,305 @@ interface Branch {
   imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent],
   template: `
     <div class="appointment-form-container">
-      <div class="appointment-form-card">
+      <div class="appointment-form-content-wrapper">
         <app-progress-indicator
           [currentStep]="1"
           [steps]="stepTitles"
         ></app-progress-indicator>
-        <h2>Step 3: Book A New Appointment</h2>
+        <div class="appointment-form-card">
+          <h2>Book A New Appointment</h2>
 
-        <form
-          [formGroup]="appointmentForm"
-          (ngSubmit)="onSubmit()"
-          (click)="onDocumentClick($event)"
-          autocomplete="on"
-        >
-          <!-- Selected Services Display -->
-          <div
-            class="form-section collapsible"
-            *ngIf="selectedServices && selectedServices.length > 0"
-            data-section="selectedServices"
+          <form
+            [formGroup]="appointmentForm"
+            (ngSubmit)="onSubmit()"
+            (click)="onDocumentClick($event)"
+            autocomplete="on"
           >
+            <!-- Selected Services Display -->
             <div
-              class="section-header"
-              (click)="toggleSection('selectedServices')"
-              (focus)="onSectionFocus('selectedServices')"
-              tabindex="0"
+              class="form-section collapsible"
+              *ngIf="selectedServices && selectedServices.length > 0"
+              data-section="selectedServices"
             >
-              <h3>Applicants & Selected Services</h3>
-              <span
-                class="expand-icon"
-                [class.expanded]="selectedServicesExpanded"
-                >▼</span
-              >
-            </div>
-            <div
-              class="section-content"
-              [class.expanded]="selectedServicesExpanded"
-            >
-              <!-- Applicant Information Cards -->
               <div
-                class="applicants-overview"
-                *ngIf="bookingPersons && bookingPersons.length > 0"
+                class="section-header"
+                (click)="toggleSection('selectedServices')"
+                (focus)="onSectionFocus('selectedServices')"
+                tabindex="0"
               >
-                <div
-                  *ngFor="let person of bookingPersons; let i = index"
-                  class="applicant-card"
+                <h3>Applicants & Selected Services</h3>
+                <span
+                  class="expand-icon"
+                  [class.expanded]="selectedServicesExpanded"
+                  >▼</span
                 >
-                  <div class="applicant-header capitalised">
-                    <div class="applicant-info">
-                      <h4 class="applicant-name">{{ person.name }}</h4>
-                      <span class="applicant-type">{{ person.type }}</span>
-                    </div>
-                    <div class="applicant-identifier" *ngIf="person.idNumber">
-                      <span class="identifier-label">ID Number</span>
-                      <span class="identifier-value">{{
-                        person.idNumber
-                      }}</span>
-                    </div>
-                  </div>
-
+              </div>
+              <div
+                class="section-content"
+                [class.expanded]="selectedServicesExpanded"
+              >
+                <!-- Applicant Information Cards -->
+                <div
+                  class="applicants-overview"
+                  *ngIf="bookingPersons && bookingPersons.length > 0"
+                >
                   <div
-                    class="applicant-services"
-                    *ngIf="
-                      person.selectedServices &&
-                      person.selectedServices.length > 0
-                    "
+                    *ngFor="let person of bookingPersons; let i = index"
+                    class="applicant-card"
                   >
-                    <div class="services-label">Selected Services:</div>
-                    <div class="services-list">
-                      <div
-                        *ngFor="let service of person.selectedServices"
-                        class="service-badge"
-                      >
-                        {{ service.name }}
+                    <div class="applicant-header capitalised">
+                      <div class="applicant-info">
+                        <h4 class="applicant-name">{{ person.name }}</h4>
+                        <span class="applicant-type">{{ person.type }}</span>
+                      </div>
+                      <div class="applicant-identifier" *ngIf="person.idNumber">
+                        <span class="identifier-label">ID Number</span>
+                        <span class="identifier-value">{{
+                          person.idNumber
+                        }}</span>
                       </div>
                     </div>
-                  </div>
 
-                  <div
-                    class="no-services"
-                    *ngIf="
-                      !person.selectedServices ||
-                      person.selectedServices.length === 0
-                    "
-                  >
-                    <span class="no-services-text">No services selected</span>
+                    <div
+                      class="applicant-services"
+                      *ngIf="
+                        person.selectedServices &&
+                        person.selectedServices.length > 0
+                      "
+                    >
+                      <div class="services-label">Selected Services:</div>
+                      <div class="services-list">
+                        <div
+                          *ngFor="let service of person.selectedServices"
+                          class="service-badge"
+                        >
+                          {{ service.name }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="no-services"
+                      *ngIf="
+                        !person.selectedServices ||
+                        person.selectedServices.length === 0
+                      "
+                    >
+                      <span class="no-services-text">No services selected</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fallback for legacy selectedServices -->
+                <div
+                  class="legacy-services"
+                  *ngIf="
+                    (!bookingPersons || bookingPersons.length === 0) &&
+                    selectedServices &&
+                    selectedServices.length > 0
+                  "
+                >
+                  <div class="services-label">Selected Services:</div>
+                  <div class="selected-services-display">
+                    <div
+                      *ngFor="let service of selectedServices"
+                      class="service-badge"
+                    >
+                      {{ service.name }}
+                    </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- Fallback for legacy selectedServices -->
+            <!-- Location Selection -->
+            <div class="form-section collapsible" data-section="location">
               <div
-                class="legacy-services"
-                *ngIf="
-                  (!bookingPersons || bookingPersons.length === 0) &&
-                  selectedServices &&
-                  selectedServices.length > 0
-                "
+                class="section-header"
+                (click)="toggleSection('location')"
+                (focus)="onSectionFocus('location')"
+                tabindex="0"
               >
-                <div class="services-label">Selected Services:</div>
-                <div class="selected-services-display">
-                  <div
-                    *ngFor="let service of selectedServices"
-                    class="service-badge"
-                  >
-                    {{ service.name }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Location Selection -->
-          <div class="form-section collapsible" data-section="location">
-            <div
-              class="section-header"
-              (click)="toggleSection('location')"
-              (focus)="onSectionFocus('location')"
-              tabindex="0"
-            >
-              <h3>Branch Selection</h3>
-              <span class="expand-icon" [class.expanded]="locationExpanded"
-                >▼</span
-              >
-            </div>
-            <div class="section-content" [class.expanded]="locationExpanded">
-              <p class="section-description">Choose your preferred branch:</p>
-
-              <div class="location-grid">
-                <div class="form-group">
-                  <label for="province">Province *</label>
-                  <select
-                    id="province"
-                    formControlName="province"
-                    (change)="onProvinceChange()"
-                    (focus)="onSectionFocus('location')"
-                    (blur)="onSectionBlur('location')"
-                  >
-                    <option value="">Select Province</option>
-                    <option
-                      *ngFor="let province of provinces"
-                      [value]="province.id"
-                    >
-                      {{ province.name }}
-                    </option>
-                  </select>
-                  <div
-                    *ngIf="
-                      appointmentForm.get('province')?.invalid &&
-                      appointmentForm.get('province')?.touched
-                    "
-                    class="error-message"
-                  >
-                    Province is required
-                  </div>
-                </div>
-
-                <div
-                  class="form-group"
-                  *ngIf="appointmentForm.get('province')?.value"
+                <h3>Branch Selection</h3>
+                <span class="expand-icon" [class.expanded]="locationExpanded"
+                  >▼</span
                 >
-                  <label for="area">Area *</label>
-                  <select
-                    id="area"
-                    formControlName="area"
-                    (change)="onAreaChange()"
-                    (focus)="onSectionFocus('location')"
-                    (blur)="onSectionBlur('location')"
-                  >
-                    <option value="">Select Area</option>
-                    <option
-                      *ngFor="let area of filteredAreas"
-                      [value]="area.id"
-                    >
-                      {{ area.name }}
-                    </option>
-                  </select>
-                  <div
-                    *ngIf="
-                      appointmentForm.get('area')?.invalid &&
-                      appointmentForm.get('area')?.touched
-                    "
-                    class="error-message"
-                  >
-                    Area is required
-                  </div>
-                </div>
+              </div>
+              <div class="section-content" [class.expanded]="locationExpanded">
+                <p class="section-description">Choose your preferred branch:</p>
 
-                <div
-                  class="form-group"
-                  *ngIf="appointmentForm.get('area')?.value"
-                >
-                  <label for="branch">Branch *</label>
-                  <select
-                    id="branch"
-                    formControlName="branch"
-                    (focus)="onSectionFocus('location')"
-                    (blur)="onSectionBlur('location')"
-                  >
-                    <option value="">Select Branch</option>
-                    <option
-                      *ngFor="let branch of filteredBranches"
-                      [value]="branch.id"
+                <div class="location-grid">
+                  <div class="form-group">
+                    <label for="province">Province *</label>
+                    <select
+                      id="province"
+                      formControlName="province"
+                      (change)="onProvinceChange()"
+                      (focus)="onSectionFocus('location')"
+                      (blur)="onSectionBlur('location')"
                     >
-                      {{ branch.name }}
-                    </option>
-                  </select>
+                      <option value="">Select Province</option>
+                      <option
+                        *ngFor="let province of provinces"
+                        [value]="province.id"
+                      >
+                        {{ province.name }}
+                      </option>
+                    </select>
+                    <div
+                      *ngIf="
+                        appointmentForm.get('province')?.invalid &&
+                        appointmentForm.get('province')?.touched
+                      "
+                      class="error-message"
+                    >
+                      Province is required
+                    </div>
+                  </div>
+
                   <div
-                    *ngIf="
-                      appointmentForm.get('branch')?.invalid &&
-                      appointmentForm.get('branch')?.touched
-                    "
-                    class="error-message"
+                    class="form-group"
+                    *ngIf="appointmentForm.get('province')?.value"
                   >
-                    Branch is required
+                    <label for="area">Area *</label>
+                    <select
+                      id="area"
+                      formControlName="area"
+                      (change)="onAreaChange()"
+                      (focus)="onSectionFocus('location')"
+                      (blur)="onSectionBlur('location')"
+                    >
+                      <option value="">Select Area</option>
+                      <option
+                        *ngFor="let area of filteredAreas"
+                        [value]="area.id"
+                      >
+                        {{ area.name }}
+                      </option>
+                    </select>
+                    <div
+                      *ngIf="
+                        appointmentForm.get('area')?.invalid &&
+                        appointmentForm.get('area')?.touched
+                      "
+                      class="error-message"
+                    >
+                      Area is required
+                    </div>
+                  </div>
+
+                  <div
+                    class="form-group"
+                    *ngIf="appointmentForm.get('area')?.value"
+                  >
+                    <label for="branch">Branch *</label>
+                    <select
+                      id="branch"
+                      formControlName="branch"
+                      (focus)="onSectionFocus('location')"
+                      (blur)="onSectionBlur('location')"
+                    >
+                      <option value="">Select Branch</option>
+                      <option
+                        *ngFor="let branch of filteredBranches"
+                        [value]="branch.id"
+                      >
+                        {{ branch.name }}
+                      </option>
+                    </select>
+                    <div
+                      *ngIf="
+                        appointmentForm.get('branch')?.invalid &&
+                        appointmentForm.get('branch')?.touched
+                      "
+                      class="error-message"
+                    >
+                      Branch is required
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Date Range Selection -->
-          <div class="form-section collapsible" data-section="dateRange">
-            <div
-              class="section-header"
-              (click)="toggleSection('dateRange')"
-              (focus)="onSectionFocus('dateRange')"
-              tabindex="0"
-            >
-              <h3>Select Booking Date Range</h3>
-              <span class="expand-icon" [class.expanded]="dateRangeExpanded"
-                >▼</span
+            <!-- Date Range Selection -->
+            <div class="form-section collapsible" data-section="dateRange">
+              <div
+                class="section-header"
+                (click)="toggleSection('dateRange')"
+                (focus)="onSectionFocus('dateRange')"
+                tabindex="0"
               >
-            </div>
-            <div class="section-content" [class.expanded]="dateRangeExpanded">
-              <p class="section-description">
-                Choose when you'd like to book your appointment:
-              </p>
+                <h3>Select Booking Date Range</h3>
+                <span class="expand-icon" [class.expanded]="dateRangeExpanded"
+                  >▼</span
+                >
+              </div>
+              <div class="section-content" [class.expanded]="dateRangeExpanded">
+                <p class="section-description">
+                  Choose when you'd like to book your appointment:
+                </p>
 
-              <div class="date-grid">
-                <div class="form-group">
-                  <label for="startDate">Start Date *</label>
-                  <input
-                    type="date"
-                    id="startDate"
-                    formControlName="startDate"
-                    [min]="today"
-                    (focus)="onSectionFocus('dateRange')"
-                    (blur)="onSectionBlur('dateRange')"
-                  />
-                  <div
-                    *ngIf="
-                      appointmentForm.get('startDate')?.invalid &&
-                      appointmentForm.get('startDate')?.touched
-                    "
-                    class="error-message"
-                  >
-                    Start date is required
+                <div class="date-grid">
+                  <div class="form-group">
+                    <label for="startDate">Start Date *</label>
+                    <input
+                      type="date"
+                      id="startDate"
+                      formControlName="startDate"
+                      [min]="today"
+                      (focus)="onSectionFocus('dateRange')"
+                      (blur)="onSectionBlur('dateRange')"
+                    />
+                    <div
+                      *ngIf="
+                        appointmentForm.get('startDate')?.invalid &&
+                        appointmentForm.get('startDate')?.touched
+                      "
+                      class="error-message"
+                    >
+                      Start date is required
+                    </div>
                   </div>
-                </div>
 
-                <div class="form-group">
-                  <label for="endDate">End Date *</label>
-                  <input
-                    type="date"
-                    id="endDate"
-                    formControlName="endDate"
-                    [min]="appointmentForm.get('startDate')?.value || today"
-                    (focus)="onSectionFocus('dateRange')"
-                    (blur)="onSectionBlur('dateRange')"
-                  />
-                  <div
-                    *ngIf="
-                      appointmentForm.get('endDate')?.invalid &&
-                      appointmentForm.get('endDate')?.touched
-                    "
-                    class="error-message"
-                  >
-                    End date is required
+                  <div class="form-group">
+                    <label for="endDate">End Date *</label>
+                    <input
+                      type="date"
+                      id="endDate"
+                      formControlName="endDate"
+                      [min]="appointmentForm.get('startDate')?.value || today"
+                      (focus)="onSectionFocus('dateRange')"
+                      (blur)="onSectionBlur('dateRange')"
+                    />
+                    <div
+                      *ngIf="
+                        appointmentForm.get('endDate')?.invalid &&
+                        appointmentForm.get('endDate')?.touched
+                      "
+                      class="error-message"
+                    >
+                      End date is required
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Action Buttons -->
-          <div class="button-group">
-            <button type="button" (click)="goBack()" class="btn-secondary">
-              Back
-            </button>
-            <button
-              type="submit"
-              [disabled]="!isFormValid()"
-              class="btn-primary"
-            >
-              Find Available Slots
-            </button>
-          </div>
-        </form>
+            <!-- Action Buttons -->
+            <div class="button-group">
+              <button type="button" (click)="goBack()" class="btn-secondary">
+                Back
+              </button>
+              <button
+                type="submit"
+                [disabled]="!isFormValid()"
+                class="btn-primary"
+              >
+                Find Available Slots
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   `,
@@ -365,13 +367,21 @@ interface Branch {
       .appointment-form-container {
         display: flex;
         justify-content: center;
-        padding: 20px;
+        align-items: center;
         min-height: calc(100vh - 70px);
         background: linear-gradient(
           135deg,
           var(--DHAOffWhite) 0%,
           #e8f5e8 100%
         );
+        padding: 20px;
+      }
+
+      .appointment-form-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: var(--step-form-gap);
+        width: var(--form-width);
       }
 
       .appointment-form-card {
@@ -379,15 +389,16 @@ interface Branch {
         border-radius: 16px;
         padding: 40px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        width: fit-content;
-        max-width: 600px;
-        min-width: 500px;
+        max-width: var(--form-width);
+        box-sizing: border-box;
+        height: var(--mobile-form-height);
+        overflow-y: auto;
       }
 
       h2 {
         color: var(--DHAGreen);
         margin-bottom: 30px;
-        font-size: 2rem;
+        font-size: 24px;
         font-weight: 700;
         text-align: center;
       }
@@ -486,7 +497,7 @@ interface Branch {
 
       .applicant-card {
         background: var(--DHAWhite);
-        border: 2px solid var(--DHABackGroundLightGray);
+        border: 2px solid var(--DHAWhite);
         border-radius: 12px;
         padding: 20px;
         transition: all 0.3s ease;
@@ -738,7 +749,12 @@ interface Branch {
         display: flex;
         gap: 20px;
         margin-top: 40px;
-        justify-content: center;
+        justify-content: space-between;
+      }
+
+      .button-group > * {
+        flex: 1;
+        white-space: nowrap;
       }
 
       .btn-primary,
@@ -782,11 +798,13 @@ interface Branch {
       @media (max-width: 768px) {
         .appointment-form-container {
           padding: 24px 2px;
+          flex-direction: column;
         }
         .appointment-form-card {
           padding: 25px 20px;
           min-width: unset;
-          max-width: 100%;
+          height: 600px;
+          overflow-y: auto;
           width: 100%;
         }
 

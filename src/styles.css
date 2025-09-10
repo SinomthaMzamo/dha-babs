@@ -7,6 +7,9 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
+  --mobile-form-height: 600px;
+  --step-form-gap: 16px;
+  --form-width: 500px;
 }
 
 /* Apply system fonts to body text */
@@ -34,6 +37,9 @@ li,
 td,
 th {
   font-family: var(--font-family-sans-serif);
+}
+
+body {
 }
 
 /* Keep button fonts as they are (they should inherit from their component styles) */

@@ -35,174 +35,197 @@ interface SlotSearchCriteria {
 
         <!-- No Slots Available -->
         <div *ngIf="!isLoading && noSlotsAvailable" class="no-slots-container">
-          <div class="no-slots-card">
+          <div class="content-wrapper">
             <app-progress-indicator
               [currentStep]="2"
               [steps]="stepTitles"
             ></app-progress-indicator>
-            <!-- <div class="no-slots-icon">📅</div> -->
-            <h3>No Available Slots Found</h3>
-            <p>
-              We couldn't find any available appointment slots for your selected
-              criteria.
-            </p>
-            <!-- Booking Summary - Always Visible -->
-            <div class="booking-summary">
-              <h3>📋 Booking Summary</h3>
-              <div class="summary-grid">
-                <div class="summary-item">
-                  <span class="summary-label">📍 Branch:</span>
-                  <span class="summary-value">{{
-                    getBranchDisplayName()
-                  }}</span>
+            <div class="no-slots-card">
+              <!-- <div class="no-slots-icon">📅</div> -->
+              <h3>No Available Slots Found</h3>
+              <p>
+                We couldn't find any available appointment slots for your
+                selected criteria.
+              </p>
+              <!-- Booking Summary - Always Visible -->
+              <div class="booking-summary">
+                <h3>📋 Booking Summary</h3>
+                <div class="summary-grid">
+                  <div class="summary-item">
+                    <span class="summary-label">📍 Branch:</span>
+                    <span class="summary-value">{{
+                      getBranchDisplayName()
+                    }}</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-label">📅 Date Range:</span>
+                    <span class="summary-value">{{
+                      getDateRangeDisplay()
+                    }}</span>
+                  </div>
+                  <!-- <div class="summary-item">
+                    <span class="summary-label">🔍 Search Date:</span>
+                    <span class="summary-value">{{
+                      getSearchDateDisplay()
+                    }}</span>
+                  </div> -->
                 </div>
-                <div class="summary-item">
-                  <span class="summary-label">📅 Date Range:</span>
-                  <span class="summary-value">{{ getDateRangeDisplay() }}</span>
-                </div>
-                <!-- <div class="summary-item">
-                  <span class="summary-label">🔍 Search Date:</span>
-                  <span class="summary-value">{{
-                    getSearchDateDisplay()
-                  }}</span>
-                </div> -->
+                <button
+                  type="button"
+                  (click)="editSearch()"
+                  class="action-btn std"
+                  title="Add an accompanying applicant to this booking"
+                >
+                  <div class="btn-contents">
+                    <span class="btn-icon">✏️</span>
+                    <span class="btn-text">Edit Search Criteria</span>
+                  </div>
+                </button>
               </div>
-              <button
-                type="button"
-                (click)="editSearch()"
-                class="action-btn std"
-                title="Add an accompanying applicant to this booking"
-              >
-                <div class="btn-contents">
-                  <span class="btn-icon">✏️</span>
-                  <span class="btn-text">Edit Search Criteria</span>
-                </div>
-              </button>
             </div>
           </div>
         </div>
 
         <!-- Available Slots -->
+
         <div
           *ngIf="!isLoading && !noSlotsAvailable && availableSlots.length > 0"
-          class="slots-container-wrapper"
         >
-          <app-progress-indicator
-            [currentStep]="2"
-            [steps]="stepTitles"
-          ></app-progress-indicator>
-          <!-- Booking Summary - Always Visible -->
-          <div class="booking-summary">
-            <h3>📋 Booking Summary</h3>
-            <div class="summary-grid">
-              <div class="summary-item">
-                <span class="summary-label">📍 Branch:</span>
-                <span class="summary-value">{{ getBranchDisplayName() }}</span>
-              </div>
-              <div class="summary-item">
-                <span class="summary-label">📅 Date Range:</span>
-                <span class="summary-value">{{ getDateRangeDisplay() }}</span>
-              </div>
-              <!-- <div class="summary-item">
-                <span class="summary-label">🔍 Search Date:</span>
-                <span class="summary-value">{{ getSearchDateDisplay() }}</span>
-              </div> -->
-            </div>
-            <button
-              type="button"
-              (click)="editSearch()"
-              class="action-btn std"
-              title="Add an accompanying applicant to this booking"
-            >
-              <div class="btn-contents">
-                <span class="btn-icon">✏️</span>
-                <span class="btn-text">Edit Search Criteria</span>
-              </div>
-            </button>
-          </div>
-
-          <!-- Available Slots - Grouped by Day -->
-          <div class="slots-container">
-            <div class="slots-header">
-              <h3>📅 Available Appointment Slots</h3>
-              <div class="slots-header-right">
-                <div class="slots-count">
-                  {{ getTotalSlotsCount() }} slots found across
-                  {{ getUniqueDaysCount() }} days
+          <div class="content-wrapper">
+            <app-progress-indicator
+              [currentStep]="2"
+              [steps]="stepTitles"
+            ></app-progress-indicator>
+            <div class="slots-container-wrapper">
+              <!-- Booking Summary - Always Visible -->
+              <div class="booking-summary">
+                <h3>📋 Booking Summary</h3>
+                <div class="summary-grid">
+                  <div class="summary-item">
+                    <span class="summary-label">📍 Branch:</span>
+                    <span class="summary-value">{{
+                      getBranchDisplayName()
+                    }}</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-label">📅 Date Range:</span>
+                    <span class="summary-value">{{
+                      getDateRangeDisplay()
+                    }}</span>
+                  </div>
+                  <!-- <div class="summary-item">
+                  <span class="summary-label">🔍 Search Date:</span>
+                  <span class="summary-value">{{ getSearchDateDisplay() }}</span>
+                </div> -->
                 </div>
                 <button
-                  *ngIf="shouldShowReturnToMenu()"
-                  (click)="returnToMenu()"
-                  class="btn-return-menu"
+                  type="button"
+                  (click)="editSearch()"
+                  class="action-btn std"
+                  title="Add an accompanying applicant to this booking"
                 >
-                  ← Return to Menu
+                  <div class="btn-contents">
+                    <span class="btn-icon">✏️</span>
+                    <span class="btn-text">Edit Search Criteria</span>
+                  </div>
                 </button>
               </div>
-            </div>
-
-            <div class="slots-grouped">
-              <div
-                *ngFor="let dayGroup of getPaginatedDayGroups()"
-                class="day-group"
-              >
-                <div class="day-header" (click)="toggleDayGroup(dayGroup.date)">
-                  <div class="day-info">
-                    <span class="day-date">{{
-                      dayGroup.date | date : 'EEEE, MMMM d, y'
-                    }}</span>
-                    <span class="day-slots-count"
-                      >{{ dayGroup.slots.length }} slot{{
-                        dayGroup.slots.length !== 1 ? 's' : ''
-                      }}</span
+              <!-- Available Slots - Grouped by Day -->
+              <div class="slots-container">
+                <div class="slots-header">
+                  <h3>📅 Available Appointment Slots</h3>
+                  <div class="slots-header-right">
+                    <div class="slots-count">
+                      {{ getTotalSlotsCount() }} slots found across
+                      {{ getUniqueDaysCount() }} days
+                    </div>
+                    <button
+                      *ngIf="shouldShowReturnToMenu()"
+                      (click)="returnToMenu()"
+                      class="btn-return-menu"
                     >
-                  </div>
-                  <div class="day-toggle">
-                    <span class="toggle-icon">{{
-                      dayGroup.isExpanded ? '▼' : '▶'
-                    }}</span>
+                      ← Return to Menu
+                    </button>
                   </div>
                 </div>
 
-                <div class="day-slots" [class.expanded]="dayGroup.isExpanded">
-                  <div *ngFor="let slot of dayGroup.slots" class="slot-item">
-                    <div class="slot-info">
-                      <div class="slot-time">{{ slot.time }}</div>
-                      <div class="slot-branch">
-                        {{ getBranchDisplayName() }}
+                <div class="slots-grouped">
+                  <div
+                    *ngFor="let dayGroup of getPaginatedDayGroups()"
+                    class="day-group"
+                  >
+                    <div
+                      class="day-header"
+                      (click)="toggleDayGroup(dayGroup.date)"
+                    >
+                      <div class="day-info">
+                        <span class="day-date">{{
+                          dayGroup.date | date : 'EEEE, MMMM d, y'
+                        }}</span>
+                        <span class="day-slots-count"
+                          >{{ dayGroup.slots.length }} slot{{
+                            dayGroup.slots.length !== 1 ? 's' : ''
+                          }}</span
+                        >
+                      </div>
+                      <div class="day-toggle">
+                        <span class="toggle-icon">{{
+                          dayGroup.isExpanded ? '▼' : '▶'
+                        }}</span>
                       </div>
                     </div>
-                    <div class="slot-actions">
-                      <button (click)="bookSlot(slot)" class="btn-book-slot">
-                        Select
-                      </button>
+
+                    <div
+                      class="day-slots"
+                      [class.expanded]="dayGroup.isExpanded"
+                    >
+                      <div
+                        *ngFor="let slot of dayGroup.slots"
+                        class="slot-item"
+                      >
+                        <div class="slot-info">
+                          <div class="slot-time">{{ slot.time }}</div>
+                          <div class="slot-branch">
+                            {{ getBranchDisplayName() }}
+                          </div>
+                        </div>
+                        <div class="slot-actions">
+                          <button
+                            (click)="bookSlot(slot)"
+                            class="btn-book-slot"
+                          >
+                            Select
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
+
+                <!-- Pagination Controls -->
+                <div class="pagination-controls">
+                  <!-- Load More Button -->
+                  <button
+                    *ngIf="hasMoreDays"
+                    (click)="loadMoreDays()"
+                    class="btn-load-more"
+                  >
+                    📅 See {{ getRemainingDaysCount() }} more day{{
+                      getRemainingDaysCount() !== 1 ? 's' : ''
+                    }}
+                    with available slots
+                  </button>
+
+                  <!-- Show Less Button -->
+                  <button
+                    *ngIf="currentPage > 1"
+                    (click)="showLessDays()"
+                    class="btn-show-less"
+                  >
+                    📅 Show Less ({{ daysPerPage }} days)
+                  </button>
+                </div>
               </div>
-            </div>
-
-            <!-- Pagination Controls -->
-            <div class="pagination-controls">
-              <!-- Load More Button -->
-              <button
-                *ngIf="hasMoreDays"
-                (click)="loadMoreDays()"
-                class="btn-load-more"
-              >
-                📅 See {{ getRemainingDaysCount() }} more day{{
-                  getRemainingDaysCount() !== 1 ? 's' : ''
-                }}
-                with available slots
-              </button>
-
-              <!-- Show Less Button -->
-              <button
-                *ngIf="currentPage > 1"
-                (click)="showLessDays()"
-                class="btn-show-less"
-              >
-                📅 Show Less ({{ daysPerPage }} days)
-              </button>
             </div>
           </div>
         </div>
@@ -226,6 +249,8 @@ interface SlotSearchCriteria {
       }
 
       .appointment-results-container {
+        display: flex;
+        justify-content: center;
         min-height: 100vh;
         background: linear-gradient(
           135deg,
@@ -376,6 +401,13 @@ interface SlotSearchCriteria {
         margin: 0 auto;
       }
 
+      .content-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: var(--step-form-gap);
+        width: var(--form-width);
+      }
+
       /* Available Slots */
       .slots-container {
         background: var(--DHAWhite);
@@ -454,8 +486,6 @@ interface SlotSearchCriteria {
         word-break: break-word;
       }
 
-      
-
       .btn-contents {
         display: flex;
         gap: 4px;
@@ -471,7 +501,6 @@ interface SlotSearchCriteria {
         font-weight: 500;
         cursor: pointer;
         transition: all 0.3s ease;
-        // text-decoration: underline;
         text-underline-offset: 2px;
         display: block;
         margin: 0 auto;
@@ -484,7 +513,6 @@ interface SlotSearchCriteria {
 
       .btn-icon {
         font-size: 14px;
-        // text-decoration: none;
       }
 
       .btn-text {
