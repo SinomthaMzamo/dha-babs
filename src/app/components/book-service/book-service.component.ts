@@ -204,7 +204,7 @@ interface BookingPerson {
                     (click)="goBack()"
                     class="btn-secondary"
                   >
-                    Back to Menu
+                    Back
                   </button>
                   <button
                     type="button"
@@ -482,7 +482,7 @@ interface BookingPerson {
                 [disabled]="addApplicantForm.invalid"
                 class="btn-primary"
               >
-                Add Applicant
+                Add
               </button>
             </div>
           </div>
@@ -547,7 +547,7 @@ interface BookingPerson {
                 (click)="savePersonServices()"
                 class="btn-primary"
               >
-                Save Services
+                Save
               </button>
             </div>
           </div>
@@ -685,14 +685,14 @@ interface BookingPerson {
                   (click)="goBackToResults()"
                   class="btn-secondary"
                 >
-                  ← Back to Slots
+                  ← Back
                 </button>
                 <button
                   type="button"
                   (click)="confirmBooking()"
                   class="btn-primary"
                 >
-                  ✅ Confirm Booking
+                  Confirm
                 </button>
               </div>
             </div>
@@ -1318,6 +1318,9 @@ interface BookingPerson {
       }
 
       @media (max-width: 480px) {
+
+        
+
         .header-actions {
         }
 
@@ -1632,7 +1635,7 @@ interface BookingPerson {
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        min-width: 150px;
+        min-width: 100px;
       }
 
       .btn-primary {
@@ -1863,6 +1866,7 @@ interface BookingPerson {
           padding: 0;
         }
         .booking-preview-container {
+          box-sizing: border-box;
         }
 
         .booking-preview-card {
@@ -1880,7 +1884,8 @@ interface BookingPerson {
         }
 
         .action-buttons {
-          flex-direction: column;
+         
+          gap: 10px;
         }
         .modal-overlay {
           padding: 10px;
@@ -1890,7 +1895,7 @@ interface BookingPerson {
         }
 
         .modal-footer {
-          flex-direction: column;
+          gap: 10px;
         }
 
         .book-service-container .confirm-booking-card {
@@ -2005,9 +2010,9 @@ interface BookingPerson {
         }
 
         .confirm-actions {
-          display: flex;
-          justify-content: space-between;
-          flex-direction: column;
+          /* display: flex;
+          // justify-content: space-between;
+          // flex-direction: column;*/
           gap: 8px;
           margin-top: 16px;
           padding-top: 12px;
@@ -2053,7 +2058,14 @@ interface BookingPerson {
         }
 
         @media (max-width: 768px) {
-          .book-service-container .main-content .confirm-booking-container {
+          .booking-preview-content-wrapper{
+            padding: 0 8px;
+            max-width: 100%;
+            box-sizing: border-box;
+          }
+          .book-service-container
+          .main-content
+          .confirm-booking-container {
             padding: 16px 12px;
           }
 
@@ -2081,6 +2093,9 @@ interface BookingPerson {
             flex-direction: column;
             gap: 5px;
           }
+
+          
+          
         }
 
         @media (max-width: 480px) {

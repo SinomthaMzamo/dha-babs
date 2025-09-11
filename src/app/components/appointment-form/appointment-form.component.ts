@@ -72,7 +72,7 @@ interface Branch {
                 (click)="toggleSection('selectedServices')"
                 tabindex="0"
               >
-                <h3>Applicants & Selected Services</h3>
+                <h3>Applicant Details</h3>
                 <span
                   class="expand-icon"
                   [class.expanded]="selectedServicesExpanded"
@@ -368,7 +368,7 @@ interface Branch {
                 [disabled]="!isFormValid()"
                 class="btn-primary"
               >
-                Find Available Slots
+                Search
               </button>
             </div>
           </form>
@@ -434,10 +434,10 @@ interface Branch {
       }
 
       .form-section {
-        margin-bottom: 28px;
+        margin-bottom: 10px;
         background: var(--DHAOffWhite);
-        border-radius: 12px;
-        border: 1px solid var(--DHAGreen);
+        border-radius: 8px;
+        border: 1px solid var(--DHATextGray);
         overflow: hidden;
       }
 
@@ -451,8 +451,8 @@ interface Branch {
         align-items: center;
         padding: 10px 12px;
         cursor: pointer;
-        background: var(--DHAGreen);
-        color: var(--DHAWhite);
+        background: var(--DHAWhite);
+        color: var(--DHAGreen);
         transition: background-color 0.3s ease;
       }
 
@@ -466,7 +466,7 @@ interface Branch {
       }
 
       .section-header h3 {
-        color: var(--DHAWhite);
+        color: var(--DHATextGrayDark);
         margin: 0;
         font-size: 1.1rem;
         font-weight: 600;
@@ -476,7 +476,7 @@ interface Branch {
       .expand-icon {
         font-size: 1.2rem;
         transition: transform 0.3s ease, color 0.3s ease;
-        color: var(--DHAWhite);
+        color: var(--DHATextGrayDark);
       }
 
       .section-header:hover .expand-icon {
@@ -511,7 +511,7 @@ interface Branch {
       }
 
       .section-description {
-        color: var(--DHATextGrayDark);
+        color: var(--DHATextGray);
         margin-bottom: 20px;
         font-size: 1rem;
         margin-top: 0;
@@ -535,12 +535,6 @@ interface Branch {
         margin-top: 20px;
         margin-bottom: 10px;
       }
-
-      /* .applicant-card:hover {
-         border-color: var(--DHAGreen);
-         box-shadow: 0 4px 12px rgba(1, 102, 53, 0.1);
-         padding: 20px;
-      }*/
 
       .applicant-header {
         display: flex;
@@ -1013,19 +1007,33 @@ interface Branch {
           padding: 20px 15px;
         }
 
+        .section-header h3 {
+          font-size: 16px;
+        }
+
+        .expand-icon {
+          font-size: 16px;
+        }
+
+        .section-description {
+          font-size: 14px;
+        }
+
         .location-grid,
         .date-grid {
           grid-template-columns: 1fr;
         }
 
         .button-group {
-          flex-direction: column;
-          align-items: space-between;
+          /*flex-direction: column;
+          align-items: space-between;*/
+          gap: 10px;
         }
 
         .btn-primary,
         .btn-secondary {
-          width: 100%;
+
+          min-width: 100px;
         }
       }
     `,
