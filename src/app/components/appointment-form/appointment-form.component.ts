@@ -987,8 +987,9 @@ interface Branch {
         }
 
         .appointment-form-container {
-          padding: 24px 2px;
+          padding: 24px 0;
           flex-direction: column;
+          justify-content: center;
         }
 
         .appointment-form-content-wrapper {
@@ -1033,7 +1034,7 @@ interface Branch {
         .btn-primary,
         .btn-secondary {
 
-          min-width: 100px;
+          min-width: 0;
         }
       }
     `,

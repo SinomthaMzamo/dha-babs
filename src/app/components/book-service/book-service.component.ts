@@ -717,6 +717,7 @@ interface BookingPerson {
         --DHABackGroundLightGray: #f4f4f4;
         --DividerGray: #949494;
         --DHAOffBlack: rgb(42, 41, 41);
+        --DHADisabledTextGray: #c4c4c4;
       }
 
       .book-service-container {
@@ -1318,9 +1319,6 @@ interface BookingPerson {
       }
 
       @media (max-width: 480px) {
-
-        
-
         .header-actions {
         }
 
@@ -1635,7 +1633,7 @@ interface BookingPerson {
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        min-width: 100px;
+        min-width: 0;
       }
 
       .btn-primary {
@@ -1884,7 +1882,6 @@ interface BookingPerson {
         }
 
         .action-buttons {
-         
           gap: 10px;
         }
         .modal-overlay {
@@ -2048,24 +2045,30 @@ interface BookingPerson {
           cursor: pointer;
           transition: all 0.3s ease;
           flex: 1;
-          box-shadow: 0 4px 15px rgba(1, 102, 53, 0.3);
         }
 
-        .btn-primary:hover {
-          background: linear-gradient(135deg, #018a3a 0%, var(--DHAGreen) 100%);
+        .btn-primary:hover:not(:disabled) {
+          background: var(--DHAWhite);
+          color: var(--DHAGreen);
+          border: 1px solid var(--DHAGreen);
           transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(1, 102, 53, 0.4);
+          /*box-shadow: 2px 4px rgba(1, 102, 53, 0.4);*/
+        }
+
+        .btn-primary:disabled {
+          background: var(--DHADisabledButtonGray);
+          color: var(--DHADisabledTextGray);
+          cursor: not-allowed;
+          box-shadow: none;
         }
 
         @media (max-width: 768px) {
-          .booking-preview-content-wrapper{
+          .booking-preview-content-wrapper {
             padding: 0 8px;
             max-width: 100%;
             box-sizing: border-box;
           }
-          .book-service-container
-          .main-content
-          .confirm-booking-container {
+          .book-service-container .main-content .confirm-booking-container {
             padding: 16px 12px;
           }
 
@@ -2094,8 +2097,10 @@ interface BookingPerson {
             gap: 5px;
           }
 
-          
-          
+          .modal-footer .btn-primary,
+          .modal-footer .btn-secondary {
+            min-width: 0;
+          }
         }
 
         @media (max-width: 480px) {

@@ -62,7 +62,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--step-form-gap);
-  max-width: var(--form-width);
+  width: var(--form-width);
   box-sizing: border-box;
 }
 
