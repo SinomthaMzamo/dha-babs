@@ -439,7 +439,7 @@ interface SlotSearchCriteria {
       /* Booking Summary */
       .booking-summary {
         border-radius: 12px;
-        padding-bottom: 10px;
+        padding-bottom: 1px;
         position: relative;
         overflow: hidden;
       }
@@ -868,7 +868,8 @@ interface SlotSearchCriteria {
         }
 
         .slots-container {
-          padding: 8px 0;
+          padding: 20px 15px;
+          padding-top: 0;
         }
 
         .slots-header {
