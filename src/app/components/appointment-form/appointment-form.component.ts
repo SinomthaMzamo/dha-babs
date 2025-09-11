@@ -989,11 +989,13 @@ interface Branch {
         .appointment-form-container {
           padding: 24px 0;
           flex-direction: column;
-          justify-content: center;
+          position: relative;
         }
 
         .appointment-form-content-wrapper {
           padding: 0 8px;
+          position: absolute;
+          top: 0;
         }
 
         .appointment-form-card {

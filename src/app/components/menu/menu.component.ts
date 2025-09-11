@@ -27,7 +27,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         <div class="menu-card">
           <div class="welcome-section">
             <h1 class="capitalised">
-              Welcome, {{ getPersonalInfo().forenames }}!
+              Welcome, {{ getPersonalInfo().forenames.split(' ')[0] }}!
             </h1>
             <p class="subtitle">What would you like to do today?</p>
           </div>
@@ -76,11 +76,11 @@ import { ReactiveFormsModule } from '@angular/forms';
             </div>
           </div>
 
-          <div class="menu-footer">
+          <!-- <div class="menu-footer">
             <button (click)="goBack()" class="btn-secondary">
               ← Back to Contact Info
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -312,7 +312,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         }
 
         .welcome-section {
-          margin-bottom: 25px;
+          margin-bottom: 20px;
         }
 
         .welcome-section h1 {
@@ -327,12 +327,13 @@ import { ReactiveFormsModule } from '@angular/forms';
         .menu-grid {
           grid-template-columns: 1fr;
           gap: 8px;
-          margin-bottom: 16px;
+          margin-bottom: 0;
         }
 
         .menu-item {
           padding: 8px;
           border-radius: 10px;
+          padding-bottom: calc(8px + 1.2rem);
         }
 
         .menu-icon {
@@ -375,7 +376,6 @@ import { ReactiveFormsModule } from '@angular/forms';
       }
 
       @media (max-width: 480px) {
-
         .menu-content {
           padding-left: 8px;
           padding-right: 8px;
@@ -389,6 +389,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
         .welcome-section h1 {
           font-size: 1.6rem;
+          margin-bottom: 0;
         }
 
         .subtitle {
@@ -397,6 +398,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
         .menu-item {
           padding: 15px;
+          padding-bottom: calc(15px + 1.1rem);
         }
 
         .menu-icon {

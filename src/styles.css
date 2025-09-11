@@ -73,6 +73,7 @@ body {
 
   .content-wrapper {
     padding: 0 8px;
+    position: relative;
   }
 }
 

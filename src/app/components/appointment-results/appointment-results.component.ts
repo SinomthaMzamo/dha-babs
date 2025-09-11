@@ -865,6 +865,8 @@ interface SlotSearchCriteria {
         .slots-container-wrapper {
           padding: 25px 20px;
           height: var(--mobile-form-height);
+          overflow-y: auto;
+          width: 100%;
         }
 
         .slots-container {
