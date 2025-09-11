@@ -362,18 +362,27 @@ import { CommonModule } from '@angular/common';
         background: var(--DHAGreen);
         color: var(--DHAWhite);
         border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-size: 14px;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 16px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
         flex: 1;
+        min-width: 150px;
       }
 
-      .btn-primary:hover {
-        background: var(--DHAOrange);
-        transform: translateY(-1px);
+      .btn-primary:hover:not(:disabled) {
+        background: var(--DHAWhite);
+        transform: translateY(-2px);
+        color: var(--DHAGreen);
+        border: 1px solid var(--DHAGreen);
+      }
+
+      .btn-primary:disabled {
+        background: var(--DHADisabledButtonGray);
+        color: var(--DHADisabledTextGray);
+        cursor: not-allowed;
       }
 
       @media (max-width: 768px) {

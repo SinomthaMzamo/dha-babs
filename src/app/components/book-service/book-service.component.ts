@@ -212,7 +212,7 @@ interface BookingPerson {
                     [disabled]="!hasAnyServicesSelected()"
                     class="btn-primary"
                   >
-                    Continue to Location
+                    Continue
                   </button>
                 </div>
               </div>
@@ -1234,23 +1234,30 @@ interface BookingPerson {
       }
 
       .btn-primary {
-        background: linear-gradient(135deg, var(--DHAGreen) 0%, #018a3a 100%);
+        background: var(--DHAGreen);
         color: var(--DHAWhite);
         border: none;
-        border-radius: 10px;
+        border-radius: 8px;
         padding: 15px 30px;
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
         flex: 1;
-        box-shadow: 0 4px 15px rgba(1, 102, 53, 0.3);
+        min-width: 150px;
       }
 
-      .btn-primary:hover {
-        background: linear-gradient(135deg, #018a3a 0%, var(--DHAGreen) 100%);
+      .btn-primary:hover:not(:disabled) {
+        background: var(--DHAWhite);
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(1, 102, 53, 0.4);
+        color: var(--DHAGreen);
+        border: 1px solid var(--DHAGreen);
+      }
+
+      .btn-primary:disabled {
+        background: var(--DHADisabledButtonGray);
+        color: var(--DHADisabledTextGray);
+        cursor: not-allowed;
       }
 
       .confirm-actions {
@@ -1522,7 +1529,6 @@ interface BookingPerson {
       }
 
       .modal-content .form-group {
-        margin-bottom: 20px;
       }
 
       /* Floating Label Styles */
@@ -1580,10 +1586,13 @@ interface BookingPerson {
       /* Legacy styles for non-floating inputs */
       .modal-content .form-group label:not(.floating-label) {
         display: block;
-        margin-bottom: 8px;
         font-weight: 600;
         color: var(--DHATextGrayDark);
         font-size: 14px;
+      }
+
+      .modal-body form .form-group {
+        margin-bottom: 10px;
       }
 
       .modal-content .form-control:not(.floating-input) {
@@ -1616,13 +1625,14 @@ interface BookingPerson {
       .btn-primary,
       .btn-secondary {
         flex: 1;
-        padding: 14px;
+        padding: 15px 30px;
         border: none;
-        border-radius: 6px;
+        border-radius: 8px;
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
+        min-width: 150px;
       }
 
       .btn-primary {
@@ -1631,7 +1641,10 @@ interface BookingPerson {
       }
 
       .btn-primary:hover:not(:disabled) {
-        background: var(--DHAHoverGreen);
+        background: var(--DHAWhite);
+        transform: translateY(-2px);
+        color: var(--DHAGreen);
+        border: 1px solid var(--DHAGreen);
       }
 
       .btn-primary:disabled {
@@ -1808,13 +1821,14 @@ interface BookingPerson {
       .modal-footer .btn-secondary,
       .modal-footer .btn-primary {
         flex: 1;
-        padding: 12px;
+        padding: 15px 30px;
         border: none;
-        border-radius: 6px;
+        border-radius: 8px;
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
+        min-width: 150px;
       }
 
       .modal-footer .btn-secondary {
@@ -1831,8 +1845,17 @@ interface BookingPerson {
         color: var(--DHAWhite);
       }
 
-      .modal-footer .btn-primary:hover {
-        background: var(--DHAMaroon);
+      .modal-footer .btn-primary:hover:not(:disabled) {
+        background: var(--DHAWhite);
+        transform: translateY(-2px);
+        color: var(--DHAGreen);
+        border: 1px solid var(--DHAGreen);
+      }
+
+      .modal-footer .btn-primary:disabled {
+        background: var(--DHADisabledButtonGray);
+        color: var(--DHADisabledTextGray);
+        cursor: not-allowed;
       }
 
       @media (max-width: 768px) {
@@ -2052,6 +2075,11 @@ interface BookingPerson {
 
           .services-header[_ngcontent-ng-c3851277952] {
             margin-bottom: 6px;
+          }
+
+          .radio-group {
+            flex-direction: column;
+            gap: 5px;
           }
         }
 

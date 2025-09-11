@@ -325,19 +325,23 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       }
 
       .btn-primary {
-        padding: 14px 40px;
+        padding: 15px 30px;
         border: none;
-        border-radius: 6px;
+        border-radius: 8px;
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
         background: var(--DHAGreen);
         color: var(--DHAWhite);
+        min-width: 150px;
       }
 
       .btn-primary:hover:not(:disabled) {
-        background: var(--DHAMaroon);
+        background: var(--DHAWhite);
+        transform: translateY(-2px);
+        color: var(--DHAGreen);
+        border: 1px solid var(--DHAGreen);
       }
 
       .btn-primary:disabled {

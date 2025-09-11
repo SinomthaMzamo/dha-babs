@@ -70,7 +70,6 @@ interface Branch {
               <div
                 class="section-header"
                 (click)="toggleSection('selectedServices')"
-                (focus)="onSectionFocus('selectedServices')"
                 tabindex="0"
               >
                 <h3>Applicants & Selected Services</h3>
@@ -171,7 +170,6 @@ interface Branch {
               <div
                 class="section-header"
                 (click)="toggleSection('location')"
-                (focus)="onSectionFocus('location')"
                 tabindex="0"
               >
                 <h3>Branch Selection</h3>
@@ -188,7 +186,6 @@ interface Branch {
                       id="province"
                       formControlName="province"
                       (change)="onProvinceChange()"
-                      (focus)="onSectionFocus('location')"
                       (blur)="onSectionBlur('location')"
                       class="floating-input"
                       [class.has-value]="appointmentForm.get('province')?.value"
@@ -223,7 +220,6 @@ interface Branch {
                       id="area"
                       formControlName="area"
                       (change)="onAreaChange()"
-                      (focus)="onSectionFocus('location')"
                       (blur)="onSectionBlur('location')"
                       class="floating-input"
                       [class.has-value]="appointmentForm.get('area')?.value"
@@ -257,7 +253,6 @@ interface Branch {
                     <select
                       id="branch"
                       formControlName="branch"
-                      (focus)="onSectionFocus('location')"
                       (blur)="onSectionBlur('location')"
                       class="floating-input"
                       [class.has-value]="appointmentForm.get('branch')?.value"
@@ -292,7 +287,6 @@ interface Branch {
               <div
                 class="section-header"
                 (click)="toggleSection('dateRange')"
-                (focus)="onSectionFocus('dateRange')"
                 tabindex="0"
               >
                 <h3>Select Booking Date Range</h3>
@@ -313,7 +307,6 @@ interface Branch {
                       formControlName="startDate"
                       placeholder=""
                       [min]="today"
-                      (focus)="onSectionFocus('dateRange')"
                       (blur)="onSectionBlur('dateRange')"
                       class="floating-input"
                       [class.has-value]="
@@ -341,7 +334,6 @@ interface Branch {
                       formControlName="endDate"
                       [min]="appointmentForm.get('startDate')?.value || today"
                       [max]="maxDate"
-                      (focus)="onSectionFocus('dateRange')"
                       (blur)="onSectionBlur('dateRange')"
                       class="floating-input"
                       [class.has-value]="appointmentForm.get('endDate')?.value"
@@ -966,8 +958,10 @@ interface Branch {
       }
 
       .btn-primary:hover:not(:disabled) {
-        background: var(--DHAMaroon);
+        background: var(--DHAWhite);
         transform: translateY(-2px);
+        color: var(--DHAGreen);
+        border: 1px solid var(--DHAGreen);
       }
 
       .btn-primary:disabled {
@@ -1389,34 +1383,6 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
         this.selectedServicesExpanded = false;
         this.locationExpanded = false;
         this.dateRangeExpanded = !this.dateRangeExpanded;
-        break;
-    }
-  }
-
-  onSectionFocus(section: string) {
-    // Only expand section if it's not already expanded (to avoid interfering with toggle)
-    // This prevents the double-click issue when clicking on section headers
-    switch (section) {
-      case 'selectedServices':
-        if (!this.selectedServicesExpanded) {
-          this.selectedServicesExpanded = true;
-          this.locationExpanded = false;
-          this.dateRangeExpanded = false;
-        }
-        break;
-      case 'location':
-        if (!this.locationExpanded) {
-          this.selectedServicesExpanded = false;
-          this.locationExpanded = true;
-          this.dateRangeExpanded = false;
-        }
-        break;
-      case 'dateRange':
-        if (!this.dateRangeExpanded) {
-          this.selectedServicesExpanded = false;
-          this.locationExpanded = false;
-          this.dateRangeExpanded = true;
-        }
         break;
     }
   }

@@ -45,7 +45,8 @@ interface SlotSearchCriteria {
               <h3>No Available Slots Found</h3>
               <p>
                 We couldn't find any available appointment slots for your
-                selected criteria.
+                selected criteria. <br />
+                <br />Try editing your search or try again later.
               </p>
               <!-- Booking Summary - Always Visible -->
               <div class="booking-summary">
@@ -139,13 +140,13 @@ interface SlotSearchCriteria {
                       {{ getTotalSlotsCount() }} slots found across
                       {{ getUniqueDaysCount() }} days
                     </div>
-                    <button
+                    <!-- <button
                       *ngIf="shouldShowReturnToMenu()"
                       (click)="returnToMenu()"
                       class="btn-return-menu"
                     >
                       ← Return to Menu
-                    </button>
+                    </button> -->
                   </div>
                 </div>
 
@@ -221,7 +222,7 @@ interface SlotSearchCriteria {
                     (click)="showLessDays()"
                     class="btn-show-less"
                   >
-                   Show Less ({{ daysPerPage }} days)
+                    Show Less ({{ daysPerPage }} days)
                   </button>
                 </div>
               </div>
@@ -593,7 +594,7 @@ interface SlotSearchCriteria {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         flex-wrap: wrap;
         gap: 15px;
       }
@@ -619,7 +620,6 @@ interface SlotSearchCriteria {
         color: var(--DHATextGray);
         font-size: 14px;
         font-weight: 500;
-        padding-top: 1rem;
       }
 
       .btn-return-menu {
@@ -802,13 +802,14 @@ interface SlotSearchCriteria {
       /* Buttons */
       .btn-primary,
       .btn-secondary {
-        padding: 12px 24px;
+        padding: 15px 30px;
         border: none;
-        border-radius: 6px;
-        font-size: 14px;
+        border-radius: 8px;
+        font-size: 16px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
+        min-width: 150px;
       }
 
       .btn-primary {
@@ -816,9 +817,17 @@ interface SlotSearchCriteria {
         color: var(--DHAWhite);
       }
 
-      .btn-primary:hover {
-        background: var(--DHAMaroon);
-        transform: translateY(-1px);
+      .btn-primary:hover:not(:disabled) {
+        background: var(--DHAWhite);
+        transform: translateY(-2px);
+        color: var(--DHAGreen);
+        border: 1px solid var(--DHAGreen);
+      }
+
+      .btn-primary:disabled {
+        background: var(--DHADisabledButtonGray);
+        color: var(--DHADisabledTextGray);
+        cursor: not-allowed;
       }
 
       .btn-secondary {
@@ -871,7 +880,7 @@ interface SlotSearchCriteria {
         .slots-header-right {
           flex-direction: column;
           align-items: flex-start;
-          gap: 15px;
+          gap: 10px;
         }
 
         .no-slots-actions {
