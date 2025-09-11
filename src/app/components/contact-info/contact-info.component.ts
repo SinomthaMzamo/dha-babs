@@ -42,16 +42,18 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
               (ngSubmit)="onContactSubmit()"
               autocomplete="on"
             >
-              <div class="form-group">
-                <label for="email">Email Address *</label>
+              <div class="form-group floating-label-group">
                 <input
                   type="email"
                   id="email"
                   formControlName="email"
-                  class="form-control"
-                  placeholder="Enter your email address"
+                  class="floating-input"
                   autocomplete="email"
+                  [class.has-value]="contactForm.get('email')?.value"
                 />
+                <label for="email" class="floating-label"
+                  >Email Address *</label
+                >
                 <div
                   *ngIf="
                     contactForm.get('email')?.invalid &&
@@ -68,16 +70,16 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="phone">Phone Number *</label>
+              <div class="form-group floating-label-group">
                 <input
                   type="tel"
                   id="phone"
                   formControlName="phone"
-                  class="form-control"
-                  placeholder="Enter your phone number"
+                  class="floating-input"
                   autocomplete="tel"
+                  [class.has-value]="contactForm.get('phone')?.value"
                 />
+                <label for="phone" class="floating-label">Phone Number *</label>
                 <div
                   *ngIf="
                     contactForm.get('phone')?.invalid &&
@@ -243,33 +245,91 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
       .form-group {
         margin-bottom: 20px;
         width: 100%;
-        overflow: hidden;
       }
 
-      label {
+      /* Floating Label Styles */
+      .floating-label-group {
+        position: relative;
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+
+      .floating-input {
+        width: 100%;
+        padding: 16px 12px;
+        border: 1px solid var(--DividerGray);
+        border-radius: 6px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        background: var(--DHAWhite);
+      }
+
+      .floating-input:focus,
+      .floating-input.has-value {
+        padding: 16px 12px;
+      }
+
+      .floating-input:focus {
+        outline: none;
+        border-color: var(--DHAGreen);
+        box-shadow: 0 0 0 3px rgba(1, 102, 53, 0.1);
+      }
+
+      .floating-input:disabled {
+        background-color: var(--DHABackGroundLightGray);
+        cursor: not-allowed;
+        color: var(--DHADisabledTextGray);
+        border-color: var(--DividerGray);
+      }
+
+      .floating-label {
+        position: absolute;
+        top: 16px;
+        left: 12px;
+        font-weight: 600;
+        color: var(--DHATextGray);
+        font-size: 16px;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        background: var(--DHAWhite);
+        padding: 0 4px;
+        z-index: 1;
+      }
+
+      .floating-input:focus + .floating-label,
+      .floating-input.has-value + .floating-label {
+        top: -8px;
+        left: 8px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      /* Legacy styles for non-floating inputs */
+      label:not(.floating-label) {
         display: block;
         margin-bottom: 8px;
         font-weight: 600;
         color: var(--DHATextGrayDark);
       }
 
-      .form-control {
+      .form-control:not(.floating-input) {
         width: 100%;
         padding: 12px;
-        border: 2px solid var(--DividerGray);
+        border: 1px solid var(--DividerGray);
         border-radius: 6px;
         font-size: 16px;
         transition: border-color 0.3s ease;
         box-sizing: border-box;
       }
 
-      .form-control:focus {
+      .form-control:not(.floating-input):focus {
         outline: none;
         border-color: var(--DHAGreen);
         box-sizing: border-box;
       }
 
-      .form-control:disabled {
+      .form-control:not(.floating-input):disabled {
         background-color: var(--DHABackGroundLightGray);
         cursor: not-allowed;
         color: var(--DHADisabledTextGray);

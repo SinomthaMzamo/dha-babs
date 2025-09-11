@@ -12,12 +12,23 @@
   --form-width: 500px;
 }
 
+
 /* Apply system fonts to body text */
 body {
   font-family: var(--font-family-sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* For Chrome/Safari/Edge (WebKit) */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important; /* replace 'white' with your bg */
+  box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-text-fill-color: #000 !important; /* text color */
+  transition: background-color 5000s ease-in-out 0s; /* prevents flashing */
+}
+
+
 
 /* Apply system fonts to all text elements except buttons */
 p,
@@ -64,3 +75,5 @@ body {
     padding: 0 8px;
   }
 }
+
+

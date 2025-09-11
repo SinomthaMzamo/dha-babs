@@ -175,16 +175,17 @@ interface Branch {
                 <p class="section-description">Choose your preferred branch:</p>
 
                 <div class="location-grid">
-                  <div class="form-group">
-                    <label for="province">Province *</label>
+                  <div class="form-group floating-label-group">
                     <select
                       id="province"
                       formControlName="province"
                       (change)="onProvinceChange()"
                       (focus)="onSectionFocus('location')"
                       (blur)="onSectionBlur('location')"
+                      class="floating-input"
+                      [class.has-value]="appointmentForm.get('province')?.value"
                     >
-                      <option value="">Select Province</option>
+                      <option value=""></option>
                       <option
                         *ngFor="let province of provinces"
                         [value]="province.id"
@@ -192,6 +193,9 @@ interface Branch {
                         {{ province.name }}
                       </option>
                     </select>
+                    <label for="province" class="floating-label"
+                      >Select province *</label
+                    >
                     <div
                       *ngIf="
                         appointmentForm.get('province')?.invalid &&
@@ -204,18 +208,19 @@ interface Branch {
                   </div>
 
                   <div
-                    class="form-group"
+                    class="form-group floating-label-group"
                     *ngIf="appointmentForm.get('province')?.value"
                   >
-                    <label for="area">Area *</label>
                     <select
                       id="area"
                       formControlName="area"
                       (change)="onAreaChange()"
                       (focus)="onSectionFocus('location')"
                       (blur)="onSectionBlur('location')"
+                      class="floating-input"
+                      [class.has-value]="appointmentForm.get('area')?.value"
                     >
-                      <option value="">Select Area</option>
+                      <option value=""></option>
                       <option
                         *ngFor="let area of filteredAreas"
                         [value]="area.id"
@@ -223,6 +228,9 @@ interface Branch {
                         {{ area.name }}
                       </option>
                     </select>
+                    <label for="area" class="floating-label"
+                      >Select area *</label
+                    >
                     <div
                       *ngIf="
                         appointmentForm.get('area')?.invalid &&
@@ -235,17 +243,18 @@ interface Branch {
                   </div>
 
                   <div
-                    class="form-group"
+                    class="form-group floating-label-group"
                     *ngIf="appointmentForm.get('area')?.value"
                   >
-                    <label for="branch">Branch *</label>
                     <select
                       id="branch"
                       formControlName="branch"
                       (focus)="onSectionFocus('location')"
                       (blur)="onSectionBlur('location')"
+                      class="floating-input"
+                      [class.has-value]="appointmentForm.get('branch')?.value"
                     >
-                      <option value="">Select Branch</option>
+                      <option value=""></option>
                       <option
                         *ngFor="let branch of filteredBranches"
                         [value]="branch.id"
@@ -253,6 +262,9 @@ interface Branch {
                         {{ branch.name }}
                       </option>
                     </select>
+                    <label for="branch" class="floating-label"
+                      >Select branch *</label
+                    >
                     <div
                       *ngIf="
                         appointmentForm.get('branch')?.invalid &&
@@ -286,16 +298,23 @@ interface Branch {
                 </p>
 
                 <div class="date-grid">
-                  <div class="form-group">
-                    <label for="startDate">Start Date *</label>
+                  <div class="form-group floating-label-group">
                     <input
                       type="date"
                       id="startDate"
                       formControlName="startDate"
+                      placeholder=""
                       [min]="today"
                       (focus)="onSectionFocus('dateRange')"
                       (blur)="onSectionBlur('dateRange')"
+                      class="floating-input"
+                      [class.has-value]="
+                        appointmentForm.get('startDate')?.value
+                      "
                     />
+                    <label for="startDate" class="floating-label"
+                      >Select start date *</label
+                    >
                     <div
                       *ngIf="
                         appointmentForm.get('startDate')?.invalid &&
@@ -307,16 +326,21 @@ interface Branch {
                     </div>
                   </div>
 
-                  <div class="form-group">
-                    <label for="endDate">End Date *</label>
+                  <div class="form-group floating-label-group">
                     <input
                       type="date"
                       id="endDate"
                       formControlName="endDate"
                       [min]="appointmentForm.get('startDate')?.value || today"
+                      [max]="maxDate"
                       (focus)="onSectionFocus('dateRange')"
                       (blur)="onSectionBlur('dateRange')"
+                      class="floating-input"
+                      [class.has-value]="appointmentForm.get('endDate')?.value"
                     />
+                    <label for="endDate" class="floating-label"
+                      >End Date *</label
+                    >
                     <div
                       *ngIf="
                         appointmentForm.get('endDate')?.invalid &&
@@ -713,15 +737,151 @@ interface Branch {
         flex-direction: column;
       }
 
-      label {
+      /* Floating Label Styles */
+      .floating-label-group {
+        position: relative;
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+
+      .floating-input {
+        padding: 16px 12px;
+        border: 2px solid var(--DHATextGray);
+        border-radius: 6px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background: var(--DHAWhite);
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .floating-input:focus,
+      .floating-input.has-value {
+        padding: 16px 12px;
+      }
+
+      /* Special handling for select elements */
+      select.floating-input {
+        padding-right: 30px; /* Make room for dropdown arrow */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23949494' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+      }
+
+      /* Hide date format when label is inside input */
+      input[type='date'].floating-input:not(:focus):not(.has-value) {
+        color: transparent;
+      }
+
+      input[type='date'].floating-input:not(:focus):not(
+          .has-value
+        )::-webkit-datetime-edit {
+        color: transparent;
+      }
+
+      input[type='date'].floating-input:not(:focus):not(
+          .has-value
+        )::-webkit-datetime-edit-fields-wrapper {
+        color: transparent;
+      }
+
+      input[type='date'].floating-input:not(:focus):not(
+          .has-value
+        )::-webkit-datetime-edit-text {
+        color: transparent;
+      }
+
+      input[type='date'].floating-input:not(:focus):not(
+          .has-value
+        )::-webkit-datetime-edit-month-field,
+      input[type='date'].floating-input:not(:focus):not(
+          .has-value
+        )::-webkit-datetime-edit-day-field,
+      input[type='date'].floating-input:not(:focus):not(
+          .has-value
+        )::-webkit-datetime-edit-year-field {
+        color: transparent;
+      }
+
+      /* Show date format when focused or has value */
+      input[type='date'].floating-input:focus,
+      input[type='date'].floating-input.has-value {
+        color: inherit;
+      }
+
+      input[type='date'].floating-input:focus::-webkit-datetime-edit,
+      input[type='date'].floating-input.has-value::-webkit-datetime-edit {
+        color: inherit;
+      }
+
+      input[type='date'].floating-input:focus::-webkit-datetime-edit-fields-wrapper,
+      input[type='date'].floating-input.has-value::-webkit-datetime-edit-fields-wrapper {
+        color: inherit;
+      }
+
+      input[type='date'].floating-input:focus::-webkit-datetime-edit-text,
+      input[type='date'].floating-input.has-value::-webkit-datetime-edit-text {
+        color: inherit;
+      }
+
+      input[type='date'].floating-input:focus::-webkit-datetime-edit-month-field,
+      input[type='date'].floating-input:focus::-webkit-datetime-edit-day-field,
+      input[type='date'].floating-input:focus::-webkit-datetime-edit-year-field,
+      input[type='date'].floating-input.has-value::-webkit-datetime-edit-month-field,
+      input[type='date'].floating-input.has-value::-webkit-datetime-edit-day-field,
+      input[type='date'].floating-input.has-value::-webkit-datetime-edit-year-field {
+        color: inherit;
+      }
+
+      .floating-input:focus {
+        outline: none;
+        border-color: var(--DHAGreen);
+        box-shadow: 0 0 0 3px rgba(1, 102, 53, 0.1);
+      }
+
+      .floating-input:disabled {
+        background: var(--DHADisabledButtonGray);
+        color: var(--DHADisabledTextGray);
+        cursor: not-allowed;
+      }
+
+      .floating-label {
+        position: absolute;
+        top: 16px;
+        left: 12px;
+        font-weight: 600;
+        color: var(--DHATextGray);
+        font-size: 16px;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        background: var(--DHAWhite);
+        padding: 0 4px;
+        z-index: 1;
+      }
+
+      .floating-input:focus + .floating-label,
+      .floating-input.has-value + .floating-label {
+        top: -8px;
+        left: 8px;
+        font-size: 12px;
+        color: var(--DHAGreen);
+        font-weight: 600;
+      }
+
+      /* Legacy label styles for non-floating inputs */
+      label:not(.floating-label) {
         font-weight: 600;
         color: var(--DHAGreen);
         margin-bottom: 8px;
         font-size: 1rem;
       }
 
-      select,
-      input[type='date'] {
+      select:not(.floating-input),
+      input[type='date']:not(.floating-input) {
         padding: 12px;
         border: 2px solid var(--DHATextGray);
         border-radius: 6px;
@@ -730,14 +890,14 @@ interface Branch {
         background: var(--DHAWhite);
       }
 
-      select:focus,
-      input[type='date']:focus {
+      select:not(.floating-input):focus,
+      input[type='date']:not(.floating-input):focus {
         outline: none;
         border-color: var(--DHAGreen);
         box-shadow: 0 0 0 3px rgba(1, 102, 53, 0.1);
       }
 
-      select:disabled {
+      select:not(.floating-input):disabled {
         background: var(--DHADisabledButtonGray);
         color: var(--DHADisabledTextGray);
         cursor: not-allowed;
@@ -850,6 +1010,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
 
   appointmentForm: FormGroup;
   today: string;
+  maxDate: string;
 
   // Section expansion state
   selectedServicesExpanded = true;
@@ -1054,6 +1215,11 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     });
 
     this.today = new Date().toISOString().split('T')[0];
+
+    // Set max date to 30 days from now
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 30);
+    this.maxDate = maxDate.toISOString().split('T')[0];
   }
 
   ngOnInit() {

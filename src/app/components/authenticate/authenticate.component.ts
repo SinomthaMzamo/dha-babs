@@ -37,13 +37,18 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
             (ngSubmit)="onSubmit()"
             autocomplete="on"
           >
-            <div class="form-group">
-              <label for="idType">ID Type *</label>
-              <select id="idType" formControlName="idType" class="form-control">
-                <option value="">Select ID Type</option>
+            <div class="form-group floating-label-group">
+              <select
+                id="idType"
+                formControlName="idType"
+                class="floating-input"
+                [class.has-value]="authForm.get('idType')?.value"
+              >
+                <option value=""></option>
                 <option value="id">ID Number</option>
                 <option value="passport">Passport Number</option>
               </select>
+              <label for="idType" class="floating-label">ID Type *</label>
               <div
                 *ngIf="
                   authForm.get('idType')?.invalid &&
@@ -55,17 +60,17 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="idNumber">ID Number *</label>
+            <div class="form-group floating-label-group">
               <input
                 type="text"
                 id="idNumber"
                 formControlName="idNumber"
-                class="form-control"
-                placeholder="Enter 13-digit ID number"
+                class="floating-input"
                 maxlength="13"
                 autocomplete="username"
+                [class.has-value]="authForm.get('idNumber')?.value"
               />
+              <label for="idNumber" class="floating-label">ID Number *</label>
               <div
                 *ngIf="
                   authForm.get('idNumber')?.invalid &&
@@ -220,24 +225,89 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         margin-bottom: 20px;
       }
 
-      label {
+      /* Floating Label Styles */
+      .floating-label-group {
+        position: relative;
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+
+      .floating-input {
+        width: 100%;
+        padding: 16px 12px;
+        border: 1px solid var(--DividerGray);
+        border-radius: 6px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        background: var(--DHAWhite);
+      }
+
+      .floating-input:focus,
+      .floating-input.has-value {
+        padding: 16px 12px;
+      }
+
+      /* Special handling for select elements */
+      .floating-input[type='select-one'],
+      select.floating-input {
+        padding-right: 30px; /* Make room for dropdown arrow */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23949494' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+      }
+
+      .floating-input:focus {
+        outline: none;
+        border-color: var(--DHAGreen);
+        box-shadow: 0 0 0 3px rgba(1, 102, 53, 0.1);
+      }
+
+      .floating-label {
+        position: absolute;
+        top: 16px;
+        left: 12px;
+        font-weight: 600;
+        color: var(--DHATextGray);
+        font-size: 16px;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        background: var(--DHAWhite);
+        padding: 0 4px;
+        z-index: 1;
+      }
+
+      .floating-input:focus + .floating-label,
+      .floating-input.has-value + .floating-label {
+        top: -8px;
+        left: 8px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      /* Legacy styles for non-floating inputs */
+      label:not(.floating-label) {
         display: block;
         margin-bottom: 8px;
         font-weight: 600;
         color: var(--DHATextGrayDark);
       }
 
-      .form-control {
+      .form-control:not(.floating-input) {
         width: 100%;
         padding: 12px;
-        border: 2px solid var(--DividerGray);
+        border: 1px solid var(--DividerGray);
         border-radius: 6px;
         font-size: 16px;
         transition: border-color 0.3s ease;
         box-sizing: border-box;
       }
 
-      .form-control:focus {
+      .form-control:not(.floating-input):focus {
         outline: none;
         border-color: var(--DHAGreen);
       }

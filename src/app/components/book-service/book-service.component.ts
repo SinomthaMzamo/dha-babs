@@ -321,17 +321,22 @@ interface BookingPerson {
                 </div>
 
                 <!-- ID Number Field -->
-                <div class="form-group" *ngIf="isValidationTypeSelected('id')">
-                  <label for="idNumber">ID Number *</label>
+                <div
+                  class="form-group floating-label-group"
+                  *ngIf="isValidationTypeSelected('id')"
+                >
                   <input
                     type="text"
                     id="idNumber"
                     formControlName="idNumber"
-                    class="form-control"
-                    placeholder="Enter 13-digit ID number"
+                    class="floating-input"
                     maxlength="13"
                     autocomplete="username"
+                    [class.has-value]="addApplicantForm.get('idNumber')?.value"
                   />
+                  <label for="idNumber" class="floating-label"
+                    >ID Number *</label
+                  >
                   <div
                     *ngIf="
                       addApplicantForm.get('idNumber')?.invalid &&
@@ -354,19 +359,23 @@ interface BookingPerson {
 
                 <!-- Passport Number Field -->
                 <div
-                  class="form-group"
+                  class="form-group floating-label-group"
                   *ngIf="isValidationTypeSelected('passport')"
                 >
-                  <label for="passportNumber">Passport Number *</label>
                   <input
                     type="text"
                     id="passportNumber"
                     formControlName="passportNumber"
-                    class="form-control"
-                    placeholder="Enter passport number"
+                    class="floating-input"
                     maxlength="12"
                     autocomplete="off"
+                    [class.has-value]="
+                      addApplicantForm.get('passportNumber')?.value
+                    "
                   />
+                  <label for="passportNumber" class="floating-label"
+                    >Passport Number *</label
+                  >
                   <div
                     *ngIf="
                       addApplicantForm.get('passportNumber')?.invalid &&
@@ -389,16 +398,20 @@ interface BookingPerson {
 
                 <!-- Forenames and Last Name Fields -->
                 <div *ngIf="isValidationTypeSelected('names')">
-                  <div class="form-group">
-                    <label for="forenames">Forenames *</label>
+                  <div class="form-group floating-label-group">
                     <input
                       type="text"
                       id="forenames"
                       formControlName="forenames"
-                      class="form-control"
-                      placeholder="Enter forenames as they appear on ID"
+                      class="floating-input"
                       autocomplete="given-name"
+                      [class.has-value]="
+                        addApplicantForm.get('forenames')?.value
+                      "
                     />
+                    <label for="forenames" class="floating-label"
+                      >Forenames *</label
+                    >
                     <div
                       *ngIf="
                         addApplicantForm.get('forenames')?.invalid &&
@@ -419,16 +432,20 @@ interface BookingPerson {
                     </div>
                   </div>
 
-                  <div class="form-group">
-                    <label for="lastName">Last Name *</label>
+                  <div class="form-group floating-label-group">
                     <input
                       type="text"
                       id="lastName"
                       formControlName="lastName"
-                      class="form-control"
-                      placeholder="Enter last name as it appears on ID"
+                      class="floating-input"
                       autocomplete="family-name"
+                      [class.has-value]="
+                        addApplicantForm.get('lastName')?.value
+                      "
                     />
+                    <label for="lastName" class="floating-label"
+                      >Last Name *</label
+                    >
                     <div
                       *ngIf="
                         addApplicantForm.get('lastName')?.invalid &&
@@ -1508,7 +1525,60 @@ interface BookingPerson {
         margin-bottom: 20px;
       }
 
-      .modal-content .form-group label {
+      /* Floating Label Styles */
+      .modal-content .floating-label-group {
+        position: relative;
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+
+      .modal-content .floating-input {
+        width: 100%;
+        padding: 16px 12px;
+        border: 2px solid var(--DHABackGroundLightGray);
+        border-radius: 6px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        background: var(--DHAWhite);
+      }
+
+      .modal-content .floating-input:focus,
+      .modal-content .floating-input.has-value {
+        padding: 16px 12px;
+      }
+
+      .modal-content .floating-input:focus {
+        outline: none;
+        border-color: var(--DHAGreen);
+        box-shadow: 0 0 0 3px rgba(1, 102, 53, 0.1);
+      }
+
+      .modal-content .floating-label {
+        position: absolute;
+        top: 16px;
+        left: 12px;
+        font-weight: 600;
+        color: var(--DHATextGray);
+        font-size: 14px;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        background: var(--DHAWhite);
+        padding: 0 4px;
+        z-index: 1;
+      }
+
+      .modal-content .floating-input:focus + .floating-label,
+      .modal-content .floating-input.has-value + .floating-label {
+        top: -8px;
+        left: 8px;
+        font-size: 12px;
+        color: var(--DHAGreen);
+        font-weight: 600;
+      }
+
+      /* Legacy styles for non-floating inputs */
+      .modal-content .form-group label:not(.floating-label) {
         display: block;
         margin-bottom: 8px;
         font-weight: 600;
@@ -1516,7 +1586,7 @@ interface BookingPerson {
         font-size: 14px;
       }
 
-      .modal-content .form-control {
+      .modal-content .form-control:not(.floating-input) {
         width: 100%;
         padding: 12px;
         border: 2px solid var(--DHABackGroundLightGray);
@@ -1526,7 +1596,7 @@ interface BookingPerson {
         box-sizing: border-box;
       }
 
-      .modal-content .form-control:focus {
+      .modal-content .form-control:not(.floating-input):focus {
         outline: none;
         border-color: var(--DHAGreen);
       }

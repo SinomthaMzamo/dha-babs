@@ -649,7 +649,7 @@ interface SlotSearchCriteria {
       }
 
       .day-group {
-        border: 2px solid var(--DividerGray);
+        border: 1px solid var(--DividerGray);
         border-radius: 8px;
         overflow: hidden;
         transition: all 0.3s ease;
