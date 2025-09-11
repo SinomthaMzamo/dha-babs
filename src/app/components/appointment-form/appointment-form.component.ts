@@ -90,49 +90,57 @@ interface Branch {
                   *ngIf="bookingPersons && bookingPersons.length > 0"
                 >
                   <div
+                    class="card-separator"
                     *ngFor="let person of bookingPersons; let i = index"
-                    class="applicant-card"
                   >
-                    <div class="applicant-header capitalised">
-                      <div class="applicant-info">
-                        <span class="applicant-type">{{ person.type }}</span>
-                        <h4 class="applicant-name">{{ person.name }}</h4>
-                      </div>
-                      <div class="applicant-identifier" *ngIf="person.idNumber">
-                        <span class="identifier-label">ID Number</span>
-                        <span class="identifier-value">{{
-                          person.idNumber
-                        }}</span>
-                      </div>
-                    </div>
-
-                    <div
-                      class="applicant-services"
-                      *ngIf="
-                        person.selectedServices &&
-                        person.selectedServices.length > 0
-                      "
-                    >
-                      <div class="services-label">Selected Services:</div>
-                      <div class="services-list">
+                    <div class="applicant-card">
+                      <div class="applicant-header capitalised">
+                        <div class="applicant-info">
+                          <span class="applicant-type">{{ person.type }}</span>
+                          <h4 class="applicant-name">{{ person.name }}</h4>
+                        </div>
                         <div
-                          *ngFor="let service of person.selectedServices"
-                          class="service-badge"
+                          class="applicant-identifier"
+                          *ngIf="person.idNumber"
                         >
-                          {{ service.name }}
+                          <span class="identifier-label">ID Number</span>
+                          <span class="identifier-value">{{
+                            person.idNumber
+                          }}</span>
                         </div>
                       </div>
-                    </div>
 
-                    <div
-                      class="no-services"
-                      *ngIf="
-                        !person.selectedServices ||
-                        person.selectedServices.length === 0
-                      "
-                    >
-                      <span class="no-services-text">No services selected</span>
+                      <div
+                        class="applicant-services"
+                        *ngIf="
+                          person.selectedServices &&
+                          person.selectedServices.length > 0
+                        "
+                      >
+                        <div class="services-label">Selected Services:</div>
+                        <div class="services-list">
+                          <div
+                            *ngFor="let service of person.selectedServices"
+                            class="service-badge"
+                          >
+                            {{ service.name }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div
+                        class="no-services"
+                        *ngIf="
+                          !person.selectedServices ||
+                          person.selectedServices.length === 0
+                        "
+                      >
+                        <span class="no-services-text"
+                          >No services selected</span
+                        >
+                      </div>
                     </div>
+                    <hr *ngIf="i < bookingPersons.length - 1" />
                   </div>
                 </div>
 
@@ -172,7 +180,7 @@ interface Branch {
                 >
               </div>
               <div class="section-content" [class.expanded]="locationExpanded">
-                <p class="section-description">Choose your preferred branch:</p>
+                <p class="section-description">Choose your preferred branch</p>
 
                 <div class="location-grid">
                   <div class="form-group floating-label-group">
@@ -294,7 +302,7 @@ interface Branch {
               </div>
               <div class="section-content" [class.expanded]="dateRangeExpanded">
                 <p class="section-description">
-                  Choose when you'd like to book your appointment:
+                  Choose when you'd like to book your appointment
                 </p>
 
                 <div class="date-grid">
@@ -341,6 +349,9 @@ interface Branch {
                     <label for="endDate" class="floating-label"
                       >End Date *</label
                     >
+                    <div class="field-info">
+                      <small>End date must be within 30 days from today</small>
+                    </div>
                     <div
                       *ngIf="
                         appointmentForm.get('endDate')?.invalid &&
@@ -493,7 +504,7 @@ interface Branch {
 
       .section-content.expanded {
         max-height: 1000px;
-        padding: 25px;
+        padding: 10px;
       }
 
       .form-section:not(.collapsible) {
@@ -518,22 +529,26 @@ interface Branch {
       .applicants-overview {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 10px;
         margin-bottom: 20px;
       }
 
       .applicant-card {
-        background: var(--DHAWhite);
-        border: 2px solid var(--DHAWhite);
+        border: 2px solid transparent;
         border-radius: 12px;
-        padding: 20px;
         transition: all 0.3s ease;
       }
 
-      .applicant-card:hover {
-        border-color: var(--DHAGreen);
-        box-shadow: 0 4px 12px rgba(1, 102, 53, 0.1);
+      .applicant-card + hr {
+        margin-top: 20px;
+        margin-bottom: 10px;
       }
+
+      /* .applicant-card:hover {
+         border-color: var(--DHAGreen);
+         box-shadow: 0 4px 12px rgba(1, 102, 53, 0.1);
+         padding: 20px;
+      }*/
 
       .applicant-header {
         display: flex;
@@ -543,7 +558,7 @@ interface Branch {
         margin-bottom: 15px;
         padding-bottom: 15px;
         border-bottom: 1px solid var(--DHABackGroundLightGray);
-        row-gap: 4px;
+        row-gap: 8px;
       }
 
       .applicant-info {
@@ -730,6 +745,7 @@ interface Branch {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 20px;
+        padding: 10px 5px;
       }
 
       .form-group {
@@ -737,11 +753,21 @@ interface Branch {
         flex-direction: column;
       }
 
+      .field-info {
+        margin-top: 5px;
+      }
+
+      .field-info small {
+        color: var(--DHATextGray);
+        font-size: 12px;
+        font-style: italic;
+      }
+
       /* Floating Label Styles */
       .floating-label-group {
         position: relative;
-        margin-top: 10px;
-        margin-bottom: 20px;
+        /*margin-top: 10px;
+        margin-bottom: 20px;*/
       }
 
       .floating-input {
@@ -961,6 +987,17 @@ interface Branch {
       }
 
       @media (max-width: 768px) {
+        h2 {
+          font-size: 20px;
+        }
+        .applicant-name {
+          font-size: 14px;
+        }
+
+        .identifier-value {
+          font-size: 12px;
+        }
+
         .appointment-form-container {
           padding: 24px 2px;
           flex-direction: column;
@@ -1336,36 +1373,50 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
   }
 
   toggleSection(section: string) {
+    // Collapse other sections when toggling a section
     switch (section) {
       case 'selectedServices':
         this.selectedServicesExpanded = !this.selectedServicesExpanded;
+        this.locationExpanded = false;
+        this.dateRangeExpanded = false;
         break;
       case 'location':
+        this.selectedServicesExpanded = false;
         this.locationExpanded = !this.locationExpanded;
+        this.dateRangeExpanded = false;
         break;
       case 'dateRange':
+        this.selectedServicesExpanded = false;
+        this.locationExpanded = false;
         this.dateRangeExpanded = !this.dateRangeExpanded;
         break;
     }
   }
 
   onSectionFocus(section: string) {
-    // Collapse other sections when focusing on a new section
+    // Only expand section if it's not already expanded (to avoid interfering with toggle)
+    // This prevents the double-click issue when clicking on section headers
     switch (section) {
       case 'selectedServices':
-        this.selectedServicesExpanded = true;
-        this.locationExpanded = false;
-        this.dateRangeExpanded = false;
+        if (!this.selectedServicesExpanded) {
+          this.selectedServicesExpanded = true;
+          this.locationExpanded = false;
+          this.dateRangeExpanded = false;
+        }
         break;
       case 'location':
-        this.selectedServicesExpanded = false;
-        this.locationExpanded = true;
-        this.dateRangeExpanded = false;
+        if (!this.locationExpanded) {
+          this.selectedServicesExpanded = false;
+          this.locationExpanded = true;
+          this.dateRangeExpanded = false;
+        }
         break;
       case 'dateRange':
-        this.selectedServicesExpanded = false;
-        this.locationExpanded = false;
-        this.dateRangeExpanded = true;
+        if (!this.dateRangeExpanded) {
+          this.selectedServicesExpanded = false;
+          this.locationExpanded = false;
+          this.dateRangeExpanded = true;
+        }
         break;
     }
   }

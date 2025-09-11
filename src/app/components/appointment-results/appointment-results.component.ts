@@ -49,7 +49,7 @@ interface SlotSearchCriteria {
               </p>
               <!-- Booking Summary - Always Visible -->
               <div class="booking-summary">
-                <h3>📋 Booking Summary</h3>
+                <h3>Booking Summary</h3>
                 <div class="summary-grid">
                   <div class="summary-item">
                     <span class="summary-label">📍 Branch:</span>
@@ -77,7 +77,7 @@ interface SlotSearchCriteria {
                   title="Add an accompanying applicant to this booking"
                 >
                   <div class="btn-contents">
-                    <span class="btn-icon">✏️</span>
+                    <span class="btn-icon"></span>
                     <span class="btn-text">Edit Search Criteria</span>
                   </div>
                 </button>
@@ -98,7 +98,7 @@ interface SlotSearchCriteria {
             <div class="slots-container-wrapper">
               <!-- Booking Summary - Always Visible -->
               <div class="booking-summary">
-                <h3>📋 Booking Summary</h3>
+                <h3>Booking Summary</h3>
                 <div class="summary-grid">
                   <div class="summary-item">
                     <span class="summary-label">📍 Branch:</span>
@@ -124,15 +124,16 @@ interface SlotSearchCriteria {
                   title="Add an accompanying applicant to this booking"
                 >
                   <div class="btn-contents">
-                    <span class="btn-icon">✏️</span>
                     <span class="btn-text">Edit Search Criteria</span>
                   </div>
                 </button>
+                <hr class="summary-divider" />
               </div>
+
               <!-- Available Slots - Grouped by Day -->
               <div class="slots-container">
                 <div class="slots-header">
-                  <h3>📅 Available Appointment Slots</h3>
+                  <h3>Available Appointment Slots</h3>
                   <div class="slots-header-right">
                     <div class="slots-count">
                       {{ getTotalSlotsCount() }} slots found across
@@ -159,7 +160,7 @@ interface SlotSearchCriteria {
                     >
                       <div class="day-info">
                         <span class="day-date">{{
-                          dayGroup.date | date : 'EEEE, MMMM d, y'
+                          dayGroup.date | date : 'EEEE MMM d y'
                         }}</span>
                         <span class="day-slots-count"
                           >{{ dayGroup.slots.length }} slot{{
@@ -183,9 +184,8 @@ interface SlotSearchCriteria {
                         class="slot-item"
                       >
                         <div class="slot-info">
-                          <div class="slot-time">{{ slot.time }}</div>
-                          <div class="slot-branch">
-                            {{ getBranchDisplayName() }}
+                          <div class="slot-time">
+                            {{ formatTimeRange(slot.time) }}
                           </div>
                         </div>
                         <div class="slot-actions">
@@ -209,7 +209,7 @@ interface SlotSearchCriteria {
                     (click)="loadMoreDays()"
                     class="btn-load-more"
                   >
-                    📅 See {{ getRemainingDaysCount() }} more day{{
+                    See {{ getRemainingDaysCount() }} more day{{
                       getRemainingDaysCount() !== 1 ? 's' : ''
                     }}
                     with available slots
@@ -221,7 +221,7 @@ interface SlotSearchCriteria {
                     (click)="showLessDays()"
                     class="btn-show-less"
                   >
-                    📅 Show Less ({{ daysPerPage }} days)
+                   Show Less ({{ daysPerPage }} days)
                   </button>
                 </div>
               </div>
@@ -409,7 +409,6 @@ interface SlotSearchCriteria {
         overflow-y: auto;
         width: 100%; /* fill the wrapper */
         box-sizing: border-box;
-  
       }
 
       .content-wrapper {
@@ -423,24 +422,23 @@ interface SlotSearchCriteria {
 
       /* Available Slots */
       .slots-container {
-        background: var(--DHAWhite);
         border-radius: 16px;
         padding: 30px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding-top: 0;
+      }
+
+      .summary-divider {
+        margin-top: 20px;
+        margin-bottom: 0;
+        height: 1px;
+        border: none; /* nuke all borders */
+        border-top: 1px solid gainsboro; /* only top border */
       }
 
       /* Booking Summary */
       .booking-summary {
-        margin-bottom: 20px;
-        background: linear-gradient(
-          135deg,
-          var(--DHAOffWhite) 0%,
-          #f8f9fa 100%
-        );
         border-radius: 12px;
         padding: 18px;
-        border: 1px solid var(--DHABackGroundLightGray);
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
         position: relative;
         overflow: hidden;
       }
@@ -484,7 +482,7 @@ interface SlotSearchCriteria {
 
       .summary-label {
         font-weight: 600;
-        color: var(--DHATextGrayDark);
+        color: var(--DHATextGray);
         font-size: 11px;
         text-transform: uppercase;
         letter-spacing: 0.3px;
@@ -492,7 +490,7 @@ interface SlotSearchCriteria {
       }
 
       .summary-value {
-        color: var(--DHAGreen);
+        color: var(--DHATextGrayDark);
         font-weight: 600;
         font-size: 14px;
         line-height: 1.3;
@@ -550,7 +548,7 @@ interface SlotSearchCriteria {
         color: var(--DHAWhite);
         border: none;
         border-radius: 12px;
-        padding: 15px 30px;
+        padding: 10px;
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
@@ -573,7 +571,7 @@ interface SlotSearchCriteria {
         color: var(--DHAWhite);
         border: none;
         border-radius: 12px;
-        padding: 15px 30px;
+        padding: 10px;
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
@@ -603,7 +601,7 @@ interface SlotSearchCriteria {
       .slots-header h3 {
         color: var(--DHAGreen);
         margin: 0;
-        font-size: 1.4rem;
+        font-size: 18px;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -662,7 +660,7 @@ interface SlotSearchCriteria {
 
       .day-header {
         background: var(--DHABackGroundLightGray);
-        padding: 15px 20px;
+        padding: 10px;
         cursor: pointer;
         display: flex;
         justify-content: space-between;
@@ -725,7 +723,7 @@ interface SlotSearchCriteria {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 20px;
+        padding: 10px;
         background: var(--DHAWhite);
         border-bottom: 1px solid var(--DividerGray);
         transition: all 0.3s ease;
@@ -743,13 +741,20 @@ interface SlotSearchCriteria {
 
       .slot-info {
         flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
       }
 
       .slot-time {
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 16px;
+        font-weight: 600;
         color: var(--DHAGreen);
-        margin-bottom: 5px;
+        background: rgba(1, 102, 53, 0.1);
+        padding: 8px 12px;
+        border-radius: 6px;
+        display: inline-block;
+        width: 116px;
       }
 
       .slot-service {
@@ -760,10 +765,15 @@ interface SlotSearchCriteria {
 
       .slot-branch {
         color: var(--DHAOrange);
-        font-size: 12px;
-        font-weight: 600;
+        font-size: 13px;
+        font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        background: rgba(255, 140, 0, 0.1);
+        padding: 4px 8px;
+        border-radius: 4px;
+        display: inline-block;
+        width: fit-content;
       }
 
       .slot-actions {
@@ -775,7 +785,7 @@ interface SlotSearchCriteria {
         background: var(--DHAOrange);
         color: var(--DHAWhite);
         border: none;
-        padding: 12px 20px;
+        padding: 8px 12px;
         border-radius: 6px;
         font-size: 14px;
         font-weight: 600;
@@ -850,6 +860,7 @@ interface SlotSearchCriteria {
 
         .slots-container {
           padding: 20px 15px;
+          padding-top: 0;
         }
 
         .slots-header {
@@ -1059,6 +1070,27 @@ export class AppointmentResultsComponent implements OnInit {
 
   bookSlot(slot: AvailableSlot) {
     this.slotSelected.emit(slot);
+  }
+
+  formatTimeRange(time: string): string {
+    // Convert time string (e.g., "13:00") to time range (e.g., "from 13:00 to 14:00")
+    if (!time) return '';
+
+    // Parse the time
+    const [hours, minutes] = time.split(':').map(Number);
+
+    // Create start time
+    const startTime = `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}`;
+
+    // Calculate end time (add 1 hour)
+    const endHours = (hours + 1) % 24;
+    const endTime = `${endHours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}`;
+
+    return `${startTime} to ${endTime}`;
   }
 
   returnToMenu() {
