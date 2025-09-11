@@ -987,7 +987,7 @@ interface Branch {
         }
 
         .appointment-form-container {
-          padding: 24px 2px;
+          padding: 24px 0;
           flex-direction: column;
         }
 
@@ -1000,7 +1000,7 @@ interface Branch {
           min-width: unset;
           height: 600px;
           overflow-y: auto;
-          width: 100%;
+          width: 328px;
         }
 
         .form-section {
