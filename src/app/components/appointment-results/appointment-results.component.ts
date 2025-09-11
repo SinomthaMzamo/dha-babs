@@ -96,7 +96,7 @@ interface SlotSearchCriteria {
               [currentStep]="2"
               [steps]="stepTitles"
             ></app-progress-indicator>
-            <div class="slots-container-wrapper">
+            <div class="no-slots-card no-outline">
               <!-- Booking Summary - Always Visible -->
               <div class="booking-summary">
                 <h3>Booking Summary</h3>
@@ -375,6 +375,11 @@ interface SlotSearchCriteria {
         box-sizing: border-box;
       }
 
+      .no-slots-card.no-outline {
+        border-color: var(--DHAWhite);
+        text-align: unset;
+      }
+
       .no-slots-icon {
         font-size: 4rem;
         margin-bottom: 20px;
@@ -424,7 +429,7 @@ interface SlotSearchCriteria {
       /* Available Slots */
       .slots-container {
         border-radius: 16px;
-        padding: 30px;
+        padding: 30px 0;
         padding-top: 0;
       }
 
