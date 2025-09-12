@@ -369,6 +369,8 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
           padding: 4px 10px;
           font-size: 12px;
         }
+
+        
       }
     `,
   ],

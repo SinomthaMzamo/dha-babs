@@ -606,13 +606,13 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         }
 
         .button-group {
-          flex-direction: column;
           gap: 10px;
         }
 
         .btn-primary,
         .btn-secondary {
           padding: 12px;
+          min-width: 0;
         }
 
         .logo-icon {
