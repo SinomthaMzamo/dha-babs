@@ -12,6 +12,23 @@ interface AvailableSlot {
   branch: string;
 }
 
+interface Province {
+  id: string;
+  name: string;
+}
+
+interface Area {
+  id: string;
+  name: string;
+  provinceId: string;
+}
+
+interface Branch {
+  id: string;
+  name: string;
+  areaId: string;
+}
+
 interface SlotSearchCriteria {
   branch: string;
   startDate: string;
@@ -48,6 +65,7 @@ interface SlotSearchCriteria {
                 selected criteria. <br />
                 <br />Try editing your search or try again later.
               </p>
+              <hr class="summary-divider" />
               <!-- Booking Summary - Always Visible -->
               <div class="booking-summary">
                 <h3>Booking Summary</h3>
@@ -874,6 +892,10 @@ interface SlotSearchCriteria {
           width: 100%;
         }
 
+        .booking-summary {
+          padding: 20px 0;
+        }
+
         .slots-container {
           padding: 14px 0;
         }
@@ -905,7 +927,7 @@ interface SlotSearchCriteria {
         }
 
         .btn-home-top {
-          padding: 15px 12px;
+          padding: 15px 12;
           font-size: 12px;
         }
       }
@@ -916,6 +938,173 @@ export class AppointmentResultsComponent implements OnInit {
   @Input() searchCriteria: SlotSearchCriteria | null = null;
   @Output() editSearchRequested = new EventEmitter<void>();
   @Output() slotSelected = new EventEmitter<AvailableSlot>();
+
+  provinces: Province[] = [
+    { id: 'gauteng', name: 'Gauteng' },
+    { id: 'western-cape', name: 'Western Cape' },
+    { id: 'kwazulu-natal', name: 'KwaZulu-Natal' },
+    { id: 'eastern-cape', name: 'Eastern Cape' },
+    { id: 'free-state', name: 'Free State' },
+    { id: 'mpumalanga', name: 'Mpumalanga' },
+    { id: 'limpopo', name: 'Limpopo' },
+    { id: 'north-west', name: 'North West' },
+    { id: 'northern-cape', name: 'Northern Cape' },
+  ];
+
+  areas: Area[] = [
+    // Gauteng
+    { id: 'jhb-central', name: 'Johannesburg Central', provinceId: 'gauteng' },
+    { id: 'jhb-sandton', name: 'Sandton', provinceId: 'gauteng' },
+    { id: 'pta-central', name: 'Pretoria Central', provinceId: 'gauteng' },
+
+    // Western Cape
+    { id: 'ct-central', name: 'Cape Town Central', provinceId: 'western-cape' },
+    { id: 'ct-bellville', name: 'Bellville', provinceId: 'western-cape' },
+    { id: 'ct-durbanville', name: 'Durbanville', provinceId: 'western-cape' },
+
+    // KwaZulu-Natal
+    { id: 'dbn-central', name: 'Durban Central', provinceId: 'kwazulu-natal' },
+    { id: 'dbn-umhlanga', name: 'Umhlanga', provinceId: 'kwazulu-natal' },
+
+    // Eastern Cape
+    {
+      id: 'pe-central',
+      name: 'Port Elizabeth Central',
+      provinceId: 'eastern-cape',
+    },
+    { id: 'pe-east-london', name: 'East London', provinceId: 'eastern-cape' },
+
+    // Free State
+    {
+      id: 'bloem-central',
+      name: 'Bloemfontein Central',
+      provinceId: 'free-state',
+    },
+
+    // Mpumalanga
+    {
+      id: 'nelspruit-central',
+      name: 'Nelspruit Central',
+      provinceId: 'mpumalanga',
+    },
+
+    // Limpopo
+    {
+      id: 'polokwane-central',
+      name: 'Polokwane Central',
+      provinceId: 'limpopo',
+    },
+
+    // North West
+    {
+      id: 'mahikeng-central',
+      name: 'Mahikeng Central',
+      provinceId: 'north-west',
+    },
+  ];
+
+  branches: Branch[] = [
+    // Johannesburg Central
+    {
+      id: 'jhb-central-main',
+      name: 'Johannesburg Central Main Office',
+      areaId: 'jhb-central',
+    },
+    {
+      id: 'jhb-central-east',
+      name: 'Johannesburg Central East Office',
+      areaId: 'jhb-central',
+    },
+
+    // Sandton
+    {
+      id: 'jhb-sandton-main',
+      name: 'Sandton Main Office',
+      areaId: 'jhb-sandton',
+    },
+
+    // Pretoria Central
+    {
+      id: 'pta-central-main',
+      name: 'Pretoria Central Main Office',
+      areaId: 'pta-central',
+    },
+
+    // Cape Town Central
+    {
+      id: 'ct-central-main',
+      name: 'Cape Town Central Main Office',
+      areaId: 'ct-central',
+    },
+
+    // Bellville
+    {
+      id: 'ct-bellville-main',
+      name: 'Bellville Main Office',
+      areaId: 'ct-bellville',
+    },
+    {
+      id: 'ct-tygervalley-main',
+      name: 'Tygervalley Main Office',
+      areaId: 'ct-bellville',
+    },
+
+    // Durbanville
+    {
+      id: 'ct-durbanville-main',
+      name: 'Durbanville Main Office',
+      areaId: 'ct-durbanville',
+    },
+
+    // Durban Central
+    {
+      id: 'dbn-central-main',
+      name: 'Durban Central Main Office',
+      areaId: 'dbn-central',
+    },
+
+    // Umhlanga
+    {
+      id: 'dbn-umhlanga-main',
+      name: 'Umhlanga Main Office',
+      areaId: 'dbn-umhlanga',
+    },
+
+    // Port Elizabeth Central
+    {
+      id: 'pe-central-main',
+      name: 'Port Elizabeth Central Main Office',
+      areaId: 'pe-central',
+    },
+
+    // East London
+    {
+      id: 'pe-east-london-main',
+      name: 'East London Main Office',
+      areaId: 'pe-east-london',
+    },
+
+    // Bloemfontein Central
+    {
+      id: 'bloem-central-main',
+      name: 'Bloemfontein Central Main Office',
+      areaId: 'bloem-central',
+    },
+
+    // Nelspruit Central
+    {
+      id: 'nelspruit-central-main',
+      name: 'Nelspruit Central Main Office',
+      areaId: 'nelspruit-central',
+    },
+
+    // Polokwane Central
+    {
+      id: 'polokwane-central-main',
+      name: 'Polokwane Central Main Office',
+      areaId: 'polokwane-central',
+    },
+  ];
 
   availableSlots: AvailableSlot[] = [];
   isLoading = false;
@@ -964,8 +1153,22 @@ export class AppointmentResultsComponent implements OnInit {
   getBranchDisplayName(): string {
     if (!this.searchCriteria?.branch) return 'Not selected';
 
-    // This would normally come from the search criteria
-    return 'Bellville, Cape Town, Western Cape';
+    const branch = this.branches.find(
+      (b) => b.id === this.searchCriteria?.branch
+    );
+
+    if (!branch) return 'Unknown branch';
+
+    // Find the area for this branch
+    const area = this.areas.find((a) => a.id === branch.areaId);
+    if (!area) return branch.name;
+
+    // Find the province for this area
+    const province = this.provinces.find((p) => p.id === area.provinceId);
+    if (!province) return `${area.name}→ ${branch.name}`;
+
+    // Return full hierarchy: Province, Area, Branch
+    return `${province.name} → ${area.name} → ${branch.name}`;
   }
 
   getDateRangeDisplay(): string {

@@ -309,6 +309,7 @@ interface Branch {
                       formControlName="startDate"
                       placeholder=""
                       [min]="today"
+                      [max]="maxDate"
                       (blur)="onSectionBlur('dateRange')"
                       class="floating-input"
                       [class.has-value]="
@@ -316,7 +317,7 @@ interface Branch {
                       "
                     />
                     <label for="startDate" class="floating-label"
-                      >Select start date *</label
+                      >Select from date *</label
                     >
                     <div
                       *ngIf="
@@ -341,7 +342,7 @@ interface Branch {
                       [class.has-value]="appointmentForm.get('endDate')?.value"
                     />
                     <label for="endDate" class="floating-label"
-                      >End Date *</label
+                      >Select to date *</label
                     >
                     <div class="field-info">
                       <small>End date must be within 30 days from today</small>
