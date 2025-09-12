@@ -15,12 +15,12 @@ import { Router } from '@angular/router';
         </div>
         <h1>Branch Appointment Booking System</h1>
         <p class="subtitle">
-          A modern, user-friendly platform for DHA appointment management
+          A modern, user-friendly platform for scheduling Home Affairs visits.
         </p>
 
         <div class="cta-section">
           <h2>Ready to get started?</h2>
-          <p>Experience the improved DHA booking system</p>
+          <p>Schedule your next visit today!</p>
           <button (click)="startBooking()" class="cta-button">
             Book Today
           </button>
