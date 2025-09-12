@@ -91,7 +91,7 @@ interface SlotSearchCriteria {
         <div
           *ngIf="!isLoading && !noSlotsAvailable && availableSlots.length > 0"
         >
-          <div class="content-wrapper">
+          <div class="content-wrapper results-wrapper">
             <app-progress-indicator
               [currentStep]="2"
               [steps]="stepTitles"
@@ -425,6 +425,10 @@ interface SlotSearchCriteria {
         width: 100%;
         max-width: var(--form-width);
         box-sizing: border-box;
+      }
+
+      .results-wrapper {
+        max-width: 1000px; /* Wider for results display */
       }
 
       /* Available Slots */
@@ -857,6 +861,10 @@ interface SlotSearchCriteria {
 
         .content-wrapper {
           padding: 0 8px;
+        }
+
+        .results-wrapper {
+          max-width: 100%;
         }
 
         .no-slots-card {
