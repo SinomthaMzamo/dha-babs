@@ -18,6 +18,14 @@ import { Router } from '@angular/router';
           A modern, user-friendly platform for DHA appointment management
         </p>
 
+        <div class="cta-section">
+          <h2>Ready to get started?</h2>
+          <p>Experience the improved DHA booking system</p>
+          <button (click)="startBooking()" class="cta-button">
+            Book Today
+          </button>
+        </div>
+
         <div class="features-grid">
           <div class="feature-card">
             <!-- TODO: highlight easy log in with ID or Passport number -->
@@ -29,7 +37,7 @@ import { Router } from '@angular/router';
           <div class="feature-card">
             <div class="feature-icon">📅</div>
             <h3>Service Booking</h3>
-            <p>Easily book appointments for single or multiple services</p>
+            <p>Book forsingle or multiple services easily</p>
           </div>
 
           <!-- <div class="feature-card">
@@ -53,14 +61,6 @@ import { Router } from '@angular/router';
             <h3>Avoid long queues with us!</h3>
             <p>Spend less time standing around</p>
           </div>
-        </div>
-
-        <div class="cta-section">
-          <h2>Ready to get started?</h2>
-          <p>Experience the improved DHA booking system</p>
-          <button (click)="startBooking()" class="cta-button">
-            Book Today
-          </button>
         </div>
 
         <div class="info-section">
@@ -117,6 +117,7 @@ import { Router } from '@angular/router';
       .demo-card {
         background: var(--DHAWhite);
         padding: 40px;
+        padding-top: 80px;
         border-radius: 16px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         width: 100%;
@@ -146,9 +147,10 @@ import { Router } from '@angular/router';
       }
 
       h1 {
-        color: var(--DHAGreen);
+        color: var(--DHATextGrayDark);
         font-size: 2.5rem;
         margin-bottom: 10px;
+        margin-top: 24px;
         font-weight: 700;
       }
 
@@ -276,6 +278,7 @@ import { Router } from '@angular/router';
         }
         .demo-card {
           padding: 20px 15px;
+          padding-top: 60px;
         }
 
         .header-section {
@@ -366,6 +369,7 @@ import { Router } from '@angular/router';
 
         .demo-card {
           padding: 15px 10px;
+          padding-top: 60px;
         }
 
         h1 {
