@@ -378,6 +378,7 @@ interface SlotSearchCriteria {
       .no-slots-card.no-outline {
         border-color: var(--DHAWhite);
         text-align: unset;
+        width: 100%;
       }
 
       .no-slots-icon {
