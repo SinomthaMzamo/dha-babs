@@ -430,7 +430,6 @@ interface SlotSearchCriteria {
       .slots-container {
         border-radius: 16px;
         padding: 30px 0;
-        padding-top: 0;
       }
 
       .summary-divider {
