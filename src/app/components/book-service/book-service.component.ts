@@ -43,8 +43,8 @@ interface BookingPerson {
     AppointmentFormComponent,
     AppointmentResultsComponent,
     ProgressIndicatorComponent,
-    NavbarComponent
-],
+    NavbarComponent,
+  ],
   template: `
     <div class="book-service-container">
       <app-navbar></app-navbar>
@@ -993,11 +993,12 @@ interface BookingPerson {
       }
 
       .header-description {
-        color: var(--DHATextGray);
+        color: var(--DHATextGrayDark);
         font-size: 13px;
         margin: 0;
         line-height: 1.5;
         max-width: 400px;
+        font-weight: 600;
       }
 
       .header-actions {
@@ -2099,6 +2100,10 @@ interface BookingPerson {
           .modal-footer .btn-primary,
           .modal-footer .btn-secondary {
             min-width: 0;
+          }
+
+          .btn-text{
+            font-size: 10px;
           }
         }
 

@@ -37,7 +37,7 @@ import { Router } from '@angular/router';
           <div class="feature-card">
             <div class="feature-icon">📅</div>
             <h3>Service Booking</h3>
-            <p>Book forsingle or multiple services easily</p>
+            <p>Book for single or multiple services easily</p>
           </div>
 
           <!-- <div class="feature-card">
