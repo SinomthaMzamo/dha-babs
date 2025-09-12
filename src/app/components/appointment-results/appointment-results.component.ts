@@ -79,7 +79,7 @@ interface SlotSearchCriteria {
                 >
                   <div class="btn-contents">
                     <span class="btn-icon"></span>
-                    <span class="btn-text">Edit Search Criteria</span>
+                    <span class="btn-text">Edit Search</span>
                   </div>
                 </button>
               </div>
@@ -125,7 +125,7 @@ interface SlotSearchCriteria {
                   title="Add an accompanying applicant to this booking"
                 >
                   <div class="btn-contents">
-                    <span class="btn-text">Edit Search Criteria</span>
+                    <span class="btn-text">Edit Search</span>
                   </div>
                 </button>
                 <hr class="summary-divider" />
@@ -304,7 +304,7 @@ interface SlotSearchCriteria {
         background: var(--DHAGreen);
         color: var(--DHAWhite);
         border: none;
-        padding: 8px 16px;
+        padding: 15px 8px;
         border-radius: 6px;
         font-size: 14px;
         font-weight: 600;
@@ -897,14 +897,15 @@ interface SlotSearchCriteria {
         .btn-primary,
         .btn-secondary {
           width: 100%;
-          max-width: 200px;
+          min-width: 0;
+          padding: 8px 15px;
         }
         .logo-icon {
           height: 32px;
         }
 
         .btn-home-top {
-          padding: 4px 10px;
+          padding: 15px 12px;
           font-size: 12px;
         }
       }

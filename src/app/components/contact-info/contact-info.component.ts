@@ -8,24 +8,15 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
+import { NavbarComponent } from "../shared/navbar/navbar.component";
 
 @Component({
   selector: 'app-contact-info',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent],
+  imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent, NavbarComponent],
   template: `
-    <div class="top-bar">
-      <div class="top-bar-content">
-        <div class="logo-section">
-          <button type="button" (click)="goHome()" class="btn-home-top">
-            ← Home
-          </button>
-        </div>
-        <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
-      </div>
-    </div>
-
     <div class="contact-info-container">
+      <app-navbar></app-navbar>
       <div class="contact-info-content-wrapper">
         <app-progress-indicator
           [currentStep]="getProgressStep()"
@@ -142,69 +133,11 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
         box-sizing: border-box;
       }
 
-      .top-bar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: whitesmoke;
-        border-bottom: 2px solid var(--DHAGreen);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .top-bar-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .logo-section {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .logo-icon {
-        height: 60px;
-        width: auto;
-        object-fit: contain;
-      }
-
-      .logo-text {
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--DHATextGrayDark);
-      }
-
-      .btn-home-top {
-        background: var(--DHAGreen);
-        color: var(--DHAWhite);
-        border: none;
-        padding: 8px 16px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-
-      .btn-home-top:hover {
-        background: var(--DHAOrange);
-        transform: translateY(-1px);
-      }
-
       .contact-info-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: calc(100vh - 70px);
+        min-height: calc(100vh - 73px);
         background: linear-gradient(
           135deg,
           var(--DHAOffWhite) 0%,
@@ -466,15 +399,6 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
           padding: 12px;
           min-width: 0;
         }
-
-        .logo-icon {
-          height: 32px;
-        }
-
-        .btn-home-top {
-          padding: 4px 10px;
-          font-size: 12px;
-        }
       }
     `,
   ],
@@ -550,9 +474,5 @@ export class ContactInfoComponent implements OnInit {
   goBack() {
     // Navigate back to personal info verification
     this.router.navigate(['/personal-info']);
-  }
-
-  goHome() {
-    this.router.navigate(['/']);
   }
 }

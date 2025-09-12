@@ -2,26 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NavbarComponent } from "../shared/navbar/navbar.component";
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NavbarComponent],
   template: `
     <div class="menu-container">
-      <!-- Top Bar -->
-      <div class="top-bar">
-        <div class="top-bar-content">
-          <div class="logo-section">
-            <button type="button" (click)="goHome()" class="btn-home-top">
-              ← Home
-            </button>
-            <!-- <span class="logo-text">Branch Appointment Booking System</span> -->
-          </div>
-          <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
-        </div>
-      </div>
-
+      <app-navbar></app-navbar>
       <!-- Main Content -->
       <div class="menu-content">
         <div class="menu-card">
@@ -112,65 +101,6 @@ import { ReactiveFormsModule } from '@angular/forms';
           #e8f5e8 100%
         );
         padding-top: 70px;
-      }
-
-      .top-bar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: whitesmoke;
-        border-bottom: 2px solid var(--DHAGreen);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        padding: 0 20px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .top-bar-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-
-      .logo-section {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .logo-icon {
-        height: 60px;
-        width: auto;
-        object-fit: contain;
-      }
-
-      .logo-text {
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--DHATextGrayDark);
-      }
-
-      .btn-home-top {
-        background: var(--DHAGreen);
-        color: var(--DHAWhite);
-        border: none;
-        padding: 8px 16px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-
-      .btn-home-top:hover {
-        background: var(--DHAOrange);
-        transform: translateY(-1px);
       }
 
       .menu-content {
@@ -365,14 +295,6 @@ import { ReactiveFormsModule } from '@angular/forms';
           padding: 10px 24px;
           font-size: 14px;
         }
-
-        .logo-icon {
-          height: 28px;
-        }
-        .btn-home-top {
-          padding: 4px 8px;
-          font-size: 11px;
-        }
       }
 
       @media (max-width: 480px) {
@@ -488,9 +410,5 @@ export class MenuComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/contact-info']);
-  }
-
-  goHome() {
-    this.router.navigate(['/']);
   }
 }

@@ -16,6 +16,7 @@ import {
 } from '@angular/forms';
 import { BookingStepIndicatorComponent } from '../booking-step-indicator/booking-step-indicator.component';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
+import { NavbarComponent } from "../shared/navbar/navbar.component";
 
 interface Service {
   id: string;
@@ -44,9 +45,10 @@ interface Branch {
 @Component({
   selector: 'app-appointment-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent],
+  imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent, NavbarComponent],
   template: `
     <div class="appointment-form-container">
+      <app-navbar></app-navbar>
       <div class="appointment-form-content-wrapper">
         <app-progress-indicator
           [currentStep]="1"
@@ -1035,8 +1037,9 @@ interface Branch {
 
         .btn-primary,
         .btn-secondary {
-
+          width: 100%;
           min-width: 0;
+          padding: 15px 8px;
         }
       }
     `,

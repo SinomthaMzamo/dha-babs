@@ -10,6 +10,7 @@ import {
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 import { AppointmentResultsComponent } from '../appointment-results/appointment-results.component';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
+import { NavbarComponent } from "../shared/navbar/navbar.component";
 
 interface SlotSearchCriteria {
   branch: string;
@@ -42,20 +43,11 @@ interface BookingPerson {
     AppointmentFormComponent,
     AppointmentResultsComponent,
     ProgressIndicatorComponent,
-  ],
+    NavbarComponent
+],
   template: `
     <div class="book-service-container">
-      <!-- Top Bar -->
-      <div class="top-bar">
-        <div class="top-bar-content">
-          <div class="logo-section">
-            <button type="button" (click)="goHome()" class="btn-home-top">
-              ← Home
-            </button>
-          </div>
-          <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
-        </div>
-      </div>
+      <app-navbar></app-navbar>
 
       <!-- Main Content -->
       <div class="main-content">
@@ -1313,7 +1305,7 @@ interface BookingPerson {
         }
 
         .btn-home-top {
-          padding: 4px 10px;
+          padding: 15px 12px;
           font-size: 12px;
         }
       }
@@ -2095,6 +2087,13 @@ interface BookingPerson {
           .radio-group {
             flex-direction: column;
             gap: 5px;
+          }
+
+          .btn-primary,
+          .btn-secondary {
+            width: 100%;
+            min-width: 0;
+            padding: 15px 8px;
           }
 
           .modal-footer .btn-primary,

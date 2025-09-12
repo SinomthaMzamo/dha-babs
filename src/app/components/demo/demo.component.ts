@@ -373,7 +373,7 @@ import { Router } from '@angular/router';
         }
 
         h1 {
-          font-size: 1.6rem;
+          font-size: 1.4rem;
         }
 
         .subtitle {

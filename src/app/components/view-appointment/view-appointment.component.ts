@@ -1,24 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { NavbarComponent } from "../shared/navbar/navbar.component";
 
 @Component({
   selector: 'app-view-appointment',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NavbarComponent],
   template: `
     <div class="view-appointment-container">
       <!-- Top Bar -->
-      <div class="top-bar">
-        <div class="top-bar-content">
-          <div class="logo-section">
-            <button type="button" (click)="goHome()" class="btn-home-top">
-              ← Home
-            </button>
-          </div>
-          <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
-        </div>
-      </div>
+      <app-navbar></app-navbar>
 
       <!-- Main Content -->
       <div class="view-appointment-content">
@@ -390,8 +382,8 @@ import { CommonModule } from '@angular/common';
           height: 40px;
         }
         .btn-home-top {
-          padding: 4px 8px;
-          font-size: 11px;
+          padding: 15px 12px;
+          font-size: 12px;
         }
 
         .view-appointment-content {
