@@ -16,7 +16,7 @@ import {
 } from '@angular/forms';
 import { BookingStepIndicatorComponent } from '../booking-step-indicator/booking-step-indicator.component';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
-import { NavbarComponent } from "../shared/navbar/navbar.component";
+import { NavbarComponent } from '../shared/navbar/navbar.component';
 
 interface Service {
   id: string;
@@ -45,7 +45,12 @@ interface Branch {
 @Component({
   selector: 'app-appointment-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent, NavbarComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ProgressIndicatorComponent,
+    NavbarComponent,
+  ],
   template: `
     <div class="appointment-form-container">
       <app-navbar></app-navbar>
@@ -60,7 +65,6 @@ interface Branch {
           <form
             [formGroup]="appointmentForm"
             (ngSubmit)="onSubmit()"
-            (click)="onDocumentClick($event)"
             autocomplete="on"
           >
             <!-- Selected Services Display -->
@@ -188,7 +192,6 @@ interface Branch {
                       id="province"
                       formControlName="province"
                       (change)="onProvinceChange()"
-                      (blur)="onSectionBlur('location')"
                       class="floating-input"
                       [class.has-value]="appointmentForm.get('province')?.value"
                     >
@@ -222,7 +225,6 @@ interface Branch {
                       id="area"
                       formControlName="area"
                       (change)="onAreaChange()"
-                      (blur)="onSectionBlur('location')"
                       class="floating-input"
                       [class.has-value]="appointmentForm.get('area')?.value"
                     >
@@ -255,7 +257,6 @@ interface Branch {
                     <select
                       id="branch"
                       formControlName="branch"
-                      (blur)="onSectionBlur('location')"
                       class="floating-input"
                       [class.has-value]="appointmentForm.get('branch')?.value"
                     >
@@ -1403,29 +1404,19 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
   }
 
   onSectionBlur(section: string) {
-    // Auto-collapse sections after a short delay to allow for navigation
     setTimeout(() => {
-      // Check if any form controls in this specific section are still focused
       const activeElement = document.activeElement;
       let shouldCollapse = true;
 
       if (activeElement) {
-        // Check if the active element is within the specific section
         const sectionElement = document.querySelector(
           `[data-section="${section}"]`
         );
         if (sectionElement && sectionElement.contains(activeElement)) {
           shouldCollapse = false;
         }
-
-        // Also check if the active element is the section header itself (to prevent collapse on header click)
-        const sectionHeader = sectionElement?.querySelector('.section-header');
-        if (sectionHeader && sectionHeader.contains(activeElement)) {
-          shouldCollapse = false;
-        }
       }
 
-      // Auto-collapse all sections when out of focus
       if (shouldCollapse) {
         switch (section) {
           case 'selectedServices':
@@ -1439,47 +1430,22 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
             break;
         }
       }
-    }, 200); // Reduced delay to make it more responsive
+    }, 200);
   }
 
-  // Handle clicks outside sections to auto-collapse
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
 
-    // Check if click is on a section header (don't collapse in this case)
+    // Check if click is on a section header
     const clickedHeader = target.closest('.section-header');
     if (clickedHeader) {
       return; // Let the click event handle the toggle
     }
 
-    // Check if click is on a form control within a section
-    const clickedFormControl = target.closest('select, input');
+    // Check if click is on a form control
+    const clickedFormControl = target.closest('select, input, textarea');
     if (clickedFormControl) {
-      const section = clickedFormControl.closest('[data-section]');
-      if (section) {
-        const sectionName = section.getAttribute('data-section');
-        if (sectionName) {
-          // Expand the section when clicking on its form controls and collapse others
-          switch (sectionName) {
-            case 'selectedServices':
-              this.selectedServicesExpanded = true;
-              this.locationExpanded = false;
-              this.dateRangeExpanded = false;
-              break;
-            case 'location':
-              this.selectedServicesExpanded = false;
-              this.locationExpanded = true;
-              this.dateRangeExpanded = false;
-              break;
-            case 'dateRange':
-              this.selectedServicesExpanded = false;
-              this.locationExpanded = false;
-              this.dateRangeExpanded = true;
-              break;
-          }
-        }
-      }
-      return;
+      return; // Don't interfere with form control interactions
     }
 
     // Check if click is outside any section

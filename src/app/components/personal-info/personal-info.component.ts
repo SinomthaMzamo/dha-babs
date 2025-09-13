@@ -13,7 +13,12 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
 @Component({
   selector: 'app-personal-info',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent, NavbarComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ProgressIndicatorComponent,
+    NavbarComponent,
+  ],
   template: `
     <div class="personal-info-container">
       <app-navbar></app-navbar>
@@ -26,7 +31,8 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
           <div *ngIf="currentStep === 1" class="step-section">
             <h2>Verify Personal Information</h2>
             <p class="step-description">
-              Please verify your personal details against DHA records
+              Please enter your personal details, we will verify them against
+              DHA records
             </p>
 
             <form
@@ -437,7 +443,7 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
         font-weight: 500;
         font-size: 14px;
         text-align: right;
-        word-break: break-all;
+        overflow-wrap: break-word;
       }
 
       @keyframes bounce {

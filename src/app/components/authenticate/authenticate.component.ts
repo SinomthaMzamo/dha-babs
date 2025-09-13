@@ -13,7 +13,12 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
 @Component({
   selector: 'app-authenticate',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent, NavbarComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ProgressIndicatorComponent,
+    NavbarComponent,
+  ],
   template: `
     <div class="auth-container">
       <app-navbar></app-navbar>
@@ -21,7 +26,11 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
         <app-progress-indicator [currentStep]="0"></app-progress-indicator>
         <div class="auth-card">
           <h2>Sign In</h2>
-
+          <p class="step-description">
+            Please note that this service is only available for individuals who
+            have a South African ID Number or a Passport registered on our
+            system.
+          </p>
           <form
             [formGroup]="authForm"
             (ngSubmit)="onSubmit()"
@@ -76,6 +85,8 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
                 </div>
               </div>
             </div>
+
+            
 
             <div class="button-group">
               <button
@@ -152,6 +163,14 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
         margin-bottom: 30px;
         font-size: 28px;
         font-weight: 600;
+      }
+
+      .step-description {
+        color: var(--DHATextGray);
+        font-size: 14px;
+        margin-bottom: 30px;
+        line-height: 1.5;
+        text-align: left;
       }
 
       .form-group {
