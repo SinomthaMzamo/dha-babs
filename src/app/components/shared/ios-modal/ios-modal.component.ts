@@ -55,7 +55,23 @@ import { CommonModule } from '@angular/common';
         </div>
 
         <div class="ios-modal-footer" *ngIf="showFooter">
-          <ng-content select="[slot=footer]"></ng-content>
+          <button
+            *ngIf="cancelText"
+            type="button"
+            class="btn-secondary"
+            (click)="onCancel()"
+          >
+            {{ cancelText }}
+          </button>
+          <button
+            *ngIf="confirmText"
+            type="button"
+            class="btn-primary"
+            [disabled]="confirmDisabled"
+            (click)="onConfirm()"
+          >
+            {{ confirmText }}
+          </button>
         </div>
       </div>
     </div>
@@ -116,7 +132,7 @@ import { CommonModule } from '@angular/common';
         background: var(--DHAWhite);
         border-radius: 12px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        max-width: 90vw;
+        max-width: 500px;
         max-height: 90vh;
         width: 100%;
         display: flex;
@@ -219,7 +235,53 @@ import { CommonModule } from '@angular/common';
         flex-shrink: 0;
         display: flex;
         gap: 12px;
-        justify-content: flex-end;
+        justify-content: space-between;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        flex: 1;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 150px;
+      }
+
+      .btn-primary {
+        background: var(--DHAGreen);
+        color: var(--DHAWhite);
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: var(--DHAWhite);
+        transform: translateY(-2px);
+        color: var(--DHAGreen);
+        border: 1px solid var(--DHAGreen);
+      }
+
+      .btn-primary:disabled {
+        background: var(--DHADisabledButtonGray);
+        color: var(--DHADisabledTextGray);
+        cursor: not-allowed;
+      }
+
+      .btn-secondary {
+        background: var(--DHATextGrayDark);
+        color: var(--DHAWhite);
+      }
+
+      .btn-secondary:hover {
+        background: var(--DHAOffBlack);
       }
 
       /* iOS Safari specific media queries */
@@ -269,7 +331,7 @@ import { CommonModule } from '@angular/common';
         }
 
         .ios-modal-container {
-          max-width: 95vw;
+          max-width: 500px;
           max-height: 95vh;
           border-radius: 8px;
         }
@@ -288,12 +350,65 @@ import { CommonModule } from '@angular/common';
 
         .ios-modal-footer {
           padding: 12px 20px 16px;
-          flex-direction: column;
+          display: flex;
+          flex-direction: row;
+          gap: 8px;
+          justify-content: flex-end;
         }
 
-        .ios-modal-footer button {
-          width: 100%;
-          min-height: 44px;
+        .ios-modal-footer .btn-primary,
+        .ios-modal-footer .btn-secondary {
+          flex: 1;
+          padding: 15px 30px;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          min-width: 0;
+          /* Reset default button styles */
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          outline: none;
+          text-decoration: none;
+          display: inline-block;
+          box-sizing: border-box;
+        }
+
+        .ios-modal-footer .btn-primary {
+          background: var(--DHAGreen);
+          color: var(--DHAWhite);
+        }
+
+        .ios-modal-footer .btn-primary:hover:not(:disabled) {
+          background: var(--DHAWhite);
+          transform: translateY(-2px);
+          color: var(--DHAGreen);
+          border: 1px solid var(--DHAGreen);
+        }
+
+        .ios-modal-footer .btn-primary:disabled {
+          background: var(--DHADisabledButtonGray);
+          color: var(--DHADisabledTextGray);
+          cursor: not-allowed;
+        }
+
+        .ios-modal-footer .btn-secondary {
+          background: var(--DHATextGrayDark);
+          color: var(--DHAWhite);
+        }
+
+        .ios-modal-footer .btn-secondary:hover {
+          background: var(--DHAOffBlack);
+          transform: translateY(-2px);
+        }
+
+        .btn-primary,
+        .btn-secondary {
+          padding: 12px;
+          min-width: 0;
         }
       }
 
@@ -310,8 +425,13 @@ export class IosModalComponent implements OnInit, OnDestroy {
   @Input() showFooter: boolean = true;
   @Input() closeOnOverlayClick: boolean = true;
   @Input() closeOnEscape: boolean = true;
+  @Input() cancelText: string = '';
+  @Input() confirmText: string = '';
+  @Input() confirmDisabled: boolean = false;
   @Output() modalClosed = new EventEmitter<void>();
   @Output() modalOpened = new EventEmitter<void>();
+  @Output() cancelClicked = new EventEmitter<void>();
+  @Output() confirmClicked = new EventEmitter<void>();
 
   @ViewChild('modalContainer', { static: false }) modalContainer!: ElementRef;
 
@@ -401,6 +521,15 @@ export class IosModalComponent implements OnInit, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
     this.closeModal();
+  }
+
+  onCancel() {
+    this.cancelClicked.emit();
+    this.closeModal();
+  }
+
+  onConfirm() {
+    this.confirmClicked.emit();
   }
 
   private handleEscapeKey = (event: KeyboardEvent) => {

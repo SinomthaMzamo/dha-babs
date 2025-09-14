@@ -75,18 +75,25 @@ import { CommonModule } from '@angular/common';
         border: 1px solid #e0e0e0;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 1000;
+        z-index: 9999;
         opacity: 0;
         visibility: hidden;
         transform: translateY(-10px);
         transition: all 0.2s ease;
         margin-top: 4px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90vw;
+        max-width: 320px;
+        margin: 0;
       }
 
       .custom-date-picker.open {
         opacity: 1;
         visibility: visible;
-        transform: translateY(0);
+        transform: translate(-50%, -50%);
       }
 
       .date-picker-header {

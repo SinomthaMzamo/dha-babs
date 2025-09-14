@@ -221,7 +221,12 @@ interface BookingPerson {
           title="Add New Applicant"
           [closeOnOverlayClick]="true"
           [closeOnEscape]="true"
+          cancelText="Cancel"
+          confirmText="Add"
+          [confirmDisabled]="addApplicantForm.invalid"
           (modalClosed)="closeAddApplicantModal()"
+          (cancelClicked)="closeAddApplicantModal()"
+          (confirmClicked)="saveNewApplicant()"
         >
           <form [formGroup]="addApplicantForm" (ngSubmit)="saveNewApplicant()">
             <!-- relationship to the main applicant -->
@@ -443,24 +448,6 @@ interface BookingPerson {
               </div>
             </div>
           </form>
-
-          <div slot="footer">
-            <button
-              type="button"
-              (click)="closeAddApplicantModal()"
-              class="btn-secondary"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              (click)="saveNewApplicant()"
-              [disabled]="addApplicantForm.invalid"
-              class="btn-primary"
-            >
-              Add
-            </button>
-          </div>
         </app-ios-modal>
 
         <!-- Person Service Selection Modal -->
@@ -703,7 +690,7 @@ interface BookingPerson {
           var(--DHAOffWhite) 0%,
           #e8f5e8 100%
         );
-        padding-top: 70px;
+        padding-top: 73px;
       }
 
       .top-bar {
@@ -769,6 +756,8 @@ interface BookingPerson {
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
+        height: 100vh;
+        width: 100vw;
       }
 
       /* Booking Preview Styles */
@@ -776,7 +765,7 @@ interface BookingPerson {
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: calc(100vh - 70px);
+        min-height: calc(100vh - 73px);
         background: linear-gradient(
           135deg,
           var(--DHAOffWhite) 0%,
@@ -797,10 +786,11 @@ interface BookingPerson {
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         padding: 30px;
         width: 100%;
-        height: var(--mobile-form-height);
+        max-height: calc(100vh - 150px);
         /* width: fit-content; */
         /* min-width: 400px; */
         box-sizing: border-box;
+        overflow-y: auto;
       }
 
       .booking-preview-card h2 {
@@ -1068,9 +1058,15 @@ interface BookingPerson {
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        min-height: 100vh;
+        min-height: calc(100vh - 73px);
         padding: 20px;
-        background: var(--DHABackGroundLightGray);
+        background: linear-gradient(
+          135deg,
+          var(--DHAOffWhite) 0%,
+          #e8f5e8 100%
+        );
+        width: 100vw;
+        box-sizing: border-box;
       }
 
       .book-service-container .confirm-booking-card {
@@ -1079,7 +1075,7 @@ interface BookingPerson {
         padding: 16px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         border: 1px solid var(--DHABackGroundLightGray);
-        height: calc(var(--mobile-form-height) + 200px);
+        max-height: calc(100vh - 150px);
         overflow-y: auto;
         box-sizing: border-box;
         margin: 0 auto;
@@ -1835,7 +1831,7 @@ interface BookingPerson {
           min-width: unset;
           max-width: 600px;
           width: 100%;
-          height: var(--mobile-form-height);
+          max-height: calc(100vh - 150px);
           overflow-y: auto;
           box-sizing: border-box;
         }
@@ -2034,6 +2030,7 @@ interface BookingPerson {
           }
           .book-service-container .main-content .confirm-booking-container {
             padding: 16px 12px;
+            max-height: calc(100vh - 150px);
           }
 
           .confirm-booking-card {

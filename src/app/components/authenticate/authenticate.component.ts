@@ -9,7 +9,6 @@ import {
 import { Router } from '@angular/router';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
-import { IosModalComponent } from '../shared/ios-modal/ios-modal.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -25,7 +24,6 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     ProgressIndicatorComponent,
     NavbarComponent,
-    IosModalComponent,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -111,71 +109,9 @@ import { MatInputModule } from '@angular/material/input';
               </button>
             </div>
           </form>
-
-          <!-- Demo Button for iOS Modal -->
-          <div class="demo-section">
-            <button
-              type="button"
-              class="btn-secondary"
-              (click)="openDemoModal()"
-            >
-              Test iOS Safari Modal
-            </button>
-          </div>
         </div>
       </div>
     </div>
-
-    <!-- iOS Safari Modal Demo -->
-    <app-ios-modal
-      [isOpen]="showDemoModal"
-      title="iOS Safari Modal Demo"
-      [closeOnOverlayClick]="true"
-      [closeOnEscape]="true"
-      (modalClosed)="closeDemoModal()"
-    >
-      <div class="modal-demo-content">
-        <h4>This is an iOS Safari-friendly modal!</h4>
-        <p>
-          This modal is specifically designed to work well on iOS Safari with
-          proper:
-        </p>
-        <ul>
-          <li>Viewport handling</li>
-          <li>Touch event management</li>
-          <li>Z-index stacking</li>
-          <li>Body scroll prevention</li>
-          <li>Safe area support</li>
-        </ul>
-
-        <div class="form-group">
-          <label>Test Input (won't zoom on iOS):</label>
-          <input
-            type="text"
-            placeholder="Type here to test iOS Safari behavior"
-            class="form-input"
-          />
-        </div>
-
-        <div class="form-group">
-          <label>Test Select:</label>
-          <select class="form-select">
-            <option>Option 1</option>
-            <option>Option 2</option>
-            <option>Option 3</option>
-          </select>
-        </div>
-      </div>
-
-      <div slot="footer">
-        <button type="button" class="btn-secondary" (click)="closeDemoModal()">
-          Cancel
-        </button>
-        <button type="button" class="btn-primary" (click)="closeDemoModal()">
-          OK
-        </button>
-      </div>
-    </app-ios-modal>
   `,
   styles: [
     `
@@ -231,6 +167,7 @@ import { MatInputModule } from '@angular/material/input';
         );
         padding: 20px;
         position: relative;
+        height: 100vh;
       }
 
       .auth-content-wrapper {
@@ -248,6 +185,7 @@ import { MatInputModule } from '@angular/material/input';
         width: 100%;
         box-sizing: border-box;
         height: var(--mobile-form-height);
+        max-height: calc(100vh - 150px);
       }
 
       h2 {
@@ -400,6 +338,7 @@ import { MatInputModule } from '@angular/material/input';
         .auth-container {
           padding: 0 8px;
           margin-top: 73px;
+          height: 100vh;
         }
         .auth-card {
           padding: 20px;

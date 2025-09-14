@@ -370,7 +370,7 @@ interface SlotSearchCriteria {
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: calc(100vh - 70px);
+        min-height: calc(100vh - 73px);
         background: linear-gradient(
           135deg,
           var(--DHAOffWhite) 0%,
@@ -883,6 +883,10 @@ interface SlotSearchCriteria {
           height: var(--mobile-form-height);
           overflow-y: auto;
           width: 100%;
+        }
+
+        .no-slots-card.no-outline {
+          max-height: calc(100vh - 150px);
         }
 
         .slots-container-wrapper {

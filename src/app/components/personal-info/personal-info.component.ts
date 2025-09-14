@@ -202,6 +202,7 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
           #e8f5e8 100%
         );
         padding: 20px;
+        height: 100vh;
       }
 
       .personal-info-content-wrapper {
@@ -515,7 +516,7 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
 
         .personal-info-container {
           padding: 0 8px;
-          margin: 73px 0;
+          margin-top: 73px;
         }
 
         input {
@@ -526,6 +527,7 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
           padding: 20px;
           max-width: 100%;
           height: var(--mobile-form-height);
+          max-height: calc(100vh - 150px);
           overflow-y: auto;
           box-sizing: border-box;
         }

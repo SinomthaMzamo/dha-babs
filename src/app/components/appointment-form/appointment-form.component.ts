@@ -75,7 +75,8 @@ interface Branch {
               *ngIf="selectedServices && selectedServices.length > 0"
               data-section="selectedServices"
             >
-              <div class="section-header"
+              <div
+                class="section-header"
                 (click)="toggleSection('selectedServices')"
                 tabindex="0"
               >
@@ -86,7 +87,8 @@ interface Branch {
                   >▼</span
                 >
               </div>
-              <div class="section-content"
+              <div
+                class="section-content"
                 [class.expanded]="selectedServicesExpanded"
               >
                 <!-- Applicant Information Cards -->
@@ -371,7 +373,7 @@ interface Branch {
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: calc(100vh - 70px);
+        min-height: calc(100vh - 73px);
         background: linear-gradient(
           135deg,
           var(--DHAOffWhite) 0%,
@@ -395,7 +397,7 @@ interface Branch {
         padding: 40px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         max-width: var(--form-width);
-        height: var(--mobile-form-height);
+        max-height: calc(100vh - 150px);
         overflow-y: auto;
         width: 100%; /* fill the wrapper */
         box-sizing: border-box;
@@ -412,9 +414,8 @@ interface Branch {
       .form-section {
         margin-bottom: 10px;
         background: var(--DHAOffWhite);
-        border-radius: 8px;
         border: 1px solid var(--DHATextGray);
-        overflow: hidden;
+        border-radius: 8px;
       }
 
       .form-section.collapsible {
@@ -429,6 +430,7 @@ interface Branch {
         cursor: pointer;
         background: var(--DHAWhite);
         color: var(--DHAGreen);
+        border-radius: 8px;
         transition: background-color 0.3s ease;
       }
 
@@ -473,6 +475,8 @@ interface Branch {
       .section-content.expanded {
         max-height: 1000px;
         padding: 10px;
+        overflow: visible;
+        border-radius: 8px;
       }
 
       .form-section:not(.collapsible) {

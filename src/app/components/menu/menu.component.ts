@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NavbarComponent } from "../shared/navbar/navbar.component";
+import { NavbarComponent } from '../shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-menu',
@@ -100,7 +100,7 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
           var(--DHAOffWhite) 0%,
           #e8f5e8 100%
         );
-        padding-top: 70px;
+        padding-top: 73px;
       }
 
       .menu-content {
@@ -115,6 +115,7 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
         padding: 40px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         border: 2px solid var(--DHAWhite);
+        margin: 4px auto;
       }
 
       .welcome-section {
@@ -239,6 +240,7 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
           height: 660px;
           overflow-y: auto;
           box-sizing: border-box;
+          margin: 4px auto;
         }
 
         .welcome-section {
@@ -305,7 +307,7 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
 
         .menu-card {
           padding: 10px 8px;
-          margin: auto;
+          margin: 4px auto;
           width: 100%;
         }
 

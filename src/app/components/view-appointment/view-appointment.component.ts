@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { NavbarComponent } from "../shared/navbar/navbar.component";
+import { NavbarComponent } from '../shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-view-appointment',
@@ -148,7 +148,7 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
       .view-appointment-container {
         min-height: 100vh;
         background: var(--DHABackGroundLightGray);
-        padding-top: 70px;
+        padding-top: 73px;
       }
 
       .top-bar {
@@ -206,7 +206,7 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        min-height: calc(100vh - 70px);
+        min-height: calc(100vh - 73px);
         padding: 20px;
       }
 

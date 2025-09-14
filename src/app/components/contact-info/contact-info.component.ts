@@ -13,7 +13,12 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
 @Component({
   selector: 'app-contact-info',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProgressIndicatorComponent, NavbarComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ProgressIndicatorComponent,
+    NavbarComponent,
+  ],
   template: `
     <div class="contact-info-container">
       <app-navbar></app-navbar>
@@ -144,6 +149,7 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
           #e8f5e8 100%
         );
         padding: 20px;
+        height: 100vh;
       }
 
       .contact-info-content-wrapper {
@@ -361,7 +367,8 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
 
         .contact-info-container {
           padding: 0 8px;
-          margin: 73px 0;
+          margin-top: 73px 0;
+          max-height: calc(100vh - 150px);
         }
 
         input {
@@ -374,6 +381,11 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
           height: var(--mobile-form-height);
           overflow-y: auto;
           box-sizing: border-box;
+          max-height: calc(100vh - 150px);
+        }
+
+        .contact-info-content-wrapper {
+          margin-top: 150px;
         }
 
         h2 {
