@@ -101,6 +101,7 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
           #e8f5e8 100%
         );
         padding-top: 73px;
+        width: 100vw;
       }
 
       .menu-content {
