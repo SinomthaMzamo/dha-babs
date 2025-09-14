@@ -12,11 +12,20 @@
   --form-width: 500px;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 /* Apply system fonts to body text */
 body {
   font-family: var(--font-family-sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: block;
+  margin: 0;
+  background: inear-gradient(135deg, var(--DHAOffWhite) 0%, #e8f5e8 100%);
 }
 
 /* For Chrome/Safari/Edge (WebKit) */

@@ -1417,7 +1417,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
   }
 
   onStartDateChange(date: Date | null) {
-    const dateString = date ? date.toISOString().split('T')[0] : '';
+    const dateString = date ? this.formatDateForForm(date) : '';
     this.appointmentForm.patchValue({ startDate: dateString });
 
     // Update end date min if start date is after current end date
@@ -1428,7 +1428,14 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
   }
 
   onEndDateChange(date: Date | null) {
-    const dateString = date ? date.toISOString().split('T')[0] : '';
+    const dateString = date ? this.formatDateForForm(date) : '';
     this.appointmentForm.patchValue({ endDate: dateString });
+  }
+
+  private formatDateForForm(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

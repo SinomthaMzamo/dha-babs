@@ -54,8 +54,12 @@ import { CommonModule } from '@angular/common';
         <button type="button" class="btn-secondary" (click)="clearDate($event)">
           Clear
         </button>
-        <button type="button" class="btn-primary" (click)="confirmDate($event)">
-          OK
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="selectTomorrow($event)"
+        >
+          Tomorrow
         </button>
       </div>
     </div>
@@ -422,14 +426,16 @@ export class CustomDatePickerComponent implements OnInit, OnDestroy {
     this.pickerClosed.emit();
   }
 
-  confirmDate(event?: Event) {
+  selectTomorrow(event?: Event) {
     if (event) {
       event.stopPropagation();
     }
-    // Only emit if there's a selected date and it's different from the current selection
-    if (this.selectedDate) {
-      this.dateSelected.emit(this.selectedDate);
-    }
+    // Select tomorrow's date
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    this.selectedDate = tomorrow;
+    this.generateCalendarDays();
+    this.dateSelected.emit(tomorrow);
     this.pickerClosed.emit();
   }
 }
