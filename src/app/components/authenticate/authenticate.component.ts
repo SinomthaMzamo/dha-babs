@@ -8,7 +8,8 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
-import { NavbarComponent } from "../shared/navbar/navbar.component";
+import { NavbarComponent } from '../shared/navbar/navbar.component';
+import { IosModalComponent } from '../shared/ios-modal/ios-modal.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -24,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     ProgressIndicatorComponent,
     NavbarComponent,
+    IosModalComponent,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -109,9 +111,71 @@ import { MatInputModule } from '@angular/material/input';
               </button>
             </div>
           </form>
+
+          <!-- Demo Button for iOS Modal -->
+          <div class="demo-section">
+            <button
+              type="button"
+              class="btn-secondary"
+              (click)="openDemoModal()"
+            >
+              Test iOS Safari Modal
+            </button>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- iOS Safari Modal Demo -->
+    <app-ios-modal
+      [isOpen]="showDemoModal"
+      title="iOS Safari Modal Demo"
+      [closeOnOverlayClick]="true"
+      [closeOnEscape]="true"
+      (modalClosed)="closeDemoModal()"
+    >
+      <div class="modal-demo-content">
+        <h4>This is an iOS Safari-friendly modal!</h4>
+        <p>
+          This modal is specifically designed to work well on iOS Safari with
+          proper:
+        </p>
+        <ul>
+          <li>Viewport handling</li>
+          <li>Touch event management</li>
+          <li>Z-index stacking</li>
+          <li>Body scroll prevention</li>
+          <li>Safe area support</li>
+        </ul>
+
+        <div class="form-group">
+          <label>Test Input (won't zoom on iOS):</label>
+          <input
+            type="text"
+            placeholder="Type here to test iOS Safari behavior"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Test Select:</label>
+          <select class="form-select">
+            <option>Option 1</option>
+            <option>Option 2</option>
+            <option>Option 3</option>
+          </select>
+        </div>
+      </div>
+
+      <div slot="footer">
+        <button type="button" class="btn-secondary" (click)="closeDemoModal()">
+          Cancel
+        </button>
+        <button type="button" class="btn-primary" (click)="closeDemoModal()">
+          OK
+        </button>
+      </div>
+    </app-ios-modal>
   `,
   styles: [
     `
@@ -344,11 +408,85 @@ import { MatInputModule } from '@angular/material/input';
           box-sizing: border-box;
         }
       }
+
+      .demo-section {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .modal-demo-content {
+        h4 {
+          color: var(--DHAGreen);
+          margin-bottom: 16px;
+        }
+
+        p {
+          margin-bottom: 12px;
+          color: var(--DHATextGrayDark);
+        }
+
+        ul {
+          margin-bottom: 20px;
+          padding-left: 20px;
+
+          li {
+            margin-bottom: 8px;
+            color: var(--DHATextGrayDark);
+          }
+        }
+
+        .form-group {
+          margin-bottom: 16px;
+
+          label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--DHAGreen);
+          }
+
+          .form-input,
+          .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--DHAGrayLight);
+            border-radius: 6px;
+            font-size: 16px;
+            background-color: var(--DHAWhite);
+            transition: border-color 0.3s ease;
+            /* iOS Safari zoom prevention */
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 44px;
+            box-sizing: border-box;
+
+            &:focus {
+              outline: none;
+              border-color: var(--DHAGreen);
+              box-shadow: 0 0 0 3px rgba(1, 102, 53, 0.1);
+              /* Additional iOS Safari focus fixes */
+              -webkit-appearance: none;
+              transform: translateZ(0);
+            }
+          }
+
+          /* Specific iOS Safari input zoom prevention */
+          @supports (-webkit-touch-callout: none) {
+            .form-input,
+            .form-select {
+              font-size: 16px !important;
+              -webkit-text-size-adjust: 100%;
+              -webkit-user-select: text;
+            }
+          }
+        }
+      }
     `,
   ],
 })
 export class AuthenticateComponent implements OnInit {
   authForm: FormGroup;
+  showDemoModal: boolean = false;
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.authForm = this.fb.group({
@@ -369,5 +507,13 @@ export class AuthenticateComponent implements OnInit {
       // Navigate to next step
       this.router.navigate(['/personal-info']);
     }
+  }
+
+  openDemoModal() {
+    this.showDemoModal = true;
+  }
+
+  closeDemoModal() {
+    this.showDemoModal = false;
   }
 }

@@ -75,8 +75,7 @@ interface Branch {
               *ngIf="selectedServices && selectedServices.length > 0"
               data-section="selectedServices"
             >
-              <div
-                class="section-header"
+              <div class="section-header"
                 (click)="toggleSection('selectedServices')"
                 tabindex="0"
               >
@@ -87,8 +86,7 @@ interface Branch {
                   >▼</span
                 >
               </div>
-              <div
-                class="section-content"
+              <div class="section-content"
                 [class.expanded]="selectedServicesExpanded"
               >
                 <!-- Applicant Information Cards -->

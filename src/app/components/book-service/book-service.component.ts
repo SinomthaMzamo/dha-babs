@@ -11,6 +11,7 @@ import { AppointmentFormComponent } from '../appointment-form/appointment-form.c
 import { AppointmentResultsComponent } from '../appointment-results/appointment-results.component';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
+import { IosModalComponent } from '../shared/ios-modal/ios-modal.component';
 
 interface SlotSearchCriteria {
   branch: string;
@@ -44,6 +45,7 @@ interface BookingPerson {
     AppointmentResultsComponent,
     ProgressIndicatorComponent,
     NavbarComponent,
+    IosModalComponent,
   ],
   template: `
     <div class="book-service-container">
@@ -52,6 +54,7 @@ interface BookingPerson {
       <!-- Main Content -->
       <div class="main-content">
         <!-- Booking Preview Page -->
+        <!-- registered applicants (page 1 of booking process)-->
         <div
           *ngIf="currentStep === 'preview'"
           class="booking-preview-container"
@@ -213,274 +216,252 @@ interface BookingPerson {
         </div>
 
         <!-- Add Applicant Modal -->
-        <div
-          *ngIf="showAddApplicantModal"
-          class="modal-overlay"
-          (click)="closeAddApplicantModal()"
+        <app-ios-modal
+          [isOpen]="showAddApplicantModal"
+          title="Add New Applicant"
+          [closeOnOverlayClick]="true"
+          [closeOnEscape]="true"
+          (modalClosed)="closeAddApplicantModal()"
         >
-          <div class="modal-content" (click)="$event.stopPropagation()">
-            <div class="modal-header">
-              <h3>Add New Applicant</h3>
-              <button
-                type="button"
-                (click)="closeAddApplicantModal()"
-                class="modal-close"
-              >
-                ×
-              </button>
-            </div>
-            <div class="modal-body">
-              <form
-                [formGroup]="addApplicantForm"
-                (ngSubmit)="saveNewApplicant()"
-              >
-                <!-- relationship to the main applicant -->
-                <div class="form-group">
-                  <label>Applicant Type *</label>
-                  <div class="radio-group">
-                    <label class="radio-option">
-                      <input
-                        type="radio"
-                        formControlName="applicantType"
-                        value="Child"
-                        name="applicantType"
-                      />
-                      <span class="radio-label">Child</span>
-                    </label>
-                    <label class="radio-option">
-                      <input
-                        type="radio"
-                        formControlName="applicantType"
-                        value="Friend"
-                        name="applicantType"
-                      />
-                      <span class="radio-label">Friend</span>
-                    </label>
-                    <label class="radio-option">
-                      <input
-                        type="radio"
-                        formControlName="applicantType"
-                        value="Family Member"
-                        name="applicantType"
-                      />
-                      <span class="radio-label">Family Member</span>
-                    </label>
-                    <label class="radio-option">
-                      <input
-                        type="radio"
-                        formControlName="applicantType"
-                        value="Other"
-                        name="applicantType"
-                      />
-                      <span class="radio-label">Other</span>
-                    </label>
-                  </div>
-                </div>
-
-                <!-- validation method -->
-                <div class="form-group">
-                  <label>Validation Method *</label>
-                  <div class="radio-group">
-                    <label class="radio-option">
-                      <input
-                        type="radio"
-                        formControlName="validationType"
-                        value="id"
-                        name="validationType"
-                        (change)="onValidationTypeChange('id')"
-                      />
-                      <span class="radio-label">ID Number</span>
-                    </label>
-                    <label class="radio-option">
-                      <input
-                        type="radio"
-                        formControlName="validationType"
-                        value="passport"
-                        name="validationType"
-                        (change)="onValidationTypeChange('passport')"
-                      />
-                      <span class="radio-label">Passport Number</span>
-                    </label>
-                    <label class="radio-option">
-                      <input
-                        type="radio"
-                        formControlName="validationType"
-                        value="names"
-                        name="validationType"
-                        (change)="onValidationTypeChange('names')"
-                      />
-                      <span class="radio-label">Full Names</span>
-                    </label>
-                  </div>
-                </div>
-
-                <!-- ID Number Field -->
-                <div
-                  class="form-group floating-label-group"
-                  *ngIf="isValidationTypeSelected('id')"
-                >
+          <form [formGroup]="addApplicantForm" (ngSubmit)="saveNewApplicant()">
+            <!-- relationship to the main applicant -->
+            <div class="form-group">
+              <label>Applicant Type *</label>
+              <div class="radio-group">
+                <label class="radio-option">
                   <input
-                    type="text"
-                    id="idNumber"
-                    formControlName="idNumber"
-                    class="floating-input"
-                    maxlength="13"
-                    autocomplete="username"
-                    [class.has-value]="addApplicantForm.get('idNumber')?.value"
+                    type="radio"
+                    formControlName="applicantType"
+                    value="Child"
+                    name="applicantType"
                   />
-                  <label for="idNumber" class="floating-label"
-                    >ID Number *</label
-                  >
-                  <div
-                    *ngIf="
-                      addApplicantForm.get('idNumber')?.invalid &&
-                      addApplicantForm.get('idNumber')?.touched
-                    "
-                    class="error-message"
-                  >
-                    <div
-                      *ngIf="addApplicantForm.get('idNumber')?.errors?.['required']"
-                    >
-                      ID number is required
-                    </div>
-                    <div
-                      *ngIf="addApplicantForm.get('idNumber')?.errors?.['pattern']"
-                    >
-                      ID number must be exactly 13 digits
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Passport Number Field -->
-                <div
-                  class="form-group floating-label-group"
-                  *ngIf="isValidationTypeSelected('passport')"
-                >
+                  <span class="radio-label">Child</span>
+                </label>
+                <label class="radio-option">
                   <input
-                    type="text"
-                    id="passportNumber"
-                    formControlName="passportNumber"
-                    class="floating-input"
-                    maxlength="12"
-                    autocomplete="off"
-                    [class.has-value]="
-                      addApplicantForm.get('passportNumber')?.value
-                    "
+                    type="radio"
+                    formControlName="applicantType"
+                    value="Friend"
+                    name="applicantType"
                   />
-                  <label for="passportNumber" class="floating-label"
-                    >Passport Number *</label
-                  >
+                  <span class="radio-label">Friend</span>
+                </label>
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    formControlName="applicantType"
+                    value="Family Member"
+                    name="applicantType"
+                  />
+                  <span class="radio-label">Family Member</span>
+                </label>
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    formControlName="applicantType"
+                    value="Other"
+                    name="applicantType"
+                  />
+                  <span class="radio-label">Other</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- validation method -->
+            <div class="form-group">
+              <label>Validation Method *</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    formControlName="validationType"
+                    value="id"
+                    name="validationType"
+                    (change)="onValidationTypeChange('id')"
+                  />
+                  <span class="radio-label">ID Number</span>
+                </label>
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    formControlName="validationType"
+                    value="passport"
+                    name="validationType"
+                    (change)="onValidationTypeChange('passport')"
+                  />
+                  <span class="radio-label">Passport Number</span>
+                </label>
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    formControlName="validationType"
+                    value="names"
+                    name="validationType"
+                    (change)="onValidationTypeChange('names')"
+                  />
+                  <span class="radio-label">Full Names</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- ID Number Field -->
+            <div
+              class="form-group floating-label-group"
+              *ngIf="isValidationTypeSelected('id')"
+            >
+              <input
+                type="text"
+                id="idNumber"
+                formControlName="idNumber"
+                class="floating-input"
+                maxlength="13"
+                autocomplete="username"
+                [class.has-value]="addApplicantForm.get('idNumber')?.value"
+              />
+              <label for="idNumber" class="floating-label">ID Number *</label>
+              <div
+                *ngIf="
+                  addApplicantForm.get('idNumber')?.invalid &&
+                  addApplicantForm.get('idNumber')?.touched
+                "
+                class="error-message"
+              >
+                <div
+                  *ngIf="addApplicantForm.get('idNumber')?.errors?.['required']"
+                >
+                  ID number is required
+                </div>
+                <div
+                  *ngIf="addApplicantForm.get('idNumber')?.errors?.['pattern']"
+                >
+                  ID number must be exactly 13 digits
+                </div>
+              </div>
+            </div>
+
+            <!-- Passport Number Field -->
+            <div
+              class="form-group floating-label-group"
+              *ngIf="isValidationTypeSelected('passport')"
+            >
+              <input
+                type="text"
+                id="passportNumber"
+                formControlName="passportNumber"
+                class="floating-input"
+                maxlength="12"
+                autocomplete="off"
+                [class.has-value]="
+                  addApplicantForm.get('passportNumber')?.value
+                "
+              />
+              <label for="passportNumber" class="floating-label"
+                >Passport Number *</label
+              >
+              <div
+                *ngIf="
+                  addApplicantForm.get('passportNumber')?.invalid &&
+                  addApplicantForm.get('passportNumber')?.touched
+                "
+                class="error-message"
+              >
+                <div
+                  *ngIf="addApplicantForm.get('passportNumber')?.errors?.['required']"
+                >
+                  Passport number is required
+                </div>
+                <div
+                  *ngIf="addApplicantForm.get('passportNumber')?.errors?.['pattern']"
+                >
+                  Please enter a valid passport number
+                </div>
+              </div>
+            </div>
+
+            <!-- Forenames and Last Name Fields -->
+            <div *ngIf="isValidationTypeSelected('names')">
+              <div class="form-group floating-label-group">
+                <input
+                  type="text"
+                  id="forenames"
+                  formControlName="forenames"
+                  class="floating-input"
+                  autocomplete="given-name"
+                  [class.has-value]="addApplicantForm.get('forenames')?.value"
+                />
+                <label for="forenames" class="floating-label"
+                  >Forenames *</label
+                >
+                <div
+                  *ngIf="
+                    addApplicantForm.get('forenames')?.invalid &&
+                    addApplicantForm.get('forenames')?.touched
+                  "
+                  class="error-message"
+                >
                   <div
-                    *ngIf="
-                      addApplicantForm.get('passportNumber')?.invalid &&
-                      addApplicantForm.get('passportNumber')?.touched
-                    "
-                    class="error-message"
+                    *ngIf="addApplicantForm.get('forenames')?.errors?.['required']"
                   >
-                    <div
-                      *ngIf="addApplicantForm.get('passportNumber')?.errors?.['required']"
-                    >
-                      Passport number is required
-                    </div>
-                    <div
-                      *ngIf="addApplicantForm.get('passportNumber')?.errors?.['pattern']"
-                    >
-                      Please enter a valid passport number
-                    </div>
+                    Forenames are required
+                  </div>
+                  <div
+                    *ngIf="addApplicantForm.get('forenames')?.errors?.['minlength']"
+                  >
+                    Forenames must be at least 2 characters
                   </div>
                 </div>
+              </div>
 
-                <!-- Forenames and Last Name Fields -->
-                <div *ngIf="isValidationTypeSelected('names')">
-                  <div class="form-group floating-label-group">
-                    <input
-                      type="text"
-                      id="forenames"
-                      formControlName="forenames"
-                      class="floating-input"
-                      autocomplete="given-name"
-                      [class.has-value]="
-                        addApplicantForm.get('forenames')?.value
-                      "
-                    />
-                    <label for="forenames" class="floating-label"
-                      >Forenames *</label
-                    >
-                    <div
-                      *ngIf="
-                        addApplicantForm.get('forenames')?.invalid &&
-                        addApplicantForm.get('forenames')?.touched
-                      "
-                      class="error-message"
-                    >
-                      <div
-                        *ngIf="addApplicantForm.get('forenames')?.errors?.['required']"
-                      >
-                        Forenames are required
-                      </div>
-                      <div
-                        *ngIf="addApplicantForm.get('forenames')?.errors?.['minlength']"
-                      >
-                        Forenames must be at least 2 characters
-                      </div>
-                    </div>
+              <div class="form-group floating-label-group">
+                <input
+                  type="text"
+                  id="lastName"
+                  formControlName="lastName"
+                  class="floating-input"
+                  autocomplete="family-name"
+                  [class.has-value]="addApplicantForm.get('lastName')?.value"
+                />
+                <label for="lastName" class="floating-label">Last Name *</label>
+                <div
+                  *ngIf="
+                    addApplicantForm.get('lastName')?.invalid &&
+                    addApplicantForm.get('lastName')?.touched
+                  "
+                  class="error-message"
+                >
+                  <div
+                    *ngIf="addApplicantForm.get('lastName')?.errors?.['required']"
+                  >
+                    Last name is required
                   </div>
-
-                  <div class="form-group floating-label-group">
-                    <input
-                      type="text"
-                      id="lastName"
-                      formControlName="lastName"
-                      class="floating-input"
-                      autocomplete="family-name"
-                      [class.has-value]="
-                        addApplicantForm.get('lastName')?.value
-                      "
-                    />
-                    <label for="lastName" class="floating-label"
-                      >Last Name *</label
-                    >
-                    <div
-                      *ngIf="
-                        addApplicantForm.get('lastName')?.invalid &&
-                        addApplicantForm.get('lastName')?.touched
-                      "
-                      class="error-message"
-                    >
-                      <div
-                        *ngIf="addApplicantForm.get('lastName')?.errors?.['required']"
-                      >
-                        Last name is required
-                      </div>
-                      <div
-                        *ngIf="addApplicantForm.get('lastName')?.errors?.['minlength']"
-                      >
-                        Last name must be at least 2 characters
-                      </div>
-                    </div>
+                  <div
+                    *ngIf="addApplicantForm.get('lastName')?.errors?.['minlength']"
+                  >
+                    Last name must be at least 2 characters
                   </div>
                 </div>
-              </form>
+              </div>
             </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                (click)="closeAddApplicantModal()"
-                class="btn-secondary"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                (click)="saveNewApplicant()"
-                [disabled]="addApplicantForm.invalid"
-                class="btn-primary"
-              >
-                Add
-              </button>
-            </div>
+          </form>
+
+          <div slot="footer">
+            <button
+              type="button"
+              (click)="closeAddApplicantModal()"
+              class="btn-secondary"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              (click)="saveNewApplicant()"
+              [disabled]="addApplicantForm.invalid"
+              class="btn-primary"
+            >
+              Add
+            </button>
           </div>
-        </div>
+        </app-ios-modal>
 
         <!-- Person Service Selection Modal -->
         <div
@@ -1265,6 +1246,7 @@ interface BookingPerson {
         padding-top: 30px;
         border-top: 2px solid var(--DHABackGroundLightGray);
       }
+
       /* Responsive styles for applicants header */
       @media (max-width: 768px) {
         .applicants-header {
@@ -1489,11 +1471,12 @@ interface BookingPerson {
         font-style: italic;
       }
 
-      /* Add Applicant Modal Styles */
+      /* Form Styles for iOS Modal */
       .radio-group {
         display: flex;
         gap: 12px;
         margin-top: 8px;
+        flex-wrap: wrap;
       }
 
       .radio-option {
@@ -1525,39 +1508,48 @@ interface BookingPerson {
         color: var(--DHATextGrayDark);
       }
 
-      .modal-content .form-group {
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label:not(.floating-label) {
+        display: block;
+        font-weight: 600;
+        color: var(--DHATextGrayDark);
+        font-size: 14px;
+        margin-bottom: 8px;
       }
 
       /* Floating Label Styles */
-      .modal-content .floating-label-group {
+      .floating-label-group {
         position: relative;
         margin-top: 10px;
         margin-bottom: 20px;
       }
 
-      .modal-content .floating-input {
+      .floating-input {
         width: 100%;
         padding: 16px 12px;
         border: 1px solid var(--DHABackGroundLightGray);
         border-radius: 6px;
-        font-size: 14px;
+        font-size: 16px;
         transition: all 0.3s ease;
         box-sizing: border-box;
         background: var(--DHAWhite);
       }
 
-      .modal-content .floating-input:focus,
-      .modal-content .floating-input.has-value {
+      .floating-input:focus,
+      .floating-input.has-value {
         padding: 16px 12px;
       }
 
-      .modal-content .floating-input:focus {
+      .floating-input:focus {
         outline: none;
         border-color: var(--DHAGreen);
         box-shadow: 0 0 0 3px rgba(1, 102, 53, 0.1);
       }
 
-      .modal-content .floating-label {
+      .floating-label {
         position: absolute;
         top: 16px;
         left: 12px;
@@ -1571,8 +1563,8 @@ interface BookingPerson {
         z-index: 1;
       }
 
-      .modal-content .floating-input:focus + .floating-label,
-      .modal-content .floating-input.has-value + .floating-label {
+      .floating-input:focus + .floating-label,
+      .floating-input.has-value + .floating-label {
         top: -8px;
         left: 8px;
         font-size: 12px;
@@ -1580,34 +1572,7 @@ interface BookingPerson {
         font-weight: 600;
       }
 
-      /* Legacy styles for non-floating inputs */
-      .modal-content .form-group label:not(.floating-label) {
-        display: block;
-        font-weight: 600;
-        color: var(--DHATextGrayDark);
-        font-size: 14px;
-      }
-
-      .modal-body form .form-group {
-        margin-bottom: 10px;
-      }
-
-      .modal-content .form-control:not(.floating-input) {
-        width: 100%;
-        padding: 12px;
-        border: 2px solid var(--DHABackGroundLightGray);
-        border-radius: 6px;
-        font-size: 14px;
-        transition: border-color 0.3s ease;
-        box-sizing: border-box;
-      }
-
-      .modal-content .form-control:not(.floating-input):focus {
-        outline: none;
-        border-color: var(--DHAGreen);
-      }
-
-      .modal-content .error-message {
+      .error-message {
         color: var(--DHARed);
         font-size: 12px;
         margin-top: 4px;
