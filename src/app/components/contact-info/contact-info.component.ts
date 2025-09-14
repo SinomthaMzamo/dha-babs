@@ -368,7 +368,6 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
         .contact-info-container {
           padding: 0 8px;
           margin-top: 73px 0;
-          max-height: calc(100vh - 150px);
         }
 
         input {
