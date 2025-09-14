@@ -12,7 +12,6 @@
   --form-width: 500px;
 }
 
-
 /* Apply system fonts to body text */
 body {
   font-family: var(--font-family-sans-serif);
@@ -22,10 +21,10 @@ body {
 
 /* For Chrome/Safari/Edge (WebKit) */
 input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0px 1000px white inset !important; 
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
   box-shadow: 0 0 0px 1000px white inset !important;
-  -webkit-text-fill-color: #000 !important; 
-  transition: background-color 5000s ease-in-out 0s; 
+  -webkit-text-fill-color: #000 !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 /* Apply system fonts to all text elements except buttons */
@@ -64,15 +63,107 @@ body {
   box-sizing: border-box;
 }
 
+ .mat-calendar{
+  background: aliceblue;
+  border: 2px solid aliceblue;
+  border-radius: 8px;
+}
+
+.mat-calendar-body-cell.mat-calendar-body-disabled {
+    cursor: not-allowed;
+    color: gainsboro;
+}
+
+.mat-mdc-form-field{
+  width: 100%;
+}
+
+/* Apply globally to all MDC outlined form fields */
+.mat-mdc-form-field-appearance-outline .mdc-notched-outline {
+  border-radius: 16px;      /* Rounded corners */
+  border-color: gainsboro;  /* Default border color */
+}
+
+/* On focus */
+.mat-mdc-form-field-appearance-outline.mat-mdc-focused .mdc-notched-outline {
+  border-color: var(--DHAGreen); /* Your focus color */
+}
+
+/* On hover (optional) */
+.mat-mdc-form-field-appearance-outline:hover .mdc-notched-outline {
+  border-color: lightgray;
+}
+
+.mdc-text-field--outlined .mat-mdc-form-field-infix, .mdc-text-field--no-label .mat-mdc-form-field-infix {
+    padding-top: var(--mat-form-field-container-vertical-padding, 16px);
+    padding-bottom: var(--mat-form-field-container-vertical-padding, 16px);
+    padding-left: var(--mat-form-field-container-vertical-padding, 12px);
+    padding-right: var(--mat-form-field-container-vertical-padding, 12px);
+}
+
+label.mdc-floating-label{
+  color: var(--DHATextGray);;
+  /* padding-left: 12px; */
+}
+
+.mat-mdc-form-field-icon-suffix, [dir=rtl] .mat-mdc-form-field-icon-prefix{
+  /* padding: 0 4px 0 4px !important; */
+}
+
+body > app-root > app-book-service > div > div > app-appointment-form > div > div > div > form > div:nth-child(3) > div.section-content.expanded > div > div:nth-child(3) > mat-form-field > div.mat-mdc-text-field-wrapper.mdc-text-field.mdc-text-field--outlined > div > div.mdc-notched-outline.mdc-notched-outline--upgraded{
+  border: 1px solid var(--DividerGray);
+}
+
+/* Target outlined form fields */
+.mat-mdc-form-field-appearance-outline .mdc-notched-outline {
+  border-radius: 16px;      /* Your custom radius */
+  border-color: gainsboro;  /* Your custom color */
+}
+
+/* On focus */
+.mat-mdc-form-field-appearance-outline.mat-mdc-focused .mdc-notched-outline {
+  border-color: var(--DHAGreen); /* Optional: your focus color */
+}
+
+/* Optional: on hover */
+.mat-mdc-form-field-appearance-outline:hover .mdc-notched-outline {
+  border-color: lightgray; 
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+
+  /* fallback + iOS fix */
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+.modal-content {
+  background: var(--DHAWhite);
+  border-radius: 12px;
+  max-width: 90vw;
+  width: 100%;
+  max-height: 80vh; /* fallback */
+  max-height: calc(var(--vh, 1vh) * 80);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
 
 
 @media (max-width: 768px) {
-  
-
   .content-wrapper {
     padding: 0 8px;
     position: relative;
   }
 }
-
-

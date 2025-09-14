@@ -9,6 +9,12 @@ import {
 import { Router } from '@angular/router';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
 import { NavbarComponent } from "../shared/navbar/navbar.component";
+import { MatButtonModule } from '@angular/material/button';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-authenticate',
@@ -18,6 +24,13 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
     ReactiveFormsModule,
     ProgressIndicatorComponent,
     NavbarComponent,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatIconModule,
+    MatButtonModule,
   ],
   template: `
     <div class="auth-container">
@@ -86,8 +99,6 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
               </div>
             </div>
 
-            
-
             <div class="button-group">
               <button
                 type="submit"
@@ -124,6 +135,24 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
         --DHABackGroundLightGray: #f4f4f4;
         --DividerGray: #949494;
         --DHADisabledTextGray: #c4c4c4;
+        --DHAGrayLight: gainsboro;
+      }
+
+      /* Change floating label color when active */
+      .mat-form-field.mat-focused .mat-form-field-label {
+        color: var(--DHAGreen) !important;
+        font-weight: 600;
+      }
+
+      /* Label inside before float */
+      .mat-form-field-label {
+        color: var(--DHATextGray);
+        font-weight: 600;
+      }
+
+      /* Optional: custom float position */
+      .mat-form-field-appearance-fill .mat-form-field-label {
+        transform: translateY(-1.3em) scale(0.75); /* adjust float height */
       }
 
       .auth-container {

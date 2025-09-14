@@ -10,7 +10,7 @@ import {
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 import { AppointmentResultsComponent } from '../appointment-results/appointment-results.component';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
-import { NavbarComponent } from "../shared/navbar/navbar.component";
+import { NavbarComponent } from '../shared/navbar/navbar.component';
 
 interface SlotSearchCriteria {
   branch: string;
@@ -234,6 +234,7 @@ interface BookingPerson {
                 [formGroup]="addApplicantForm"
                 (ngSubmit)="saveNewApplicant()"
               >
+                <!-- relationship to the main applicant -->
                 <div class="form-group">
                   <label>Applicant Type *</label>
                   <div class="radio-group">
@@ -276,6 +277,7 @@ interface BookingPerson {
                   </div>
                 </div>
 
+                <!-- validation method -->
                 <div class="form-group">
                   <label>Validation Method *</label>
                   <div class="radio-group">
@@ -508,6 +510,7 @@ interface BookingPerson {
                 <div
                   *ngFor="let service of tempPersonServices"
                   class="service-item"
+                  (click)="togglePersonService(service.id)"
                 >
                   <label class="service-checkbox">
                     <input
@@ -1535,7 +1538,7 @@ interface BookingPerson {
       .modal-content .floating-input {
         width: 100%;
         padding: 16px 12px;
-        border: 2px solid var(--DHABackGroundLightGray);
+        border: 1px solid var(--DHABackGroundLightGray);
         border-radius: 6px;
         font-size: 14px;
         transition: all 0.3s ease;
@@ -1676,7 +1679,7 @@ interface BookingPerson {
         border-radius: 12px;
         max-width: 500px;
         width: 100%;
-        max-height: 80vh;
+        max-height: calc(var(--vh, 1vh) * 80);
         display: flex;
         flex-direction: column;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -1743,16 +1746,18 @@ interface BookingPerson {
         border-radius: 8px;
         transition: all 0.2s;
         background: var(--DHAWhite);
+        cursor: pointer;
       }
 
       .modal-body .service-item:hover {
         border-color: var(--DHAGreen);
         background: var(--DHAOffWhite);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(1, 102, 53, 0.1);
       }
 
       .modal-body .service-checkbox {
         position: relative;
-        cursor: pointer;
         margin-top: 2px;
       }
 
@@ -1881,7 +1886,8 @@ interface BookingPerson {
           padding: 10px;
         }
         .modal-content {
-          max-height: 90vh;
+          max-height: calc(var(--vh, 1vh) * 80);
+          max-width: 90vw;
         }
 
         .modal-footer {
@@ -2102,7 +2108,7 @@ interface BookingPerson {
             min-width: 0;
           }
 
-          .btn-text{
+          .btn-text {
             font-size: 10px;
           }
         }

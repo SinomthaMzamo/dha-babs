@@ -17,6 +17,7 @@ import {
 import { BookingStepIndicatorComponent } from '../booking-step-indicator/booking-step-indicator.component';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
+import { CustomDateInputComponent } from '../shared/custom-date-input/custom-date-input.component';
 
 interface Service {
   id: string;
@@ -50,6 +51,7 @@ interface Branch {
     ReactiveFormsModule,
     ProgressIndicatorComponent,
     NavbarComponent,
+    CustomDateInputComponent,
   ],
   template: `
     <div class="appointment-form-container">
@@ -303,60 +305,31 @@ interface Branch {
                 </p>
 
                 <div class="date-grid">
-                  <div class="form-group floating-label-group">
-                    <input
-                      type="date"
-                      id="startDate"
-                      formControlName="startDate"
-                      placeholder=""
-                      [min]="today"
-                      [max]="maxDate"
-                      (blur)="onSectionBlur('dateRange')"
-                      class="floating-input"
-                      [class.has-value]="
-                        appointmentForm.get('startDate')?.value
-                      "
-                    />
-                    <label for="startDate" class="floating-label"
-                      >Select from date *</label
-                    >
-                    <div
-                      *ngIf="
-                        appointmentForm.get('startDate')?.invalid &&
-                        appointmentForm.get('startDate')?.touched
-                      "
-                      class="error-message"
-                    >
-                      Start date is required
-                    </div>
-                  </div>
+                  <app-custom-date-input
+                    label="Select from date *"
+                    placeholder="MM/DD/YYYY"
+                    [value]="getStartDateValue()"
+                    [minDate]="getMinDate()"
+                    [maxDate]="getMaxDate()"
+                    [required]="true"
+                    [error]="getStartDateError()"
+                    (valueChange)="onStartDateChange($event)"
+                    (blur)="onSectionBlur('dateRange')"
+                  ></app-custom-date-input>
 
-                  <div class="form-group floating-label-group">
-                    <input
-                      type="date"
-                      id="endDate"
-                      formControlName="endDate"
-                      [min]="appointmentForm.get('startDate')?.value || today"
-                      [max]="maxDate"
-                      (blur)="onSectionBlur('dateRange')"
-                      class="floating-input"
-                      [class.has-value]="appointmentForm.get('endDate')?.value"
-                    />
-                    <label for="endDate" class="floating-label"
-                      >Select to date *</label
-                    >
-                    <div class="field-info">
-                      <small>End date must be within 30 days from today</small>
-                    </div>
-                    <div
-                      *ngIf="
-                        appointmentForm.get('endDate')?.invalid &&
-                        appointmentForm.get('endDate')?.touched
-                      "
-                      class="error-message"
-                    >
-                      End date is required
-                    </div>
+                  <app-custom-date-input
+                    label="Select to date *"
+                    placeholder="MM/DD/YYYY"
+                    [value]="getEndDateValue()"
+                    [minDate]="getEndDateMinDate()"
+                    [maxDate]="getMaxDate()"
+                    [required]="true"
+                    [error]="getEndDateError()"
+                    (valueChange)="onEndDateChange($event)"
+                    (blur)="onSectionBlur('dateRange')"
+                  ></app-custom-date-input>
+                  <div class="field-info">
+                    <small>End date must be within 30 days from today</small>
                   </div>
                 </div>
               </div>
@@ -393,6 +366,7 @@ interface Branch {
         --DHAErrorColor: #ea2127;
         --DHADisabledButtonGray: #e6e6e6;
         --DHADisabledTextGray: #c4c4c4;
+        --DHAGrayLight: gainsboro;
       }
 
       .appointment-form-container {
@@ -738,6 +712,10 @@ interface Branch {
         padding: 10px 5px;
       }
 
+      .date-grid app-custom-date-input {
+        display: block;
+      }
+
       .form-group {
         display: flex;
         flex-direction: column;
@@ -762,7 +740,7 @@ interface Branch {
 
       .floating-input {
         padding: 16px 12px;
-        border: 2px solid var(--DHATextGray);
+        border: 1px solid var(--DHAGrayLight);
         border-radius: 6px;
         font-size: 16px;
         transition: all 0.3s ease;
@@ -786,71 +764,6 @@ interface Branch {
         background-repeat: no-repeat;
         background-position: right 12px center;
         background-size: 16px;
-      }
-
-      /* Hide date format when label is inside input */
-      input[type='date'].floating-input:not(:focus):not(.has-value) {
-        color: transparent;
-      }
-
-      input[type='date'].floating-input:not(:focus):not(
-          .has-value
-        )::-webkit-datetime-edit {
-        color: transparent;
-      }
-
-      input[type='date'].floating-input:not(:focus):not(
-          .has-value
-        )::-webkit-datetime-edit-fields-wrapper {
-        color: transparent;
-      }
-
-      input[type='date'].floating-input:not(:focus):not(
-          .has-value
-        )::-webkit-datetime-edit-text {
-        color: transparent;
-      }
-
-      input[type='date'].floating-input:not(:focus):not(
-          .has-value
-        )::-webkit-datetime-edit-month-field,
-      input[type='date'].floating-input:not(:focus):not(
-          .has-value
-        )::-webkit-datetime-edit-day-field,
-      input[type='date'].floating-input:not(:focus):not(
-          .has-value
-        )::-webkit-datetime-edit-year-field {
-        color: transparent;
-      }
-
-      /* Show date format when focused or has value */
-      input[type='date'].floating-input:focus,
-      input[type='date'].floating-input.has-value {
-        color: inherit;
-      }
-
-      input[type='date'].floating-input:focus::-webkit-datetime-edit,
-      input[type='date'].floating-input.has-value::-webkit-datetime-edit {
-        color: inherit;
-      }
-
-      input[type='date'].floating-input:focus::-webkit-datetime-edit-fields-wrapper,
-      input[type='date'].floating-input.has-value::-webkit-datetime-edit-fields-wrapper {
-        color: inherit;
-      }
-
-      input[type='date'].floating-input:focus::-webkit-datetime-edit-text,
-      input[type='date'].floating-input.has-value::-webkit-datetime-edit-text {
-        color: inherit;
-      }
-
-      input[type='date'].floating-input:focus::-webkit-datetime-edit-month-field,
-      input[type='date'].floating-input:focus::-webkit-datetime-edit-day-field,
-      input[type='date'].floating-input:focus::-webkit-datetime-edit-year-field,
-      input[type='date'].floating-input.has-value::-webkit-datetime-edit-month-field,
-      input[type='date'].floating-input.has-value::-webkit-datetime-edit-day-field,
-      input[type='date'].floating-input.has-value::-webkit-datetime-edit-year-field {
-        color: inherit;
       }
 
       .floating-input:focus {
@@ -896,8 +809,7 @@ interface Branch {
         font-size: 1rem;
       }
 
-      select:not(.floating-input),
-      input[type='date']:not(.floating-input) {
+      select:not(.floating-input) {
         padding: 12px;
         border: 2px solid var(--DHATextGray);
         border-radius: 6px;
@@ -906,8 +818,7 @@ interface Branch {
         background: var(--DHAWhite);
       }
 
-      select:not(.floating-input):focus,
-      input[type='date']:not(.floating-input):focus {
+      select:not(.floating-input):focus {
         outline: none;
         border-color: var(--DHAGreen);
         box-shadow: 0 0 0 3px rgba(1, 102, 53, 0.1);
@@ -1458,5 +1369,66 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
         this.dateRangeExpanded = false;
       }, 100);
     }
+  }
+
+  // Custom date input methods
+  getStartDateValue(): Date | null {
+    const value = this.appointmentForm.get('startDate')?.value;
+    return value ? new Date(value) : null;
+  }
+
+  getEndDateValue(): Date | null {
+    const value = this.appointmentForm.get('endDate')?.value;
+    return value ? new Date(value) : null;
+  }
+
+  getMinDate(): Date {
+    return new Date();
+  }
+
+  getMaxDate(): Date {
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 30);
+    return maxDate;
+  }
+
+  getEndDateMinDate(): Date {
+    const startDate = this.appointmentForm.get('startDate')?.value;
+    if (startDate) {
+      return new Date(startDate);
+    }
+    return new Date();
+  }
+
+  getStartDateError(): string {
+    const control = this.appointmentForm.get('startDate');
+    if (control?.invalid && control?.touched) {
+      return 'Start date is required';
+    }
+    return '';
+  }
+
+  getEndDateError(): string {
+    const control = this.appointmentForm.get('endDate');
+    if (control?.invalid && control?.touched) {
+      return 'End date is required';
+    }
+    return '';
+  }
+
+  onStartDateChange(date: Date | null) {
+    const dateString = date ? date.toISOString().split('T')[0] : '';
+    this.appointmentForm.patchValue({ startDate: dateString });
+
+    // Update end date min if start date is after current end date
+    const endDate = this.appointmentForm.get('endDate')?.value;
+    if (endDate && date && new Date(endDate) < date) {
+      this.appointmentForm.patchValue({ endDate: dateString });
+    }
+  }
+
+  onEndDateChange(date: Date | null) {
+    const dateString = date ? date.toISOString().split('T')[0] : '';
+    this.appointmentForm.patchValue({ endDate: dateString });
   }
 }
