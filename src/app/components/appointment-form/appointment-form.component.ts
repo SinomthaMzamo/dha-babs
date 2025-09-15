@@ -66,17 +66,25 @@ interface Branch {
           <button
             type="button"
             (click)="expandAllSections()"
-            class="btn-control expand-all"
+            class="btn-control"
             title="Expand all sections"
           >
+            <span class="stacked-icons">
+              <i class="fa fa-chevron-up"></i>
+              <i class="fa fa-chevron-down"></i>
+            </span>
             Expand All
           </button>
           <button
             type="button"
             (click)="collapseAllSections()"
-            class="btn-control collapse-all"
+            class="btn-control"
             title="Collapse all sections"
           >
+            <span class="stacked-icons">
+              <i class="fa fa-chevron-down"></i>
+              <i class="fa fa-chevron-up"></i>
+            </span>
             Collapse All
           </button>
         </div>
@@ -351,6 +359,8 @@ interface Branch {
     `
       :host {
         --DHAGreen: #016635;
+        --DHALightGreen: #018947;
+        --DHALightGreenLight: #ddebe4;
         --DHAOrange: #f3801f;
         --DHALightOrange: #f8ab18;
         --DHAWhite: #ffffff;
@@ -358,7 +368,12 @@ interface Branch {
         --DHATextGray: #949494;
         --DHATextGrayDark: #5a5a5a;
         --DHAErrorColor: #ea2127;
+        --DHADangerColor: #c41e3a;
+        --DHADangerColorLight: #ebcad0;
         --DHADisabledButtonGray: #e6e6e6;
+        --DHABackGroundLightGray: #f4f4f4;
+        --DividerGray: #949494;
+        --DHAOffBlack: rgb(42, 41, 41);
         --DHADisabledTextGray: #c4c4c4;
         --DHAGrayLight: gainsboro;
       }
@@ -483,20 +498,32 @@ interface Branch {
         margin-bottom: 20px;
       }
 
+      .stacked-icons {
+        display: flex;
+        flex-direction: column;
+        color: var(--DHAGreen);
+        font-size: 8px;
+      }
+
+
       .btn-control {
         padding: 8px 16px;
-        border: none;
+        border: 1px solid var(--DHAGreen);
         border-radius: 6px;
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 16px;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
-        background: var(--DHAGreen);
-        color: var(--DHAWhite);
+        background: var(--DHAWhite);
+        color: var(--DHAGreen);
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
 
       .btn-control:hover {
-        background: var(--DHAOffBlack);
+        background: var(--DHALightGreenLight);
+        border-color: var(--DHALightGreenLight);
         transform: translateY(-1px);
       }
 

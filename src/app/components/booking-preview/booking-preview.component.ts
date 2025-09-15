@@ -28,7 +28,7 @@ interface BookingPerson {
         <div class="add-applicant-menu">
           <div class="header-info">
             <p class="header-description">
-              Add additional applicants to this booking
+              Manage additional applicants for this booking
             </p>
           </div>
           <div class="applicants-header">
@@ -44,7 +44,7 @@ interface BookingPerson {
               <button
                 type="button"
                 (click)="onRemovePersonFromBooking()"
-                class="action-btn std"
+                class="action-btn danger"
                 [disabled]="bookingPersons.length <= 1"
                 title="Remove an additional applicant from this booking"
               >
@@ -53,7 +53,7 @@ interface BookingPerson {
               <button
                 type="button"
                 (click)="onClearAllPersons()"
-                class="action-btn white"
+                class="action-btn danger"
                 [disabled]="bookingPersons.length <= 1"
                 title="Remove all additional applicants from this booking"
               >
@@ -159,6 +159,8 @@ interface BookingPerson {
     `
       :host {
         --DHAGreen: #016635;
+        --DHALightGreen: #018947;
+        --DHALightGreenLight: #ddebe4;
         --DHAOrange: #f3801f;
         --DHALightOrange: #f8ab18;
         --DHAWhite: #ffffff;
@@ -166,6 +168,8 @@ interface BookingPerson {
         --DHATextGray: #949494;
         --DHATextGrayDark: #5a5a5a;
         --DHAErrorColor: #ea2127;
+        --DHADangerColor: #c41e3a;
+        --DHADangerColorLight: #ebcad0;
         --DHADisabledButtonGray: #e6e6e6;
         --DHABackGroundLightGray: #f4f4f4;
         --DividerGray: #949494;
@@ -216,7 +220,11 @@ interface BookingPerson {
 
       .applicant-card.primary-applicant {
         border-color: var(--DHAGreen);
-        background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e8 100%);
+        background: linear-gradient(
+          135deg,
+          #f8f9fa 0%,
+          rgba(232, 245, 232, 0.72) 100%
+        );
       }
 
       .applicant-header {
@@ -244,9 +252,9 @@ interface BookingPerson {
       }
 
       .remove-applicant-btn {
-        background: var(--DHAErrorColor);
-        color: var(--DHAWhite);
-        border: none;
+        background: rgba(196, 30, 58, 0.2);
+        color: var(--DHADangerColor);
+        border: 1px solid var(--DHADangerColor);
         border-radius: 50%;
         width: 24px;
         height: 24px;
@@ -262,6 +270,7 @@ interface BookingPerson {
       .remove-applicant-btn:hover {
         background: #c41e3a;
         transform: scale(1.1);
+        color: var(--DHAWhite);
       }
 
       .applicant-services {
@@ -283,19 +292,22 @@ interface BookingPerson {
       }
 
       .edit-services-btn {
-        background: var(--DHAGreen);
-        color: var(--DHAWhite);
+        background: none;
+        color: var(--DHAGreen);
         border: none;
+        padding: 8px 16px;
         border-radius: 4px;
-        padding: 4px 8px;
-        font-size: 10px;
-        font-weight: 500;
+        font-size: 12px;
+        font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
+        text-decoration: underline;
+        text-underline-offset: 2px;
       }
 
       .edit-services-btn:hover {
-        background: var(--DHAOffBlack);
+        color: var(--DHALightGreen);
+        background: rgba(1, 137, 71, 0.13);
       }
 
       .person-services-preview {
@@ -345,10 +357,10 @@ interface BookingPerson {
       }
 
       .applicants-header {
-        background: var(--DHAOffWhite);
+        /*background: var(--DHAOffWhite);
         border: 1px solid var(--DHABackGroundLightGray);
         border-radius: 8px;
-        padding: 16px;
+        padding: 16px;*/
       }
 
       .header-info {
@@ -381,6 +393,12 @@ interface BookingPerson {
         gap: 4px;
       }
 
+      .action-btn.std {
+        color: var(--DHALightGreen);
+        border: 1px solid var(--DHAGreen);
+        background: var(--DHAWhite);
+      }
+
       .action-btn:first-child {
         margin-right: auto; /* pushes the rest away, keeps it at flex-start */
       }
@@ -391,13 +409,9 @@ interface BookingPerson {
         text-align: center; /* optional: center text inside */
       }
 
-      .action-btn.std {
-        background: var(--DHAGreen);
-        color: var(--DHAWhite);
-      }
-
       .action-btn.std:hover:not(:disabled) {
-        background: var(--DHAOffBlack);
+        background: var(--DHALightGreenLight);
+        border-color: var(--DHALightGreenLight);
         transform: translateY(-1px);
       }
 
@@ -407,6 +421,19 @@ interface BookingPerson {
         border: 1px solid var(--DHABackGroundLightGray);
       }
 
+      .action-btn.danger {
+        background: var(--DHADangerColorLight);
+        color: var(--DHADangerColor);
+        border: 1px solid var(--DHADangerColor);
+      }
+
+      .action-btn.danger:hover:not(:disabled) {
+        background: var(--DHADangerColor);
+        border-color: var(--DHADangerColor);
+        transform: translateY(-1px);
+        color: var(--DHAWhite);
+      }
+
       .action-btn.white:hover:not(:disabled) {
         background: var(--DHAOffWhite);
         border-color: var(--DHATextGray);
@@ -414,6 +441,7 @@ interface BookingPerson {
 
       .action-btn:disabled {
         background: var(--DHADisabledButtonGray);
+        border: 1px solid var(--DHADisabledButtonGray);
         color: var(--DHADisabledTextGray);
         cursor: not-allowed;
         transform: none;
@@ -429,7 +457,6 @@ interface BookingPerson {
         display: flex;
         justify-content: space-between;
         gap: 12px;
-        margin-top: 20px;
         padding-top: 16px;
         border-top: 1px solid var(--DHABackGroundLightGray);
       }
