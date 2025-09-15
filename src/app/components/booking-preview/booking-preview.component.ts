@@ -18,12 +18,55 @@ interface BookingPerson {
     <app-form-page-layout [currentStep]="0" [steps]="stepTitles">
       <h2 class="step-title">Select Required Services</h2>
       <div class="card-wrapper">
+        <h6 class="step-description">
+          Manage booking applicants and their required services ({{
+            bookingPersons.length
+          }})
+        </h6>
+
+        <!-- add applicant menu -->
+        <div class="add-applicant-menu">
+          <div class="header-info">
+            <p class="header-description">
+              Add additional applicants to this booking
+            </p>
+          </div>
+          <div class="applicants-header">
+            <div class="header-actions">
+              <button
+                type="button"
+                (click)="onAddPersonToBooking()"
+                class="action-btn std"
+                title="Add an accompanying applicant to this booking"
+              >
+                <span class="btn-text">Add Applicant</span>
+              </button>
+              <button
+                type="button"
+                (click)="onRemovePersonFromBooking()"
+                class="action-btn std"
+                [disabled]="bookingPersons.length <= 1"
+                title="Remove an additional applicant from this booking"
+              >
+                <span class="btn-text">Remove</span>
+              </button>
+              <button
+                type="button"
+                (click)="onClearAllPersons()"
+                class="action-btn white"
+                [disabled]="bookingPersons.length <= 1"
+                title="Remove all additional applicants from this booking"
+              >
+                <span class="btn-text">Clear All</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="registered-applicants">
-          <h6 class="step-description">
-            Manage booking applicants and their required services ({{
-              bookingPersons.length
-            }})
-          </h6>
+          <p class="header-description">
+            Select required services for each applicant
+          </p>
           <!-- Applicants List -->
           <div class="applicants-list">
             <div *ngIf="bookingPersons.length > 0" class="applicants-grid">
@@ -94,44 +137,6 @@ interface BookingPerson {
             </div>
           </div>
         </div>
-        <!-- add applicant menu -->
-        <div class="add-applicant-menu">
-          <div class="header-info">
-            <p class="header-description">
-              Add additional applicants to this booking
-            </p>
-          </div>
-          <div class="applicants-header">
-            <div class="header-actions">
-              <button
-                type="button"
-                (click)="onAddPersonToBooking()"
-                class="action-btn std"
-                title="Add an accompanying applicant to this booking"
-              >
-                <span class="btn-text">Add Applicant</span>
-              </button>
-              <button
-                type="button"
-                (click)="onRemovePersonFromBooking()"
-                class="action-btn std"
-                [disabled]="bookingPersons.length <= 1"
-                title="Remove an additional applicant from this booking"
-              >
-                <span class="btn-text">Remove</span>
-              </button>
-              <button
-                type="button"
-                (click)="onClearAllPersons()"
-                class="action-btn white"
-                [disabled]="bookingPersons.length <= 1"
-                title="Remove all additional applicants from this booking"
-              >
-                <span class="btn-text">Clear All</span>
-              </button>
-            </div>
-          </div>
-        </div>
 
         <!-- Action Buttons -->
         <div class="action-buttons">
@@ -174,7 +179,7 @@ interface BookingPerson {
         gap: 20px;
       }
 
-      .registered-applicants h6 {
+      .step-description {
         color: var(--DHATextGray);
         font-size: 16px;
         margin: 0;
@@ -341,21 +346,21 @@ interface BookingPerson {
       }
 
       .applicants-header {
-        /*background: var(--DHAOffWhite);
+        background: var(--DHAOffWhite);
         border: 1px solid var(--DHABackGroundLightGray);
         border-radius: 8px;
-        padding: 16px;*/
+        padding: 16px;
       }
 
       .header-info {
-        margin-bottom: 12px;
       }
 
       .header-description {
         color: var(--DHATextGrayDark);
-        font-size: 14px;
+        font-size: 16px;
         margin: 0;
         font-weight: 600;
+        margin-bottom: 12px;
       }
 
       .header-actions {
