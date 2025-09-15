@@ -640,6 +640,195 @@ export class AppointmentResultsComponent implements OnInit {
   slotsPerPage = 5;
   expandedDays: Set<string> = new Set();
 
+  // Branch data structures (same as appointment form)
+  provinces: Province[] = [
+    { id: 'gauteng', name: 'Gauteng' },
+    { id: 'western-cape', name: 'Western Cape' },
+    { id: 'kwazulu-natal', name: 'KwaZulu-Natal' },
+    { id: 'eastern-cape', name: 'Eastern Cape' },
+    { id: 'free-state', name: 'Free State' },
+    { id: 'mpumalanga', name: 'Mpumalanga' },
+    { id: 'limpopo', name: 'Limpopo' },
+    { id: 'north-west', name: 'North West' },
+    { id: 'northern-cape', name: 'Northern Cape' },
+  ];
+
+  areas: Area[] = [
+    // Gauteng
+    { id: 'jhb-central', name: 'Johannesburg Central', provinceId: 'gauteng' },
+    { id: 'jhb-sandton', name: 'Sandton', provinceId: 'gauteng' },
+    { id: 'pta-central', name: 'Pretoria Central', provinceId: 'gauteng' },
+
+    // Western Cape
+    { id: 'ct-central', name: 'Cape Town Central', provinceId: 'western-cape' },
+    { id: 'ct-bellville', name: 'Bellville', provinceId: 'western-cape' },
+    { id: 'ct-durbanville', name: 'Durbanville', provinceId: 'western-cape' },
+
+    // KwaZulu-Natal
+    { id: 'dbn-central', name: 'Durban Central', provinceId: 'kwazulu-natal' },
+    { id: 'dbn-umhlanga', name: 'Umhlanga', provinceId: 'kwazulu-natal' },
+
+    // Eastern Cape
+    {
+      id: 'pe-central',
+      name: 'Port Elizabeth Central',
+      provinceId: 'eastern-cape',
+    },
+    { id: 'pe-east-london', name: 'East London', provinceId: 'eastern-cape' },
+
+    // Free State
+    {
+      id: 'bloem-central',
+      name: 'Bloemfontein Central',
+      provinceId: 'free-state',
+    },
+
+    // Mpumalanga
+    {
+      id: 'nelspruit-central',
+      name: 'Nelspruit Central',
+      provinceId: 'mpumalanga',
+    },
+
+    // Limpopo
+    {
+      id: 'polokwane-central',
+      name: 'Polokwane Central',
+      provinceId: 'limpopo',
+    },
+
+    // North West
+    {
+      id: 'mahikeng-central',
+      name: 'Mahikeng Central',
+      provinceId: 'north-west',
+    },
+
+    // Northern Cape
+    {
+      id: 'kimberley-central',
+      name: 'Kimberley Central',
+      provinceId: 'northern-cape',
+    },
+  ];
+
+  branches: Branch[] = [
+    // Johannesburg Central
+    {
+      id: 'jhb-central-main',
+      name: 'Johannesburg Central Main Office',
+      areaId: 'jhb-central',
+    },
+    {
+      id: 'jhb-central-east',
+      name: 'Johannesburg Central East Office',
+      areaId: 'jhb-central',
+    },
+
+    // Sandton
+    {
+      id: 'jhb-sandton-main',
+      name: 'Sandton Main Office',
+      areaId: 'jhb-sandton',
+    },
+
+    // Pretoria Central
+    {
+      id: 'pta-central-main',
+      name: 'Pretoria Central Main Office',
+      areaId: 'pta-central',
+    },
+
+    // Cape Town Central
+    {
+      id: 'ct-central-main',
+      name: 'Cape Town Central Main Office',
+      areaId: 'ct-central',
+    },
+
+    // Bellville
+    {
+      id: 'ct-bellville-main',
+      name: 'Bellville Main Office',
+      areaId: 'ct-bellville',
+    },
+    {
+      id: 'ct-tygervalley-main',
+      name: 'Tygervalley Main Office',
+      areaId: 'ct-bellville',
+    },
+
+    // Durbanville
+    {
+      id: 'ct-durbanville-main',
+      name: 'Durbanville Main Office',
+      areaId: 'ct-durbanville',
+    },
+
+    // Durban Central
+    {
+      id: 'dbn-central-main',
+      name: 'Durban Central Main Office',
+      areaId: 'dbn-central',
+    },
+
+    // Umhlanga
+    {
+      id: 'dbn-umhlanga-main',
+      name: 'Umhlanga Main Office',
+      areaId: 'dbn-umhlanga',
+    },
+
+    // Port Elizabeth Central
+    {
+      id: 'pe-central-main',
+      name: 'Port Elizabeth Central Main Office',
+      areaId: 'pe-central',
+    },
+
+    // East London
+    {
+      id: 'pe-east-london-main',
+      name: 'East London Main Office',
+      areaId: 'pe-east-london',
+    },
+
+    // Bloemfontein Central
+    {
+      id: 'bloem-central-main',
+      name: 'Bloemfontein Central Main Office',
+      areaId: 'bloem-central',
+    },
+
+    // Nelspruit Central
+    {
+      id: 'nelspruit-central-main',
+      name: 'Nelspruit Central Main Office',
+      areaId: 'nelspruit-central',
+    },
+
+    // Polokwane Central
+    {
+      id: 'polokwane-central-main',
+      name: 'Polokwane Central Main Office',
+      areaId: 'polokwane-central',
+    },
+
+    // Mahikeng Central
+    {
+      id: 'mahikeng-central-main',
+      name: 'Mahikeng Central Main Office',
+      areaId: 'mahikeng-central',
+    },
+
+    // Kimberley Central
+    {
+      id: 'kimberley-central-main',
+      name: 'Kimberley Central Main Office',
+      areaId: 'kimberley-central',
+    },
+  ];
+
   constructor(private slotService: SlotService, private router: Router) {}
 
   ngOnInit(): void {
@@ -672,10 +861,18 @@ export class AppointmentResultsComponent implements OnInit {
   getBranchDisplayName(): string {
     if (!this.searchCriteria?.branch) return 'N/A';
 
-    // For now, return a simple display name
-    return this.searchCriteria.branch
-      .replace(/-/g, ' ')
-      .replace(/\b\w/g, (l) => l.toUpperCase());
+    const branch = this.branches.find(
+      (b) => b.id === this.searchCriteria!.branch
+    );
+    if (!branch) return 'N/A';
+
+    const area = this.areas.find((a) => a.id === branch.areaId);
+    if (!area) return branch.name;
+
+    const province = this.provinces.find((p) => p.id === area.provinceId);
+    if (!province) return `${area.name} - ${branch.name}`;
+
+    return `${province.name} → ${area.name} → ${branch.name}`;
   }
 
   getDateRangeDisplay(): string {
@@ -709,9 +906,9 @@ export class AppointmentResultsComponent implements OnInit {
     const startParts = dayMonthOnlyFormatter.formatToParts(startDate);
     const endParts = allFormatter.formatToParts(endDate);
 
-    const startFormatted = `${startParts.find((p) => p.type === 'day')!.value} ${
-      startParts.find((p) => p.type === 'month')!.value
-    }`;
+    const startFormatted = `${
+      startParts.find((p) => p.type === 'day')!.value
+    } ${startParts.find((p) => p.type === 'month')!.value}`;
 
     const endFormatted = `${endParts.find((p) => p.type === 'day')!.value} ${
       endParts.find((p) => p.type === 'month')!.value
