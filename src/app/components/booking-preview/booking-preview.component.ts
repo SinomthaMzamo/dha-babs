@@ -176,14 +176,13 @@ interface BookingPerson {
       .card-wrapper {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 30px;
       }
 
       .step-description {
         color: var(--DHATextGray);
         font-size: 16px;
         margin: 0;
-        margin-bottom: 30px;
         line-height: 1.5;
         font-weight: 400;
       }
@@ -483,7 +482,11 @@ interface BookingPerson {
         }
 
         .step-description {
+        }
+
+        .header-description {
           font-size: 14px;
+          max-width: none;
         }
 
         .applicant-header {
