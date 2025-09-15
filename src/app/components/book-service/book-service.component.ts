@@ -756,21 +756,23 @@ interface BookingPerson {
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
-        height: 100vh;
+        min-height: calc(100vh - 73px);
         width: 100vw;
+        box-sizing: border-box;
       }
 
       /* Booking Preview Styles */
       .booking-preview-container {
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start;
         min-height: calc(100vh - 73px);
         background: linear-gradient(
           135deg,
           var(--DHAOffWhite) 0%,
           #e8f5e8 100%
         );
+        padding: 20px 0;
       }
 
       .booking-preview-content-wrapper {
@@ -1077,8 +1079,11 @@ interface BookingPerson {
         border: 1px solid var(--DHABackGroundLightGray);
         max-height: calc(100vh - 150px);
         overflow-y: auto;
+        overflow-x: hidden;
         box-sizing: border-box;
         margin: 0 auto;
+        -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+        scroll-behavior: smooth;
       }
 
       .book-service-container .confirm-booking-card h2 {
@@ -1831,9 +1836,12 @@ interface BookingPerson {
           min-width: unset;
           max-width: 600px;
           width: 100%;
-          max-height: calc(100vh - 150px);
+          height: 600px; /* Fixed height like appointment form */
           overflow-y: auto;
+          overflow-x: hidden;
           box-sizing: border-box;
+          -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+          scroll-behavior: smooth;
         }
 
         .booking-preview-card h2 {
@@ -2030,11 +2038,14 @@ interface BookingPerson {
           }
           .book-service-container .main-content .confirm-booking-container {
             padding: 16px 12px;
-            max-height: calc(100vh - 150px);
+            min-height: calc(100vh - 120px);
           }
 
           .confirm-booking-card {
             padding: 20px;
+            height: 600px; /* Fixed height like appointment form */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
           }
 
           .info-grid {
