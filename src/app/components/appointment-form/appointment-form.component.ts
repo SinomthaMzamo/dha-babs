@@ -53,12 +53,34 @@ interface Branch {
   template: `
     <app-form-page-layout [currentStep]="1" [steps]="stepTitles">
       <h2>Book A New Appointment</h2>
-
+      <h6 class="step-description">
+        Select the branch location and time period for your appointment.
+      </h6>
       <form
         [formGroup]="appointmentForm"
         (ngSubmit)="onSubmit()"
         autocomplete="on"
       >
+        <!-- Collapse/Expand All Buttons -->
+        <div class="section-controls">
+          <button
+            type="button"
+            (click)="expandAllSections()"
+            class="btn-control expand-all"
+            title="Expand all sections"
+          >
+            Expand All
+          </button>
+          <button
+            type="button"
+            (click)="collapseAllSections()"
+            class="btn-control collapse-all"
+            title="Collapse all sections"
+          >
+            Collapse All
+          </button>
+        </div>
+
         <!-- Selected Services Display -->
         <div
           class="form-section collapsible"
@@ -294,7 +316,6 @@ interface Branch {
                 [required]="true"
                 [error]="getStartDateError()"
                 (valueChange)="onStartDateChange($event)"
-                (blur)="onSectionBlur('dateRange')"
               ></app-custom-date-input>
 
               <app-custom-date-input
@@ -306,7 +327,6 @@ interface Branch {
                 [required]="true"
                 [error]="getEndDateError()"
                 (valueChange)="onEndDateChange($event)"
-                (blur)="onSectionBlur('dateRange')"
               ></app-custom-date-input>
               <div class="field-info">
                 <small>End date must be within 30 days from today</small>
@@ -349,6 +369,24 @@ interface Branch {
         font-size: 24px;
         font-weight: 700;
         text-align: center;
+      }
+
+      .step-description {
+        color: var(--DHATextGray);
+        font-size: 16px;
+        margin: 0;
+        margin-bottom: 30px;
+        line-height: 1.5;
+        font-weight: 400;
+      }
+
+      .step-title {
+        text-align: center;
+        color: var(--DHAGreen);
+        margin-bottom: 30px;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-top: 0;
       }
 
       .form-section {
@@ -435,6 +473,43 @@ interface Branch {
         margin-bottom: 20px;
         font-size: 1rem;
         margin-top: 0;
+      }
+
+      .section-controls {
+        display: flex;
+        justify-content: flex-end;
+        flex-direction: row-reverse;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .btn-control {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: var(--DHAGreen);
+        color: var(--DHAWhite);
+      }
+
+      .btn-control:hover {
+        background: var(--DHAOffBlack);
+        transform: translateY(-1px);
+      }
+
+      .btn-control.expand-all {
+        background: var(--DHAGreen);
+      }
+
+      .btn-control.collapse-all {
+        background: var(--DHATextGrayDark);
+      }
+
+      .btn-control.collapse-all:hover {
+        background: var(--DHAOffBlack);
       }
 
       /* Applicant Overview Styles - Gestalt Principles */
@@ -859,6 +934,15 @@ interface Branch {
           font-size: 14px;
         }
 
+        .section-controls {
+          gap: 8px;
+        }
+
+        .btn-control {
+          padding: 10px 16px;
+          font-size: 13px;
+        }
+
         .location-grid,
         .date-grid {
           grid-template-columns: 1fr;
@@ -1236,34 +1320,16 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     }
   }
 
-  onSectionBlur(section: string) {
-    setTimeout(() => {
-      const activeElement = document.activeElement;
-      let shouldCollapse = true;
+  expandAllSections(): void {
+    this.selectedServicesExpanded = true;
+    this.locationExpanded = true;
+    this.dateRangeExpanded = true;
+  }
 
-      if (activeElement) {
-        const sectionElement = document.querySelector(
-          `[data-section="${section}"]`
-        );
-        if (sectionElement && sectionElement.contains(activeElement)) {
-          shouldCollapse = false;
-        }
-      }
-
-      if (shouldCollapse) {
-        switch (section) {
-          case 'selectedServices':
-            this.selectedServicesExpanded = false;
-            break;
-          case 'location':
-            this.locationExpanded = false;
-            break;
-          case 'dateRange':
-            this.dateRangeExpanded = false;
-            break;
-        }
-      }
-    }, 200);
+  collapseAllSections(): void {
+    this.selectedServicesExpanded = false;
+    this.locationExpanded = false;
+    this.dateRangeExpanded = false;
   }
 
   onDocumentClick(event: Event) {

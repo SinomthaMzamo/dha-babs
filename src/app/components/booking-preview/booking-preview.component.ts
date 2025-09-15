@@ -16,10 +16,10 @@ interface BookingPerson {
   imports: [CommonModule, FormPageLayoutComponent],
   template: `
     <app-form-page-layout [currentStep]="0" [steps]="stepTitles">
-      <h2>Select Services Required</h2>
+      <h2 class="step-title">Select Required Services</h2>
       <div class="card-wrapper">
         <div class="registered-applicants">
-          <h6>
+          <h6 class="step-description">
             Manage booking applicants and their required services ({{
               bookingPersons.length
             }})
@@ -94,40 +94,42 @@ interface BookingPerson {
             </div>
           </div>
         </div>
-
-        <div class="applicants-header">
+        <!-- add applicant menu -->
+        <div class="add-applicant-menu">
           <div class="header-info">
             <p class="header-description">
               Add additional applicants to this booking
             </p>
           </div>
-          <div class="header-actions">
-            <button
-              type="button"
-              (click)="onAddPersonToBooking()"
-              class="action-btn std"
-              title="Add an accompanying applicant to this booking"
-            >
-              <span class="btn-text">Add Applicant</span>
-            </button>
-            <button
-              type="button"
-              (click)="onRemovePersonFromBooking()"
-              class="action-btn std"
-              [disabled]="bookingPersons.length <= 1"
-              title="Remove an additional applicant from this booking"
-            >
-              <span class="btn-text">Remove</span>
-            </button>
-            <button
-              type="button"
-              (click)="onClearAllPersons()"
-              class="action-btn white"
-              [disabled]="bookingPersons.length <= 1"
-              title="Remove all additional applicants from this booking"
-            >
-              <span class="btn-text">Clear All</span>
-            </button>
+          <div class="applicants-header">
+            <div class="header-actions">
+              <button
+                type="button"
+                (click)="onAddPersonToBooking()"
+                class="action-btn std"
+                title="Add an accompanying applicant to this booking"
+              >
+                <span class="btn-text">Add Applicant</span>
+              </button>
+              <button
+                type="button"
+                (click)="onRemovePersonFromBooking()"
+                class="action-btn std"
+                [disabled]="bookingPersons.length <= 1"
+                title="Remove an additional applicant from this booking"
+              >
+                <span class="btn-text">Remove</span>
+              </button>
+              <button
+                type="button"
+                (click)="onClearAllPersons()"
+                class="action-btn white"
+                [disabled]="bookingPersons.length <= 1"
+                title="Remove all additional applicants from this booking"
+              >
+                <span class="btn-text">Clear All</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -173,11 +175,21 @@ interface BookingPerson {
       }
 
       .registered-applicants h6 {
-        color: var(--DHAGreen);
+        color: var(--DHATextGray);
         font-size: 16px;
-        font-weight: 600;
-        margin-bottom: 16px;
+        margin: 0;
+        margin-bottom: 30px;
+        line-height: 1.5;
+        font-weight: 400;
+      }
+
+      .step-title {
         text-align: center;
+        color: var(--DHAGreen);
+        margin-bottom: 30px;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-top: 0;
       }
 
       .applicants-list {
@@ -329,10 +341,10 @@ interface BookingPerson {
       }
 
       .applicants-header {
-        background: var(--DHAOffWhite);
+        /*background: var(--DHAOffWhite);
         border: 1px solid var(--DHABackGroundLightGray);
         border-radius: 8px;
-        padding: 16px;
+        padding: 16px;*/
       }
 
       .header-info {
@@ -343,13 +355,12 @@ interface BookingPerson {
         color: var(--DHATextGrayDark);
         font-size: 14px;
         margin: 0;
-        text-align: center;
+        font-weight: 600;
       }
 
       .header-actions {
         display: flex;
         gap: 8px;
-        justify-content: center;
         flex-wrap: wrap;
       }
 
@@ -364,6 +375,16 @@ interface BookingPerson {
         display: flex;
         align-items: center;
         gap: 4px;
+      }
+
+      .action-btn:first-child {
+        margin-right: auto; /* pushes the rest away, keeps it at flex-start */
+      }
+
+      .action-btn:nth-child(2),
+      .action-btn:nth-child(3) {
+        flex: 0; /* share remaining space equally */
+        text-align: center; /* optional: center text inside */
       }
 
       .action-btn.std {
@@ -451,6 +472,15 @@ interface BookingPerson {
 
       /* Mobile Styles */
       @media (max-width: 768px) {
+        .step-title {
+          font-size: 1.5rem;
+          margin-bottom: 20px;
+        }
+
+        .step-description {
+          font-size: 14px;
+        }
+
         .applicant-header {
           flex-direction: column;
           gap: 8px;
@@ -461,7 +491,7 @@ interface BookingPerson {
         }
 
         .header-actions {
-          flex-direction: column;
+          /* flex-direction: column; */
         }
 
         .action-btn {
@@ -469,8 +499,14 @@ interface BookingPerson {
           justify-content: center;
         }
 
+        .action-btn:nth-child(2),
+        .action-btn:nth-child(3) {
+          flex: 1; /* share remaining space equally */
+          text-align: center; /* optional: center text inside */
+        }
+
         .action-buttons {
-          flex-direction: column;
+          /* flex-direction: column; */
         }
 
         .btn-primary,
