@@ -46,6 +46,7 @@ import { CommonModule } from '@angular/common';
         --DHABackGroundLightGray: #f4f4f4;
         --DividerGray: #949494;
         --DHADisabledTextGray: #c4c4c4;
+        width: 100%;
         max-width: 600px;
       }
 

@@ -12,6 +12,7 @@ import { AppointmentResultsComponent } from '../appointment-results/appointment-
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { IosModalComponent } from '../shared/ios-modal/ios-modal.component';
+import { ConfirmBookingComponent } from '../confirm-booking/confirm-booking.component';
 
 interface SlotSearchCriteria {
   branch: string;
@@ -46,6 +47,7 @@ interface BookingPerson {
     ProgressIndicatorComponent,
     NavbarComponent,
     IosModalComponent,
+    ConfirmBookingComponent,
   ],
   template: `
     <div class="book-service-container">
@@ -536,131 +538,16 @@ interface BookingPerson {
         ></app-appointment-results>
 
         <!-- Confirm Booking Step -->
-        <div
+        <app-confirm-booking
           *ngIf="currentStep === 'confirm'"
-          class="confirm-booking-container"
-        >
-          <div class="content-wrapper">
-            <app-progress-indicator
-              [currentStep]="3"
-              [steps]="stepTitles"
-            ></app-progress-indicator>
-            <div class="confirm-booking-card">
-              <h2>Confirm Your Booking</h2>
-              <p class="confirm-description">
-                Please review all details before confirming your appointment
-                booking.
-              </p>
-
-              <!-- Personal Information -->
-              <div class="booking-section">
-                <h3>👤 Personal Information</h3>
-                <div class="info-grid">
-                  <div class="info-item">
-                    <span class="info-label">Full Name:</span>
-                    <span class="info-value">{{
-                      personalData?.forenames + ' ' + personalData?.lastName ||
-                        'N/A'
-                    }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">ID Number:</span>
-                    <span class="info-value">{{
-                      personalData?.idNumber || 'N/A'
-                    }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Phone:</span>
-                    <span class="info-value">{{
-                      personalData?.phone || 'N/A'
-                    }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Email:</span>
-                    <span class="info-value">{{
-                      personalData?.email || 'N/A'
-                    }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Booking Details -->
-              <div class="booking-section">
-                <h3>📋 Booking Details</h3>
-                <div class="info-grid">
-                  <div class="info-item">
-                    <span class="info-label">Branch:</span>
-                    <span class="info-value">{{ getBranchDisplayName() }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Appointment Date:</span>
-                    <span class="info-value">{{
-                      getFormattedDate(selectedSlot?.date)
-                    }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Appointment Time:</span>
-                    <span class="info-value">{{
-                      selectedSlot?.time || 'N/A'
-                    }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="info-label">Total Applicants:</span>
-                    <span class="info-value">{{ bookingPersons.length }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Selected Services -->
-              <div class="booking-section">
-                <h3>🔧 Selected Services</h3>
-                <div class="services-summary">
-                  <div
-                    *ngFor="let person of bookingPersons"
-                    class="person-services"
-                  >
-                    <h4>{{ person.name }} ({{ person.type }})</h4>
-                    <div class="services-list">
-                      <div
-                        *ngFor="let service of person.selectedServices"
-                        class="service-item"
-                      >
-                        {{ service.name }}
-                      </div>
-                      <div
-                        *ngIf="
-                          !person.selectedServices ||
-                          person.selectedServices.length === 0
-                        "
-                        class="no-services"
-                      >
-                        No services selected
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Action Buttons -->
-              <div class="confirm-actions">
-                <button
-                  type="button"
-                  (click)="goBackToResults()"
-                  class="btn-secondary"
-                >
-                  ← Back
-                </button>
-                <button
-                  type="button"
-                  (click)="confirmBooking()"
-                  class="btn-primary"
-                >
-                  Confirm
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+          [stepTitles]="stepTitles"
+          [personalData]="personalData"
+          [bookingPersons]="bookingPersons"
+          [selectedSlot]="selectedSlot"
+          [branchDisplayName]="getBranchDisplayName()"
+          (backToResults)="goBackToResults()"
+          (confirmBooking)="confirmBooking()"
+        ></app-confirm-booking>
       </div>
     </div>
   `,
@@ -1069,45 +956,6 @@ interface BookingPerson {
         );
         width: 100vw;
         box-sizing: border-box;
-      }
-
-      .book-service-container .confirm-booking-card {
-        background: var(--DHAWhite);
-        border-radius: 8px;
-        padding: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-        border: 1px solid var(--DHABackGroundLightGray);
-        max-height: calc(100vh - 150px);
-        overflow-y: auto;
-        overflow-x: hidden;
-        box-sizing: border-box;
-        margin: 0 auto;
-        -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
-        scroll-behavior: smooth;
-      }
-
-      .book-service-container .confirm-booking-card h2 {
-        color: var(--DHAGreen);
-        margin-bottom: 4px;
-        font-size: 18px;
-        font-weight: 600;
-        text-align: center;
-      }
-
-      .book-service-container .confirm-description {
-        color: var(--DHATextGrayDark);
-        text-align: center;
-        margin-bottom: 16px;
-        font-size: 12px;
-        line-height: 1.3;
-      }
-
-      .book-service-container .booking-section {
-        margin-bottom: 12px;
-        padding: 12px;
-        background: var(--DHAOffWhite);
-        border-radius: 6px;
-        border: 1px solid var(--DHABackGroundLightGray);
       }
 
       .booking-section h3 {

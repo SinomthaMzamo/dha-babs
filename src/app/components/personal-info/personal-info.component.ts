@@ -7,161 +7,148 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
-import { NavbarComponent } from "../shared/navbar/navbar.component";
+import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-layout.component';
 
 @Component({
   selector: 'app-personal-info',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ProgressIndicatorComponent,
-    NavbarComponent,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, FormPageLayoutComponent],
   template: `
-    <div class="personal-info-container">
-      <app-navbar></app-navbar>
-      <div class="personal-info-content-wrapper">
-        <app-progress-indicator
-          [currentStep]="getProgressStep()"
-        ></app-progress-indicator>
-        <div class="personal-info-card">
-          <!-- Step 1: Personal Details Verification -->
-          <div *ngIf="currentStep === 1" class="step-section">
-            <h2>Verify Personal Information</h2>
-            <p class="step-description">
-              Please enter your personal details, we will verify them against
-              DHA records
-            </p>
+    <app-form-page-layout
+      [currentStep]="getProgressStep()"
+      [steps]="stepTitles"
+    >
+      <!-- Step 1: Personal Details Verification -->
+      <div *ngIf="currentStep === 1" class="step-section">
+        <h2>Verify Personal Information</h2>
+        <p class="step-description">
+          Please enter your personal details, we will verify them against DHA
+          records
+        </p>
 
-            <form
-              [formGroup]="verificationForm"
-              (ngSubmit)="onVerificationSubmit()"
-              autocomplete="on"
-            >
-              <div class="form-group floating-label-group">
-                <div class="field-info">
-                  <small>ID number from previous step</small>
-                </div>
-                <input
-                  type="text"
-                  id="idNumber"
-                  [value]="authData?.idNumber || ''"
-                  class="floating-input has-value"
-                  disabled
-                  readonly
-                />
-                <!-- <label for="idNumber" class="floating-label">ID Number</label> -->
-              </div>
-
-              <div class="form-group floating-label-group">
-                <input
-                  type="text"
-                  id="forenames"
-                  formControlName="forenames"
-                  class="floating-input"
-                  autocomplete="given-name"
-                  [class.has-value]="verificationForm.get('forenames')?.value"
-                />
-                <label for="forenames" class="floating-label"
-                  >Forenames *</label
-                >
-                <div
-                  *ngIf="
-                    verificationForm.get('forenames')?.invalid &&
-                    verificationForm.get('forenames')?.touched
-                  "
-                  class="error-message"
-                >
-                  Forenames are required
-                </div>
-              </div>
-
-              <div class="form-group floating-label-group">
-                <input
-                  type="text"
-                  id="lastName"
-                  formControlName="lastName"
-                  class="floating-input"
-                  autocomplete="family-name"
-                  [class.has-value]="verificationForm.get('lastName')?.value"
-                />
-                <label for="lastName" class="floating-label">Last Name *</label>
-                <div
-                  *ngIf="
-                    verificationForm.get('lastName')?.invalid &&
-                    verificationForm.get('lastName')?.touched
-                  "
-                  class="error-message"
-                >
-                  Last name is required
-                </div>
-              </div>
-
-              <div class="button-group">
-                <button type="button" (click)="goBack()" class="btn-secondary">
-                  ← Sign Out
-                </button>
-                <button
-                  type="submit"
-                  [disabled]="verificationForm.invalid"
-                  class="btn-primary"
-                >
-                  Verify
-                </button>
-              </div>
-            </form>
+        <form
+          [formGroup]="verificationForm"
+          (ngSubmit)="onVerificationSubmit()"
+          autocomplete="on"
+        >
+          <div class="form-group floating-label-group">
+            <div class="field-info">
+              <small>ID number from previous step</small>
+            </div>
+            <input
+              type="text"
+              id="idNumber"
+              [value]="authData?.idNumber || ''"
+              class="floating-input has-value"
+              disabled
+              readonly
+            />
+            <!-- <label for="idNumber" class="floating-label">ID Number</label> -->
           </div>
 
-          <!-- Step 2: Verification Success -->
-          <div *ngIf="currentStep === 2" class="step-section">
-            <div class="success-message">
-              <!-- <div class="success-icon">✅</div> -->
-              <h2>Verification Successful!</h2>
-              <p class="success-description">
-                Your personal details have been successfully verified against
-                DHA records.
-              </p>
+          <div class="form-group floating-label-group">
+            <input
+              type="text"
+              id="forenames"
+              formControlName="forenames"
+              class="floating-input"
+              autocomplete="given-name"
+              [class.has-value]="verificationForm.get('forenames')?.value"
+            />
+            <label for="forenames" class="floating-label">Forenames *</label>
+            <div
+              *ngIf="
+                verificationForm.get('forenames')?.invalid &&
+                verificationForm.get('forenames')?.touched
+              "
+              class="error-message"
+            >
+              Forenames are required
             </div>
+          </div>
 
-            <div class="verified-details-preview">
-              <h3>Verified Details</h3>
-              <div class="details-grid">
-                <div class="detail-item">
-                  <label>ID Number:</label>
-                  <span class="detail-value">{{ authData?.idNumber }}</span>
-                </div>
-                <div class="detail-item">
-                  <label>Full Name:</label>
-                  <span class="detail-value"
-                    >{{ verificationForm.get('forenames')?.value }}
-                    {{ verificationForm.get('lastName')?.value }}</span
-                  >
-                </div>
-              </div>
+          <div class="form-group floating-label-group">
+            <input
+              type="text"
+              id="lastName"
+              formControlName="lastName"
+              class="floating-input"
+              autocomplete="family-name"
+              [class.has-value]="verificationForm.get('lastName')?.value"
+            />
+            <label for="lastName" class="floating-label">Last Name *</label>
+            <div
+              *ngIf="
+                verificationForm.get('lastName')?.invalid &&
+                verificationForm.get('lastName')?.touched
+              "
+              class="error-message"
+            >
+              Last name is required
             </div>
+          </div>
 
-            <div class="button-group">
-              <!-- <button
+          <div class="button-group">
+            <button type="button" (click)="goBack()" class="btn-secondary">
+              ← Sign Out
+            </button>
+            <button
+              type="submit"
+              [disabled]="verificationForm.invalid"
+              class="btn-primary"
+            >
+              Verify
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 2: Verification Success -->
+      <div *ngIf="currentStep === 2" class="step-section">
+        <div class="success-message">
+          <!-- <div class="success-icon">✅</div> -->
+          <h2>Verification Successful!</h2>
+          <p class="success-description">
+            Your personal details have been successfully verified against DHA
+            records.
+          </p>
+        </div>
+
+        <div class="verified-details-preview">
+          <h3>Verified Details</h3>
+          <div class="details-grid">
+            <div class="detail-item">
+              <label>ID Number:</label>
+              <span class="detail-value">{{ authData?.idNumber }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Full Name:</label>
+              <span class="detail-value"
+                >{{ verificationForm.get('forenames')?.value }}
+                {{ verificationForm.get('lastName')?.value }}</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <!-- <button
                 type="button"
                 (click)="goBackToVerification()"
                 class="btn-secondary"
               >
                 Back
               </button> -->
-              <button
-                type="button"
-                (click)="proceedToContact()"
-                class="btn-primary"
-              >
-                Continue
-              </button>
-            </div>
-          </div>
+          <button
+            type="button"
+            (click)="proceedToContact()"
+            class="btn-primary"
+          >
+            Continue
+          </button>
         </div>
       </div>
-    </div>
+    </app-form-page-layout>
   `,
   styles: [
     `
@@ -189,40 +176,6 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
 
       * {
         box-sizing: border-box;
-      }
-
-      .personal-info-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: calc(100vh - 73px);
-        background: linear-gradient(
-          135deg,
-          var(--DHAOffWhite) 0%,
-          #e8f5e8 100%
-        );
-        padding: 20px;
-        height: 100vh;
-      }
-
-      .personal-info-content-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: var(--step-form-gap);
-        width: var(--form-width);
-      }
-
-      .personal-info-card {
-        background: var(--DHAWhite);
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: var(--form-width);
-        height: var(--mobile-form-height);
-        overflow-y: auto;
-        box-sizing: border-box;
-        border: 2px solid var(--DHAWhite);
       }
 
       h2 {
@@ -514,22 +467,8 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
           padding: 15px;
         }
 
-        .personal-info-container {
-          padding: 0 8px;
-          margin-top: 73px;
-        }
-
         input {
           font-size: 14px;
-        }
-
-        .personal-info-card {
-          padding: 20px;
-          max-width: 100%;
-          height: var(--mobile-form-height);
-          max-height: calc(100vh - 150px);
-          overflow-y: auto;
-          box-sizing: border-box;
         }
 
         h2 {
@@ -563,6 +502,12 @@ export class PersonalInfoComponent implements OnInit {
   verificationForm: FormGroup;
   authData: any;
   currentStep: number = 1;
+  stepTitles: string[] = [
+    'Sign In',
+    'Personal Info',
+    'Contact Info',
+    'Book Service',
+  ];
 
   constructor(private fb: FormBuilder, private router: Router) {
     // Form for personal details verification

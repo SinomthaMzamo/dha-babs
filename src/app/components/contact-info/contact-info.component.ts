@@ -7,108 +7,95 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
-import { NavbarComponent } from "../shared/navbar/navbar.component";
+import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-layout.component';
 
 @Component({
   selector: 'app-contact-info',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ProgressIndicatorComponent,
-    NavbarComponent,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, FormPageLayoutComponent],
   template: `
-    <div class="contact-info-container">
-      <app-navbar></app-navbar>
-      <div class="contact-info-content-wrapper">
-        <app-progress-indicator
-          [currentStep]="getProgressStep()"
-        ></app-progress-indicator>
-        <div class="contact-info-card">
-          <div class="step-section">
-            <h2>Contact Information</h2>
-            <p class="step-description">
-              Please provide your contact details for appointment notifications
-            </p>
+    <app-form-page-layout
+      [currentStep]="getProgressStep()"
+      [steps]="stepTitles"
+    >
+      <div class="step-section">
+        <h2>Contact Information</h2>
+        <p class="step-description">
+          Please provide your contact details for appointment notifications
+        </p>
 
-            <form
-              [formGroup]="contactForm"
-              (ngSubmit)="onContactSubmit()"
-              autocomplete="on"
+        <form
+          [formGroup]="contactForm"
+          (ngSubmit)="onContactSubmit()"
+          autocomplete="on"
+        >
+          <div class="form-group floating-label-group">
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="floating-input"
+              autocomplete="email"
+              [class.has-value]="contactForm.get('email')?.value"
+            />
+            <label for="email" class="floating-label">Email Address *</label>
+            <div
+              *ngIf="
+                contactForm.get('email')?.invalid &&
+                contactForm.get('email')?.touched
+              "
+              class="error-message"
             >
-              <div class="form-group floating-label-group">
-                <input
-                  type="email"
-                  id="email"
-                  formControlName="email"
-                  class="floating-input"
-                  autocomplete="email"
-                  [class.has-value]="contactForm.get('email')?.value"
-                />
-                <label for="email" class="floating-label"
-                  >Email Address *</label
-                >
-                <div
-                  *ngIf="
-                    contactForm.get('email')?.invalid &&
-                    contactForm.get('email')?.touched
-                  "
-                  class="error-message"
-                >
-                  <div *ngIf="contactForm.get('email')?.errors?.['required']">
-                    Email is required
-                  </div>
-                  <div *ngIf="contactForm.get('email')?.errors?.['email']">
-                    Please enter a valid email address
-                  </div>
-                </div>
+              <div *ngIf="contactForm.get('email')?.errors?.['required']">
+                Email is required
               </div>
-
-              <div class="form-group floating-label-group">
-                <input
-                  type="tel"
-                  id="phone"
-                  formControlName="phone"
-                  class="floating-input"
-                  autocomplete="tel"
-                  [class.has-value]="contactForm.get('phone')?.value"
-                />
-                <label for="phone" class="floating-label">Phone Number *</label>
-                <div
-                  *ngIf="
-                    contactForm.get('phone')?.invalid &&
-                    contactForm.get('phone')?.touched
-                  "
-                  class="error-message"
-                >
-                  <div *ngIf="contactForm.get('phone')?.errors?.['required']">
-                    Phone number is required
-                  </div>
-                  <div *ngIf="contactForm.get('phone')?.errors?.['pattern']">
-                    Please enter a valid phone number
-                  </div>
-                </div>
+              <div *ngIf="contactForm.get('email')?.errors?.['email']">
+                Please enter a valid email address
               </div>
-
-              <div class="button-group">
-                <button type="button" (click)="goBack()" class="btn-secondary">
-                  Back
-                </button>
-                <button
-                  type="submit"
-                  [disabled]="contactForm.invalid"
-                  class="btn-primary"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
-        </div>
+
+          <div class="form-group floating-label-group">
+            <input
+              type="tel"
+              id="phone"
+              formControlName="phone"
+              class="floating-input"
+              autocomplete="tel"
+              [class.has-value]="contactForm.get('phone')?.value"
+            />
+            <label for="phone" class="floating-label">Phone Number *</label>
+            <div
+              *ngIf="
+                contactForm.get('phone')?.invalid &&
+                contactForm.get('phone')?.touched
+              "
+              class="error-message"
+            >
+              <div *ngIf="contactForm.get('phone')?.errors?.['required']">
+                Phone number is required
+              </div>
+              <div *ngIf="contactForm.get('phone')?.errors?.['pattern']">
+                Please enter a valid phone number
+              </div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button type="button" (click)="goBack()" class="btn-secondary">
+              Back
+            </button>
+            <button
+              type="submit"
+              [disabled]="contactForm.invalid"
+              class="btn-primary"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
       </div>
-    </div>
+    </app-form-page-layout>
   `,
   styles: [
     `
@@ -136,40 +123,6 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
 
       * {
         box-sizing: border-box;
-      }
-
-      .contact-info-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: calc(100vh - 73px);
-        background: linear-gradient(
-          135deg,
-          var(--DHAOffWhite) 0%,
-          #e8f5e8 100%
-        );
-        padding: 20px;
-        height: 100vh;
-      }
-
-      .contact-info-content-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: var(--step-form-gap);
-        width: var(--form-width);
-      }
-
-      .contact-info-card {
-        background: var(--DHAWhite);
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: var(--form-width);
-        height: var(--mobile-form-height);
-        overflow-y: auto;
-        box-sizing: border-box;
-        border: 2px solid var(--DHAWhite);
       }
 
       h2 {
@@ -365,26 +318,8 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
           padding: 15px;
         }
 
-        .contact-info-container {
-          padding: 0 8px;
-          margin-top: 73px 0;
-        }
-
         input {
           font-size: 14px;
-        }
-
-        .contact-info-card {
-          padding: 20px;
-          max-width: 100%;
-          height: var(--mobile-form-height);
-          overflow-y: auto;
-          box-sizing: border-box;
-          max-height: calc(100vh - 150px);
-        }
-
-        .contact-info-content-wrapper {
-          margin-top: 150px;
         }
 
         h2 {
@@ -417,6 +352,12 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
 export class ContactInfoComponent implements OnInit {
   contactForm: FormGroup;
   personalData: any;
+  stepTitles: string[] = [
+    'Sign In',
+    'Personal Info',
+    'Contact Info',
+    'Book Service',
+  ];
 
   constructor(private fb: FormBuilder, private router: Router) {
     // Form for contact information

@@ -7,8 +7,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
-import { NavbarComponent } from '../shared/navbar/navbar.component';
+import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-layout.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -22,9 +21,7 @@ import { MatInputModule } from '@angular/material/input';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ProgressIndicatorComponent,
-    NavbarComponent,
-    ReactiveFormsModule,
+    FormPageLayoutComponent,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
@@ -33,85 +30,73 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
   ],
   template: `
-    <div class="auth-container">
-      <app-navbar></app-navbar>
-      <div class="auth-content-wrapper">
-        <app-progress-indicator [currentStep]="0"></app-progress-indicator>
-        <div class="auth-card">
-          <h2>Sign In</h2>
-          <p class="step-description">
-            Please note that this service is only available for individuals who
-            have a South African ID Number or a Passport registered on our
-            system.
-          </p>
-          <form
-            [formGroup]="authForm"
-            (ngSubmit)="onSubmit()"
-            autocomplete="on"
+    <app-form-page-layout [currentStep]="0" [steps]="stepTitles">
+      <h2>Sign In</h2>
+      <p class="step-description">
+        Please note that this service is only available for individuals who have
+        a South African ID Number or a Passport registered on our system.
+      </p>
+      <form [formGroup]="authForm" (ngSubmit)="onSubmit()" autocomplete="on">
+        <div class="form-group floating-label-group">
+          <select
+            id="idType"
+            formControlName="idType"
+            class="floating-input"
+            [class.has-value]="authForm.get('idType')?.value"
           >
-            <div class="form-group floating-label-group">
-              <select
-                id="idType"
-                formControlName="idType"
-                class="floating-input"
-                [class.has-value]="authForm.get('idType')?.value"
-              >
-                <option value=""></option>
-                <option value="id">ID Number</option>
-                <option value="passport">Passport Number</option>
-              </select>
-              <label for="idType" class="floating-label">ID Type *</label>
-              <div
-                *ngIf="
-                  authForm.get('idType')?.invalid &&
-                  authForm.get('idType')?.touched
-                "
-                class="error-message"
-              >
-                Please select an ID type
-              </div>
-            </div>
-
-            <div class="form-group floating-label-group">
-              <input
-                type="text"
-                id="idNumber"
-                formControlName="idNumber"
-                class="floating-input"
-                maxlength="13"
-                autocomplete="username"
-                [class.has-value]="authForm.get('idNumber')?.value"
-              />
-              <label for="idNumber" class="floating-label">ID Number *</label>
-              <div
-                *ngIf="
-                  authForm.get('idNumber')?.invalid &&
-                  authForm.get('idNumber')?.touched
-                "
-                class="error-message"
-              >
-                <div *ngIf="authForm.get('idNumber')?.errors?.['required']">
-                  ID number is required
-                </div>
-                <div *ngIf="authForm.get('idNumber')?.errors?.['pattern']">
-                  ID number must be exactly 13 digits
-                </div>
-              </div>
-            </div>
-
-            <div class="button-group">
-              <button
-                type="submit"
-                [disabled]="authForm.invalid"
-                class="btn-primary"
-              >
-                Sign In
-              </button>
-            </div>
-          </form>
+            <option value=""></option>
+            <option value="id">ID Number</option>
+            <option value="passport">Passport Number</option>
+          </select>
+          <label for="idType" class="floating-label">ID Type *</label>
+          <div
+            *ngIf="
+              authForm.get('idType')?.invalid && authForm.get('idType')?.touched
+            "
+            class="error-message"
+          >
+            Please select an ID type
+          </div>
         </div>
-      </div>
-    </div>
+
+        <div class="form-group floating-label-group">
+          <input
+            type="text"
+            id="idNumber"
+            formControlName="idNumber"
+            class="floating-input"
+            maxlength="13"
+            autocomplete="username"
+            [class.has-value]="authForm.get('idNumber')?.value"
+          />
+          <label for="idNumber" class="floating-label">ID Number *</label>
+          <div
+            *ngIf="
+              authForm.get('idNumber')?.invalid &&
+              authForm.get('idNumber')?.touched
+            "
+            class="error-message"
+          >
+            <div *ngIf="authForm.get('idNumber')?.errors?.['required']">
+              ID number is required
+            </div>
+            <div *ngIf="authForm.get('idNumber')?.errors?.['pattern']">
+              ID number must be exactly 13 digits
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button
+            type="submit"
+            [disabled]="authForm.invalid"
+            class="btn-primary"
+          >
+            Sign In
+          </button>
+        </div>
+      </form>
+    </app-form-page-layout>
   `,
   styles: [
     `
@@ -153,39 +138,6 @@ import { MatInputModule } from '@angular/material/input';
       /* Optional: custom float position */
       .mat-form-field-appearance-fill .mat-form-field-label {
         transform: translateY(-1.3em) scale(0.75); /* adjust float height */
-      }
-
-      .auth-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: calc(100vh - 73px);
-        background: linear-gradient(
-          135deg,
-          var(--DHAOffWhite) 0%,
-          #e8f5e8 100%
-        );
-        padding: 20px;
-        position: relative;
-        height: 100vh;
-      }
-
-      .auth-content-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: var(--step-form-gap);
-        width: var(--form-width);
-      }
-
-      .auth-card {
-        background: var(--DHAWhite);
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        box-sizing: border-box;
-        height: var(--mobile-form-height);
-        max-height: calc(100vh - 150px);
       }
 
       h2 {
@@ -334,20 +286,6 @@ import { MatInputModule } from '@angular/material/input';
         cursor: not-allowed;
       }
 
-      @media (max-width: 768px) {
-        .auth-container {
-          padding: 0 8px;
-          margin-top: 73px;
-          height: 100vh;
-        }
-        .auth-card {
-          padding: 20px;
-          height: var(--mobile-form-height);
-          overflow-y: auto;
-          box-sizing: border-box;
-        }
-      }
-
       .demo-section {
         margin-top: 20px;
         text-align: center;
@@ -426,6 +364,12 @@ import { MatInputModule } from '@angular/material/input';
 export class AuthenticateComponent implements OnInit {
   authForm: FormGroup;
   showDemoModal: boolean = false;
+  stepTitles: string[] = [
+    'Sign In',
+    'Personal Info',
+    'Contact Info',
+    'Book Service',
+  ];
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.authForm = this.fb.group({
