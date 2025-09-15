@@ -684,17 +684,38 @@ export class AppointmentResultsComponent implements OnInit {
     const startDate = new Date(this.searchCriteria.startDate);
     const endDate = new Date(this.searchCriteria.endDate);
 
-    const startFormatted = startDate.toLocaleDateString('en-ZA', {
+    // const startFormatted = startDate.toLocaleDateString('en-ZA', {
+    //   day: 'numeric',
+    //   month: 'short'
+    // });
+
+    // const endFormatted = endDate.toLocaleDateString('en-US', {
+    //   year: 'numeric',
+    //   month: 'short',
+    //   day: 'numeric',
+    // });
+
+    const dayMonthOnlyFormatter = new Intl.DateTimeFormat('en-US', {
+      day: 'numeric',
+      month: 'short',
+    });
+
+    const allFormatter = new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
     });
 
-    const endFormatted = endDate.toLocaleDateString('en-ZA', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
+    const startParts = dayMonthOnlyFormatter.formatToParts(startDate);
+    const endParts = allFormatter.formatToParts(endDate);
+
+    const startFormatted = `${startParts.find((p) => p.type === 'day')!.value} ${
+      startParts.find((p) => p.type === 'month')!.value
+    }`;
+
+    const endFormatted = `${endParts.find((p) => p.type === 'day')!.value} ${
+      endParts.find((p) => p.type === 'month')!.value
+    } ${endParts.find((p) => p.type === 'year')!.value}`;
 
     return `${startFormatted} to ${endFormatted}`;
   }
@@ -741,7 +762,7 @@ export class AppointmentResultsComponent implements OnInit {
   getFormattedDayName(dateString: string): string {
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-ZA', { weekday: 'short' });
+      return date.toLocaleDateString('en-ZA', { weekday: 'long' });
     } catch (error) {
       return 'Unknown';
     }
@@ -750,11 +771,20 @@ export class AppointmentResultsComponent implements OnInit {
   getFormattedDate(dateString: string): string {
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-ZA', {
+
+      const allFormatter = new Intl.DateTimeFormat('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
       });
+
+      const parts = allFormatter.formatToParts(date);
+
+      const formatted = `${parts.find((p) => p.type === 'day')!.value} ${
+        parts.find((p) => p.type === 'month')!.value
+      } ${parts.find((p) => p.type === 'year')!.value}`;
+
+      return formatted;
     } catch (error) {
       return 'Unknown';
     }
