@@ -58,7 +58,6 @@ interface SlotSearchCriteria {
               [steps]="stepTitles"
             ></app-progress-indicator>
             <div class="no-slots-card">
-              <!-- <div class="no-slots-icon">📅</div> -->
               <h3>No Available Slots Found</h3>
               <p>
                 We couldn't find any available appointment slots for your
@@ -82,12 +81,6 @@ interface SlotSearchCriteria {
                       getDateRangeDisplay()
                     }}</span>
                   </div>
-                  <!-- <div class="summary-item">
-                    <span class="summary-label">🔍 Search Date:</span>
-                    <span class="summary-value">{{
-                      getSearchDateDisplay()
-                    }}</span>
-                  </div> -->
                 </div>
                 <button
                   type="button"

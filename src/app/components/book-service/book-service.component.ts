@@ -9,10 +9,10 @@ import {
 } from '@angular/forms';
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 import { AppointmentResultsComponent } from '../appointment-results/appointment-results.component';
-import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { IosModalComponent } from '../shared/ios-modal/ios-modal.component';
 import { ConfirmBookingComponent } from '../confirm-booking/confirm-booking.component';
+import { BookingPreviewComponent } from '../booking-preview/booking-preview.component';
 
 interface SlotSearchCriteria {
   branch: string;
@@ -44,10 +44,10 @@ interface BookingPerson {
     ReactiveFormsModule,
     AppointmentFormComponent,
     AppointmentResultsComponent,
-    ProgressIndicatorComponent,
     NavbarComponent,
     IosModalComponent,
     ConfirmBookingComponent,
+    BookingPreviewComponent,
   ],
   template: `
     <div class="book-service-container">
@@ -56,166 +56,21 @@ interface BookingPerson {
       <!-- Main Content -->
       <div class="main-content">
         <!-- Booking Preview Page -->
-        <!-- registered applicants (page 1 of booking process)-->
-        <div
+        <app-booking-preview
           *ngIf="currentStep === 'preview'"
-          class="booking-preview-container"
-        >
-          <div class="booking-preview-content-wrapper">
-            <app-progress-indicator
-              [currentStep]="getBookingStep()"
-              [steps]="stepTitles"
-            ></app-progress-indicator>
-            <div class="booking-preview-card">
-              <h2>Select Services Required</h2>
-              <div class="card-wrapper">
-                <div class="registered-applicants">
-                  <h6>
-                    Manage booking applicants and their required services ({{
-                      bookingPersons.length
-                    }})
-                  </h6>
-                  <!-- Applicants List -->
-                  <div class="applicants-list">
-                    <div
-                      *ngIf="bookingPersons.length > 0"
-                      class="applicants-grid"
-                    >
-                      <div
-                        *ngFor="let person of bookingPersons; let i = index"
-                        class="applicant-card"
-                        [class.primary-applicant]="
-                          person.type === 'Main Applicant'
-                        "
-                      >
-                        <div class="applicant-header">
-                          <div class="applicant-info">
-                            <span class="applicant-name "
-                              >{{ person.name }} ({{ person.type }})</span
-                            >
-                            <span class="applicant-type">{{
-                              person.idNumber
-                            }}</span>
-                          </div>
-                          <button
-                            *ngIf="bookingPersons.length > 1"
-                            type="button"
-                            (click)="removeSpecificPerson(i)"
-                            class="remove-applicant-btn"
-                            title="Remove this applicant"
-                          >
-                            ×
-                          </button>
-                        </div>
-
-                        <div class="applicant-services">
-                          <div class="services-header">
-                            <span class="services-label"
-                              >Required Services:</span
-                            >
-                            <button
-                              type="button"
-                              (click)="editPersonServices(i)"
-                              class="edit-services-btn"
-                              title="Edit services for this applicant"
-                            >
-                              {{
-                                person.selectedServices.length === 0
-                                  ? 'Add Services'
-                                  : 'Edit Services'
-                              }}
-                            </button>
-                          </div>
-
-                          <div class="person-services-preview">
-                            <div
-                              *ngIf="person.selectedServices.length === 0"
-                              class="no-services"
-                            >
-                              <span>No services selected</span>
-                            </div>
-                            <div
-                              *ngFor="let service of person.selectedServices"
-                              class="service-badge"
-                            >
-                              <span>{{ service.name }}</span>
-                              <button
-                                type="button"
-                                (click)="removeServiceFromPerson(i, service)"
-                                class="remove-service-btn"
-                                title="Remove this service"
-                              >
-                                ×
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="applicants-header">
-                  <div class="header-info">
-                    <p class="header-description">
-                      Add additional applicants to this booking
-                    </p>
-                  </div>
-                  <div class="header-actions">
-                    <button
-                      type="button"
-                      (click)="addPersonToBooking()"
-                      class="action-btn std"
-                      title="Add an accompanying applicant to this booking"
-                    >
-                      <!-- <span class="btn-icon">👤+</span> -->
-                      <span class="btn-text">Add Applicant</span>
-                    </button>
-                    <button
-                      type="button"
-                      (click)="removePersonFromBooking()"
-                      class="action-btn std"
-                      [disabled]="bookingPersons.length <= 1"
-                      title="Remove an additional applicant from this booking"
-                    >
-                      <!-- <span class="btn-icon">👤-</span> -->
-                      <span class="btn-text">Remove</span>
-                    </button>
-                    <button
-                      type="button"
-                      (click)="clearAllPersons()"
-                      class="action-btn white"
-                      [disabled]="bookingPersons.length <= 1"
-                      title="Remove all additional applicants from this booking"
-                    >
-                      <!-- <span class="btn-icon">🗑️</span> -->
-                      <span class="btn-text">Clear All</span>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                  <button
-                    type="button"
-                    (click)="goBack()"
-                    class="btn-secondary"
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="button"
-                    (click)="proceedToLocation()"
-                    [disabled]="!hasAnyServicesSelected()"
-                    class="btn-primary"
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          [stepTitles]="stepTitles"
+          [bookingPersons]="bookingPersons"
+          (goBack)="goBack()"
+          (proceedToLocation)="proceedToLocation()"
+          (addPersonToBooking)="addPersonToBooking()"
+          (removePersonFromBooking)="removePersonFromBooking()"
+          (clearAllPersons)="clearAllPersons()"
+          (removeSpecificPerson)="removeSpecificPerson($event)"
+          (editPersonServices)="editPersonServices($event)"
+          (removeServiceFromPerson)="
+            removeServiceFromPerson($event.personIndex, $event.service)
+          "
+        ></app-booking-preview>
 
         <!-- Add Applicant Modal -->
         <app-ios-modal
@@ -577,7 +432,6 @@ interface BookingPerson {
           var(--DHAOffWhite) 0%,
           #e8f5e8 100%
         );
-        padding-top: 73px;
       }
 
       .top-bar {
@@ -646,47 +500,6 @@ interface BookingPerson {
         min-height: calc(100vh - 73px);
         width: 100vw;
         box-sizing: border-box;
-      }
-
-      /* Booking Preview Styles */
-      .booking-preview-container {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        min-height: calc(100vh - 73px);
-        background: linear-gradient(
-          135deg,
-          var(--DHAOffWhite) 0%,
-          #e8f5e8 100%
-        );
-        padding: 20px 0;
-      }
-
-      .booking-preview-content-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: var(--step-form-gap);
-        width: var(--form-width);
-      }
-
-      .booking-preview-card {
-        background: var(--DHAWhite);
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        width: 100%;
-        max-height: calc(100vh - 150px);
-        /* width: fit-content; */
-        /* min-width: 400px; */
-        box-sizing: border-box;
-        overflow-y: auto;
-      }
-
-      .booking-preview-card h2 {
-        color: var(--DHAGreen);
-        font-size: 24px;
-        margin: 16px 0;
-        text-align: center;
       }
 
       .preview-description {
