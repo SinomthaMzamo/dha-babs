@@ -1193,7 +1193,7 @@ interface BookingPerson {
       .floating-input {
         width: 100%;
         padding: 16px 12px;
-        border: 1px solid var(--DHABackGroundLightGray);
+        border: 1px solid var(--DHATextGray);
         border-radius: 6px;
         font-size: 16px;
         transition: all 0.3s ease;

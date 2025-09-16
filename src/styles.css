@@ -168,11 +168,24 @@ body > app-root > app-book-service > div > div > app-appointment-form > div > di
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
+.touch-target {
+  cursor: pointer;
+  
+}
+
+.touch-target:hover {
+}
+
 
 
 @media (max-width: 768px) {
   .content-wrapper {
     padding: 0 8px;
     position: relative;
+  }
+
+  .touch-target {
+    height: 48px;
+    width: 48px;
   }
 }

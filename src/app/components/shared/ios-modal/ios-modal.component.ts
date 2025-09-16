@@ -92,7 +92,7 @@ import { CommonModule } from '@angular/common';
         --DHAWhite: #ffffff;
         --DHAOffWhite: #fbfbfb;
         --DHABlack: #000000;
-        --DHAOffBlack: #381a46;
+        --DHAOffBlack: rgb(51, 51, 51);
         --DHATextGray: #949494;
         --DHATextGrayDark: #5a5a5a;
         --DHAErrorColor: #ea2127;

@@ -91,7 +91,7 @@ import { Router } from '@angular/router';
         --DHAWhite: #ffffff;
         --DHAOffWhite: #fbfbfb;
         --DHABlack: #000000;
-        --DHAOffBlack: #381a46;
+        --DHAOffBlack: rgb(51, 51, 51);
         --DHATextGray: #949494;
         --DHATextGrayDark: #5a5a5a;
         --DHAErrorColor: #f57c00;
@@ -147,7 +147,7 @@ import { Router } from '@angular/router';
       }
 
       h1 {
-        color: var(--DHATextGrayDark);
+        color: var(--DHAOffBlack);
         font-size: 2.5rem;
         margin-bottom: 10px;
         margin-top: 24px;
@@ -155,7 +155,7 @@ import { Router } from '@angular/router';
       }
 
       .subtitle {
-        color: var(--DHATextGrayDark);
+        color: var(--DHAOffBlack);
         font-size: 1.2rem;
         margin-bottom: 40px;
       }

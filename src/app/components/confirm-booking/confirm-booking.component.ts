@@ -28,84 +28,97 @@ interface SelectedSlot {
   imports: [CommonModule, FormPageLayoutComponent],
   template: `
     <app-form-page-layout [currentStep]="3" [steps]="stepTitles">
-      <h2>Confirm Your Booking</h2>
+      <h2 class="step-title">Confirm Your Booking</h2>
       <p class="confirm-description">
         Please review all details before confirming your appointment booking.
       </p>
 
-      <!-- Personal Information -->
-      <div class="booking-section">
-        <h3>👤 Personal Information</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="info-label">Full Name:</span>
-            <span class="info-value">{{
-              personalData?.forenames + ' ' + personalData?.lastName || 'N/A'
-            }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">ID Number:</span>
-            <span class="info-value">{{
-              personalData?.idNumber || 'N/A'
-            }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Phone:</span>
-            <span class="info-value">{{ personalData?.phone || 'N/A' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Email:</span>
-            <span class="info-value">{{ personalData?.email || 'N/A' }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Booking Details -->
-      <div class="booking-section">
-        <h3>📋 Booking Details</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="info-label">Branch:</span>
-            <span class="info-value">{{ branchDisplayName }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Appointment Date:</span>
-            <span class="info-value">{{
-              getFormattedDate(selectedSlot?.date)
-            }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Appointment Time:</span>
-            <span class="info-value">{{ selectedSlot?.time || 'N/A' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Total Applicants:</span>
-            <span class="info-value">{{ bookingPersons.length }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Selected Services -->
-      <div class="booking-section">
-        <h3>🔧 Selected Services</h3>
-        <div class="services-summary">
-          <div *ngFor="let person of bookingPersons" class="person-services">
-            <h4>{{ person.name }} ({{ person.type }})</h4>
-            <div class="services-list">
-              <div
-                *ngFor="let service of person.selectedServices"
-                class="service-item"
-              >
-                {{ service.name }}
+      <div class="section-grid">
+        <!-- Personal Information -->
+        <div class="section">
+          <h3 class="booking-section-title">Personal Information</h3>
+          <div class="booking-section">
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Full Name:</span>
+                <span class="info-value">{{
+                  personalData?.forenames + ' ' + personalData?.lastName || 'N/A'
+                }}</span>
               </div>
+              <div class="info-item">
+                <span class="info-label">ID Number:</span>
+                <span class="info-value">{{
+                  personalData?.idNumber || 'N/A'
+                }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Phone:</span>
+                <span class="info-value">{{ personalData?.phone || 'N/A' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Email:</span>
+                <span class="info-value">{{ personalData?.email || 'N/A' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Details -->
+        <div class="section">
+          <h3 class="booking-section-title">Booking Details</h3>
+          <div class="booking-section">
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Branch:</span>
+                <span class="info-value">{{ branchDisplayName }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Appointment Date:</span>
+                <span class="info-value">{{
+                  getFormattedDate(selectedSlot?.date)
+                }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Appointment Time:</span>
+                <span class="info-value">{{
+                  selectedSlot?.time || 'N/A'
+                }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Total Applicants:</span>
+                <span class="info-value">{{ bookingPersons.length }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Services -->
+        <div class="section">
+          <h3 class="booking-section-title">Selected Services</h3>
+          <div class="booking-section">
+            <div class="services-summary">
               <div
-                *ngIf="
-                  !person.selectedServices ||
-                  person.selectedServices.length === 0
-                "
-                class="no-services"
+                *ngFor="let person of bookingPersons"
+                class="person-services"
               >
-                No services selected
+                <h4>{{ person.name }} ({{ person.type }})</h4>
+                <div class="services-list">
+                  <div
+                    *ngFor="let service of person.selectedServices"
+                    class="service-item"
+                  >
+                    {{ service.name }}
+                  </div>
+                  <div
+                    *ngIf="
+                      !person.selectedServices ||
+                      person.selectedServices.length === 0
+                    "
+                    class="no-services"
+                  >
+                    No services selected
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -141,27 +154,43 @@ interface SelectedSlot {
         --DHADisabledTextGray: #c4c4c4;
       }
 
-      .confirm-description {
-        color: var(--DHATextGrayDark);
+      .step-title {
         text-align: center;
-        margin-bottom: 16px;
-        font-size: 12px;
-        line-height: 1.3;
+        color: var(--DHAGreen);
+        margin-bottom: 30px;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-top: 0;
+      }
+
+      .confirm-description {
+        color: var(--DHATextGray);
+        font-size: 16px;
+        margin: 0;
+        line-height: 1.5;
+        font-weight: 400;
+        margin-bottom: 30px;
+      }
+
+      .section-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
       }
 
       .booking-section {
-        margin-bottom: 12px;
         padding: 12px;
         background: var(--DHAOffWhite);
         border-radius: 6px;
         border: 1px solid var(--DHABackGroundLightGray);
       }
 
-      .booking-section h3 {
-        color: var(--DHAGreen);
-        margin-bottom: 8px;
+      .booking-section-title {
+        color: var(--DHAOffBlack);
         font-size: 14px;
         font-weight: 600;
+        margin-bottom: 8px;
+        margin-top: 0;
       }
 
       .info-grid {
@@ -184,7 +213,7 @@ interface SelectedSlot {
 
       .info-value {
         font-size: 12px;
-        color: var(--DHAOffBlack);
+        color: var(--DHATextGrayDark);
         font-weight: 600;
         word-break: break-word;
       }
@@ -196,8 +225,9 @@ interface SelectedSlot {
       }
 
       .person-services h4 {
-        color: var(--DHAGreen);
+        color: var(--DHATextGrayDark);
         margin-bottom: 4px;
+        margin-top: 0;
         font-size: 12px;
         font-weight: 600;
       }
@@ -273,12 +303,16 @@ interface SelectedSlot {
         }
 
         .confirm-actions {
-          flex-direction: column;
         }
 
         .btn-primary,
         .btn-secondary {
           width: 100%;
+        }
+
+        .step-title {
+          font-size: 1.5rem;
+          margin-bottom: 20px;
         }
       }
     `,

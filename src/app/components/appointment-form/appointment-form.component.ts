@@ -437,7 +437,7 @@ interface Branch {
       }
 
       .section-header h3 {
-        color: var(--DHATextGrayDark);
+        color: var(--DHAOffBlack);
         margin: 0;
         font-size: 1.1rem;
         font-weight: 600;
@@ -447,7 +447,7 @@ interface Branch {
       .expand-icon {
         font-size: 1.2rem;
         transition: transform 0.3s ease, color 0.3s ease;
-        color: var(--DHATextGrayDark);
+        color: var(--DHAOffBlack);
       }
 
       .section-header:hover .expand-icon {

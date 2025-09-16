@@ -82,15 +82,19 @@ interface BookingPerson {
                     >
                     <span class="applicant-type">{{ person.idNumber }}</span>
                   </div>
-                  <button
-                    *ngIf="bookingPersons.length > 1 && person.type !== 'Main Applicant'"
-                    type="button"
-                    (click)="onRemoveSpecificPerson(i)"
-                    class="remove-applicant-btn"
-                    title="Remove this applicant"
-                  >
-                    ×
-                  </button>
+                  <div class="touch-target" (click)="onRemoveSpecificPerson(i)">
+                    <button
+                      *ngIf="
+                        bookingPersons.length > 1 &&
+                        person.type !== 'Main Applicant'
+                      "
+                      type="button"
+                      class="remove-applicant-btn"
+                      title="Remove this applicant"
+                    >
+                      ×
+                    </button>
+                  </div>
                 </div>
 
                 <div class="applicant-services">
@@ -241,7 +245,7 @@ interface BookingPerson {
 
       .applicant-name {
         font-weight: 600;
-        color: var(--DHAOffBlack);
+        color: var(--DHATextGrayDark);
         font-size: 14px;
       }
 
@@ -251,9 +255,9 @@ interface BookingPerson {
       }
 
       .remove-applicant-btn {
-        background: rgba(196, 30, 58, 0.2);
+        background: var(--DHAWhite);
         color: var(--DHADangerColor);
-        border: 1px solid var(--DHADangerColor);
+        border: none;
         border-radius: 50%;
         width: 24px;
         height: 24px;
@@ -261,13 +265,15 @@ interface BookingPerson {
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 24px;
         font-weight: bold;
         transition: all 0.2s ease;
+        margin-bottom: 10.5px;
       }
 
       .remove-applicant-btn:hover {
         background: #c41e3a;
+        border: 1px solid var(--DHADangerColor);
         transform: scale(1.1);
         color: var(--DHAWhite);
       }
@@ -366,7 +372,7 @@ interface BookingPerson {
       }
 
       .header-description {
-        color: var(--DHATextGrayDark);
+        color: var(--DHAOffBlack);
         font-size: 16px;
         margin: 0;
         font-weight: 600;
@@ -516,12 +522,12 @@ interface BookingPerson {
         }
 
         .applicant-header {
-          flex-direction: column;
           gap: 8px;
         }
 
         .remove-applicant-btn {
           align-self: flex-end;
+          margin-left: 24px;  /* push the button to the right of the touch target */
         }
 
         .header-actions {
