@@ -17,7 +17,7 @@ interface Province {
   name: string;
 }
 
-interface Area {
+interface City {
   id: string;
   name: string;
   provinceId: string;
@@ -26,7 +26,7 @@ interface Area {
 interface Branch {
   id: string;
   name: string;
-  areaId: string;
+  cityId: string;
 }
 
 interface SlotSearchCriteria {
@@ -653,179 +653,154 @@ export class AppointmentResultsComponent implements OnInit {
     { id: 'northern-cape', name: 'Northern Cape' },
   ];
 
-  areas: Area[] = [
+  cities: City[] = [
     // Gauteng
-    { id: 'jhb-central', name: 'Johannesburg Central', provinceId: 'gauteng' },
-    { id: 'jhb-sandton', name: 'Sandton', provinceId: 'gauteng' },
-    { id: 'pta-central', name: 'Pretoria Central', provinceId: 'gauteng' },
+    { id: 'johannesburg', name: 'Johannesburg', provinceId: 'gauteng' },
+    { id: 'sandton', name: 'Sandton', provinceId: 'gauteng' },
+    { id: 'pretoria', name: 'Pretoria', provinceId: 'gauteng' },
 
     // Western Cape
-    { id: 'ct-central', name: 'Cape Town Central', provinceId: 'western-cape' },
-    { id: 'ct-bellville', name: 'Bellville', provinceId: 'western-cape' },
-    { id: 'ct-durbanville', name: 'Durbanville', provinceId: 'western-cape' },
+    { id: 'cape-town', name: 'Cape Town', provinceId: 'western-cape' },
+    { id: 'bellville', name: 'Bellville', provinceId: 'western-cape' },
+    { id: 'durbanville', name: 'Durbanville', provinceId: 'western-cape' },
 
     // KwaZulu-Natal
-    { id: 'dbn-central', name: 'Durban Central', provinceId: 'kwazulu-natal' },
-    { id: 'dbn-umhlanga', name: 'Umhlanga', provinceId: 'kwazulu-natal' },
+    { id: 'durban', name: 'Durban', provinceId: 'kwazulu-natal' },
+    { id: 'umhlanga', name: 'Umhlanga', provinceId: 'kwazulu-natal' },
 
     // Eastern Cape
     {
-      id: 'pe-central',
-      name: 'Port Elizabeth Central',
+      id: 'port-elizabeth',
+      name: 'Port Elizabeth',
       provinceId: 'eastern-cape',
     },
-    { id: 'pe-east-london', name: 'East London', provinceId: 'eastern-cape' },
+    { id: 'east-london', name: 'East London', provinceId: 'eastern-cape' },
 
     // Free State
-    {
-      id: 'bloem-central',
-      name: 'Bloemfontein Central',
-      provinceId: 'free-state',
-    },
+    { id: 'bloemfontein', name: 'Bloemfontein', provinceId: 'free-state' },
 
     // Mpumalanga
-    {
-      id: 'nelspruit-central',
-      name: 'Nelspruit Central',
-      provinceId: 'mpumalanga',
-    },
+    { id: 'nelspruit', name: 'Nelspruit', provinceId: 'mpumalanga' },
 
     // Limpopo
-    {
-      id: 'polokwane-central',
-      name: 'Polokwane Central',
-      provinceId: 'limpopo',
-    },
+    { id: 'polokwane', name: 'Polokwane', provinceId: 'limpopo' },
 
     // North West
-    {
-      id: 'mahikeng-central',
-      name: 'Mahikeng Central',
-      provinceId: 'north-west',
-    },
+    { id: 'mahikeng', name: 'Mahikeng', provinceId: 'north-west' },
 
     // Northern Cape
-    {
-      id: 'kimberley-central',
-      name: 'Kimberley Central',
-      provinceId: 'northern-cape',
-    },
+    { id: 'kimberley', name: 'Kimberley', provinceId: 'northern-cape' },
   ];
 
   branches: Branch[] = [
-    // Johannesburg Central
+    // Johannesburg
     {
-      id: 'jhb-central-main',
-      name: 'Johannesburg Central Main Office',
-      areaId: 'jhb-central',
-    },
-    {
-      id: 'jhb-central-east',
-      name: 'Johannesburg Central East Office',
-      areaId: 'jhb-central',
+      id: 'johannesburg',
+      name: 'Johannesburg',
+      cityId: 'johannesburg',
     },
 
     // Sandton
     {
-      id: 'jhb-sandton-main',
-      name: 'Sandton Main Office',
-      areaId: 'jhb-sandton',
+      id: 'sandton',
+      name: 'Sandton',
+      cityId: 'sandton',
     },
 
-    // Pretoria Central
+    // Pretoria
     {
-      id: 'pta-central-main',
-      name: 'Pretoria Central Main Office',
-      areaId: 'pta-central',
+      id: 'pretoria',
+      name: 'Pretoria',
+      cityId: 'pretoria',
     },
 
-    // Cape Town Central
+    // Cape Town
     {
-      id: 'ct-central-main',
-      name: 'Cape Town Central Main Office',
-      areaId: 'ct-central',
+      id: 'cape-town',
+      name: 'Cape Town',
+      cityId: 'cape-town',
     },
 
     // Bellville
     {
-      id: 'ct-bellville-main',
-      name: 'Bellville Main Office',
-      areaId: 'ct-bellville',
+      id: 'bellville',
+      name: 'Bellville',
+      cityId: 'bellville',
     },
     {
-      id: 'ct-tygervalley-main',
-      name: 'Tygervalley Main Office',
-      areaId: 'ct-bellville',
+      id: 'tygervalley',
+      name: 'Tygervalley',
+      cityId: 'bellville',
     },
 
     // Durbanville
     {
-      id: 'ct-durbanville-main',
-      name: 'Durbanville Main Office',
-      areaId: 'ct-durbanville',
+      id: 'durbanville',
+      name: 'Durbanville',
+      cityId: 'durbanville',
     },
 
-    // Durban Central
+    // Durban
     {
-      id: 'dbn-central-main',
-      name: 'Durban Central Main Office',
-      areaId: 'dbn-central',
+      id: 'durban',
+      name: 'Durban',
+      cityId: 'durban',
     },
 
     // Umhlanga
     {
-      id: 'dbn-umhlanga-main',
-      name: 'Umhlanga Main Office',
-      areaId: 'dbn-umhlanga',
+      id: 'umhlanga',
+      name: 'Umhlanga',
+      cityId: 'umhlanga',
     },
 
-    // Port Elizabeth Central
+    // Port Elizabeth
     {
-      id: 'pe-central-main',
-      name: 'Port Elizabeth Central Main Office',
-      areaId: 'pe-central',
+      id: 'port-elizabeth',
+      name: 'Port Elizabeth',
+      cityId: 'port-elizabeth',
     },
 
     // East London
     {
-      id: 'pe-east-london-main',
-      name: 'East London Main Office',
-      areaId: 'pe-east-london',
+      id: 'east-london',
+      name: 'East London',
+      cityId: 'east-london',
     },
 
-    // Bloemfontein Central
+    // Bloemfontein
     {
-      id: 'bloem-central-main',
-      name: 'Bloemfontein Central Main Office',
-      areaId: 'bloem-central',
+      id: 'bloemfontein',
+      name: 'Bloemfontein',
+      cityId: 'bloemfontein',
     },
 
-    // Nelspruit Central
+    // Nelspruit
     {
-      id: 'nelspruit-central-main',
-      name: 'Nelspruit Central Main Office',
-      areaId: 'nelspruit-central',
+      id: 'nelspruit',
+      name: 'Nelspruit',
+      cityId: 'nelspruit',
     },
 
-    // Polokwane Central
+    // Polokwane
     {
-      id: 'polokwane-central-main',
-      name: 'Polokwane Central Main Office',
-      areaId: 'polokwane-central',
+      id: 'polokwane',
+      name: 'Polokwane',
+      cityId: 'polokwane',
     },
 
-    // Mahikeng Central
+    // Mahikeng
     {
-      id: 'mahikeng-central-main',
-      name: 'Mahikeng Central Main Office',
-      areaId: 'mahikeng-central',
+      id: 'mahikeng',
+      name: 'Mahikeng',
+      cityId: 'mahikeng',
     },
 
-    // Kimberley Central
+    // Kimberley
     {
-      id: 'kimberley-central-main',
-      name: 'Kimberley Central Main Office',
-      areaId: 'kimberley-central',
+      id: 'kimberley',
+      name: 'Kimberley',
+      cityId: 'kimberley',
     },
   ];
 
@@ -866,13 +841,13 @@ export class AppointmentResultsComponent implements OnInit {
     );
     if (!branch) return 'N/A';
 
-    const area = this.areas.find((a) => a.id === branch.areaId);
-    if (!area) return branch.name;
+    const city = this.cities.find((c) => c.id === branch.cityId);
+    if (!city) return branch.name;
 
-    const province = this.provinces.find((p) => p.id === area.provinceId);
-    if (!province) return `${area.name} - ${branch.name}`;
+    const province = this.provinces.find((p) => p.id === city.provinceId);
+    if (!province) return `${city.name} - ${branch.name}`;
 
-    return `${province.name} → ${area.name} → ${branch.name}`;
+    return `${province.name} → ${city.name} → ${branch.name}`;
   }
 
   getDateRangeDisplay(): string {

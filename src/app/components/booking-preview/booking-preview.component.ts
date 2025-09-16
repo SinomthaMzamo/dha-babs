@@ -83,7 +83,7 @@ interface BookingPerson {
                     <span class="applicant-type">{{ person.idNumber }}</span>
                   </div>
                   <button
-                    *ngIf="bookingPersons.length > 1"
+                    *ngIf="bookingPersons.length > 1 && person.type !== 'Main Applicant'"
                     type="button"
                     (click)="onRemoveSpecificPerson(i)"
                     class="remove-applicant-btn"
@@ -160,7 +160,6 @@ interface BookingPerson {
       :host {
         --DHAGreen: #016635;
         --DHALightGreen: #018947;
-        --DHALightGreenLight: #ddebe4;
         --DHAOrange: #f3801f;
         --DHALightOrange: #f8ab18;
         --DHAWhite: #ffffff;
@@ -410,8 +409,8 @@ interface BookingPerson {
       }
 
       .action-btn.std:hover:not(:disabled) {
-        background: var(--DHALightGreenLight);
-        border-color: var(--DHALightGreenLight);
+        background: #ddebe4;
+        border-color: #ddebe4;
         transform: translateY(-1px);
       }
 

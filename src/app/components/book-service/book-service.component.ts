@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import {
@@ -13,6 +13,7 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { IosModalComponent } from '../shared/ios-modal/ios-modal.component';
 import { ConfirmBookingComponent } from '../confirm-booking/confirm-booking.component';
 import { BookingPreviewComponent } from '../booking-preview/booking-preview.component';
+import { ModalCleanupService } from '../../services/modal-cleanup.service';
 
 interface SlotSearchCriteria {
   branch: string;
@@ -1495,10 +1496,7 @@ interface BookingPerson {
         .booking-preview-card {
           padding: 20px;
           min-width: unset;
-          max-width: 600px;
           width: 100%;
-          height: 600px; /* Fixed height like appointment form */
-          overflow-y: auto;
           overflow-x: hidden;
           box-sizing: border-box;
           -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
@@ -1756,7 +1754,7 @@ interface BookingPerson {
     `,
   ],
 })
-export class BookServiceComponent implements OnInit {
+export class BookServiceComponent implements OnInit, OnDestroy {
   currentStep: 'preview' | 'form' | 'results' | 'confirm' = 'preview';
   stepTitles: string[] = ['Services', 'Details', 'Timeslots', 'Confirm'];
   showServiceModal = false;
@@ -1809,7 +1807,11 @@ export class BookServiceComponent implements OnInit {
     },
   ];
 
-  constructor(private router: Router, private fb: FormBuilder) {
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private modalCleanupService: ModalCleanupService
+  ) {
     this.addApplicantForm = this.fb.group({
       applicantType: ['', Validators.required],
       validationType: ['', Validators.required],
@@ -1830,6 +1832,10 @@ export class BookServiceComponent implements OnInit {
 
   ngOnInit() {
     window.scrollTo(0, 0);
+
+    // Register cleanup callback with the modal cleanup service
+    this.modalCleanupService.registerCleanup(() => this.cleanupAllModals());
+
     // Load personal data from session storage
     const personalDataStr = sessionStorage.getItem('personalData');
     if (personalDataStr) {
@@ -1859,6 +1865,37 @@ export class BookServiceComponent implements OnInit {
       // Update available services to reflect current selections
       this.updateAvailableServices();
     }
+  }
+
+  ngOnDestroy() {
+    // Ensure all modals are closed and body styles are restored
+    this.cleanupAllModals();
+
+    // Unregister cleanup callback
+    this.modalCleanupService.unregisterCleanup(() => this.cleanupAllModals());
+  }
+
+  /**
+   * Cleanup method to restore body styles if any modals are stuck open
+   * This prevents the body from being locked in a modal state
+   */
+  private cleanupAllModals() {
+    // Close all modals
+    this.showAddApplicantModal = false;
+    this.showServiceModal = false;
+    this.showPersonServiceModal = false;
+
+    // Force restore body styles (safety net)
+    this.restoreBodyStyles();
+  }
+
+  /**
+   * Restore body styles to their original state
+   * This is a safety net in case modal cleanup fails
+   */
+  private restoreBodyStyles() {
+    // Use the static cleanup method from IosModalComponent for consistency
+    IosModalComponent.forceCleanup();
   }
 
   openServiceModal() {

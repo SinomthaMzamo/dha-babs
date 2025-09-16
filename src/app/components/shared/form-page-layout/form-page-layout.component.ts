@@ -76,10 +76,11 @@ import { NavbarComponent } from '../navbar/navbar.component';
         padding: 40px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         max-width: var(--form-width);
-        max-height: calc(100vh - 150px);
+        /* max-height: calc(100vh - 150px); */
         overflow-y: auto;
         width: 100%;
         box-sizing: border-box;
+        height: 100%;
       }
 
       h2 {
@@ -113,7 +114,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
         .form-page-card {
           padding: 25px 20px;
           min-width: unset;
-          height: 600px;
+          /* height: 600px; */
           overflow-y: auto;
           width: 100%;
         }
@@ -134,7 +135,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 
         .form-page-card {
           padding: 20px 15px;
-          height: 550px;
+          /* height: 550px; */
         }
       }
     `,

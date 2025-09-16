@@ -26,11 +26,24 @@ export interface SlotSearchCriteria {
   providedIn: 'root',
 })
 export class SlotService {
-  // Mock data for available slots - Only Tygervalley has slots
+  // Mock data for available slots - One branch per province has slots
   private mockSlots: AvailableSlot[] = [];
 
+  // Mapping of province to selected branch (one branch per province)
+  private provinceBranchMapping: { [provinceId: string]: string } = {
+    gauteng: 'johannesburg',
+    'western-cape': 'cape-town',
+    'kwazulu-natal': 'durban',
+    'eastern-cape': 'port-elizabeth',
+    'free-state': 'bloemfontein',
+    mpumalanga: 'nelspruit',
+    limpopo: 'polokwane',
+    'north-west': 'mahikeng',
+    'northern-cape': 'kimberley',
+  };
+
   constructor() {
-    this.generateTygervalleySlots();
+    this.generateProvinceSlots();
   }
 
   /**
@@ -134,10 +147,24 @@ export class SlotService {
   }
 
   /**
-   * Generate Tygervalley branch slots for the next 20 days
-   * Only 1-3 available 1-hour slots per day
+   * Get the branch ID that has slots for a specific province
    */
-  private generateTygervalleySlots(): void {
+  getBranchForProvince(provinceId: string): string | null {
+    return this.provinceBranchMapping[provinceId] || null;
+  }
+
+  /**
+   * Get all provinces that have slots available
+   */
+  getProvincesWithSlots(): string[] {
+    return Object.keys(this.provinceBranchMapping);
+  }
+
+  /**
+   * Generate slots for one branch per province for the next 30 days
+   * Varied slot availability: 1-6 slots per day, Monday to Friday, 8:00-15:00
+   */
+  private generateProvinceSlots(): void {
     const timeSlots = [
       '08:00',
       '09:00',
@@ -147,39 +174,54 @@ export class SlotService {
       '13:00',
       '14:00',
       '15:00',
-      '16:00',
     ];
 
     let slotId = 1000; // Start with a unique ID range
 
-    // Generate slots for the next 20 days
-    for (let day = 0; day < 20; day++) {
-      const date = new Date();
-      date.setDate(date.getDate() + day);
-      const dateStr = date.toISOString().split('T')[0];
+    // Generate slots for each province's selected branch
+    Object.entries(this.provinceBranchMapping).forEach(
+      ([provinceId, branchId]) => {
+        // Generate slots for the next 30 days
+        for (let day = 0; day < 30; day++) {
+          const date = new Date();
+          date.setDate(date.getDate() + day);
+          const dateStr = date.toISOString().split('T')[0];
 
-      // Skip weekends (Saturday = 6, Sunday = 0)
-      const dayOfWeek = date.getDay();
-      if (dayOfWeek === 0 || dayOfWeek === 6) {
-        continue;
+          // Skip weekends (Saturday = 6, Sunday = 0)
+          const dayOfWeek = date.getDay();
+          if (dayOfWeek === 0 || dayOfWeek === 6) {
+            continue;
+          }
+
+          // Generate 1-6 random slots per day with varied distribution
+          // More likely to have 2-4 slots, less likely to have 1 or 6
+          const random = Math.random();
+          let slotsPerDay: number;
+
+          if (random < 0.1) slotsPerDay = 1; // 10% chance
+          else if (random < 0.3) slotsPerDay = 2; // 20% chance
+          else if (random < 0.6) slotsPerDay = 3; // 30% chance
+          else if (random < 0.85) slotsPerDay = 4; // 25% chance
+          else if (random < 0.95) slotsPerDay = 5; // 10% chance
+          else slotsPerDay = 6; // 5% chance
+
+          // Shuffle time slots and select the required number
+          const shuffledTimes = [...timeSlots].sort(() => Math.random() - 0.5);
+
+          for (let i = 0; i < slotsPerDay; i++) {
+            const time = shuffledTimes[i];
+
+            this.mockSlots.push({
+              id: slotId.toString(),
+              date: dateStr,
+              time: time,
+              branch: branchId,
+            });
+
+            slotId++;
+          }
+        }
       }
-
-      // Generate 1-3 random slots per day (1-hour slots only)
-      const slotsPerDay = Math.floor(Math.random() * 3) + 1; // 1-3 slots
-      const shuffledTimes = [...timeSlots].sort(() => Math.random() - 0.5);
-
-      for (let i = 0; i < slotsPerDay; i++) {
-        const time = shuffledTimes[i];
-
-        this.mockSlots.push({
-          id: slotId.toString(),
-          date: dateStr,
-          time: time,
-          branch: 'ct-tygervalley-main',
-        });
-
-        slotId++;
-      }
-    }
+    );
   }
 }

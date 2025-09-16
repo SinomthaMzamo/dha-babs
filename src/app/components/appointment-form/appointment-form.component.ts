@@ -29,7 +29,7 @@ interface Province {
   name: string;
 }
 
-interface Area {
+interface City {
   id: string;
   name: string;
   provinceId: string;
@@ -38,7 +38,7 @@ interface Area {
 interface Branch {
   id: string;
   name: string;
-  areaId: string;
+  cityId: string;
 }
 
 @Component({
@@ -239,32 +239,32 @@ interface Branch {
                 *ngIf="appointmentForm.get('province')?.value"
               >
                 <select
-                  id="area"
-                  formControlName="area"
-                  (change)="onAreaChange()"
+                  id="city"
+                  formControlName="city"
+                  (change)="onCityChange()"
                   class="floating-input"
-                  [class.has-value]="appointmentForm.get('area')?.value"
+                  [class.has-value]="appointmentForm.get('city')?.value"
                 >
                   <option value=""></option>
-                  <option *ngFor="let area of filteredAreas" [value]="area.id">
-                    {{ area.name }}
+                  <option *ngFor="let city of filteredCities" [value]="city.id">
+                    {{ city.name }}
                   </option>
                 </select>
-                <label for="area" class="floating-label">Select area *</label>
+                <label for="city" class="floating-label">Select city *</label>
                 <div
                   *ngIf="
-                    appointmentForm.get('area')?.invalid &&
-                    appointmentForm.get('area')?.touched
+                    appointmentForm.get('city')?.invalid &&
+                    appointmentForm.get('city')?.touched
                   "
                   class="error-message"
                 >
-                  Area is required
+                  City is required
                 </div>
               </div>
 
               <div
                 class="form-group floating-label-group"
-                *ngIf="appointmentForm.get('area')?.value"
+                *ngIf="appointmentForm.get('city')?.value"
               >
                 <select
                   id="branch"
@@ -504,7 +504,6 @@ interface Branch {
         color: var(--DHAGreen);
         font-size: 8px;
       }
-
 
       .btn-control {
         padding: 8px 16px;
@@ -1020,186 +1019,161 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     { id: 'northern-cape', name: 'Northern Cape' },
   ];
 
-  areas: Area[] = [
+  cities: City[] = [
     // Gauteng
-    { id: 'jhb-central', name: 'Johannesburg Central', provinceId: 'gauteng' },
-    { id: 'jhb-sandton', name: 'Sandton', provinceId: 'gauteng' },
-    { id: 'pta-central', name: 'Pretoria Central', provinceId: 'gauteng' },
+    { id: 'johannesburg', name: 'Johannesburg', provinceId: 'gauteng' },
+    { id: 'sandton', name: 'Sandton', provinceId: 'gauteng' },
+    { id: 'pretoria', name: 'Pretoria', provinceId: 'gauteng' },
 
     // Western Cape
-    { id: 'ct-central', name: 'Cape Town Central', provinceId: 'western-cape' },
-    { id: 'ct-bellville', name: 'Bellville', provinceId: 'western-cape' },
-    { id: 'ct-durbanville', name: 'Durbanville', provinceId: 'western-cape' },
+    { id: 'cape-town', name: 'Cape Town', provinceId: 'western-cape' },
+    { id: 'bellville', name: 'Bellville', provinceId: 'western-cape' },
+    { id: 'durbanville', name: 'Durbanville', provinceId: 'western-cape' },
 
     // KwaZulu-Natal
-    { id: 'dbn-central', name: 'Durban Central', provinceId: 'kwazulu-natal' },
-    { id: 'dbn-umhlanga', name: 'Umhlanga', provinceId: 'kwazulu-natal' },
+    { id: 'durban', name: 'Durban', provinceId: 'kwazulu-natal' },
+    { id: 'umhlanga', name: 'Umhlanga', provinceId: 'kwazulu-natal' },
 
     // Eastern Cape
     {
-      id: 'pe-central',
-      name: 'Port Elizabeth Central',
+      id: 'port-elizabeth',
+      name: 'Port Elizabeth',
       provinceId: 'eastern-cape',
     },
-    { id: 'pe-east-london', name: 'East London', provinceId: 'eastern-cape' },
+    { id: 'east-london', name: 'East London', provinceId: 'eastern-cape' },
 
     // Free State
-    {
-      id: 'bloem-central',
-      name: 'Bloemfontein Central',
-      provinceId: 'free-state',
-    },
+    { id: 'bloemfontein', name: 'Bloemfontein', provinceId: 'free-state' },
 
     // Mpumalanga
-    {
-      id: 'nelspruit-central',
-      name: 'Nelspruit Central',
-      provinceId: 'mpumalanga',
-    },
+    { id: 'nelspruit', name: 'Nelspruit', provinceId: 'mpumalanga' },
 
     // Limpopo
-    {
-      id: 'polokwane-central',
-      name: 'Polokwane Central',
-      provinceId: 'limpopo',
-    },
+    { id: 'polokwane', name: 'Polokwane', provinceId: 'limpopo' },
 
     // North West
-    {
-      id: 'mahikeng-central',
-      name: 'Mahikeng Central',
-      provinceId: 'north-west',
-    },
+    { id: 'mahikeng', name: 'Mahikeng', provinceId: 'north-west' },
 
     // Northern Cape
-    {
-      id: 'kimberley-central',
-      name: 'Kimberley Central',
-      provinceId: 'northern-cape',
-    },
+    { id: 'kimberley', name: 'Kimberley', provinceId: 'northern-cape' },
   ];
 
   branches: Branch[] = [
-    // Johannesburg Central
+    // Johannesburg
     {
-      id: 'jhb-central-main',
-      name: 'Johannesburg Central Main Office',
-      areaId: 'jhb-central',
-    },
-    {
-      id: 'jhb-central-east',
-      name: 'Johannesburg Central East Office',
-      areaId: 'jhb-central',
+      id: 'johannesburg',
+      name: 'Johannesburg',
+      cityId: 'johannesburg',
     },
 
     // Sandton
     {
-      id: 'jhb-sandton-main',
-      name: 'Sandton Main Office',
-      areaId: 'jhb-sandton',
+      id: 'sandton',
+      name: 'Sandton',
+      cityId: 'sandton',
     },
 
-    // Pretoria Central
+    // Pretoria
     {
-      id: 'pta-central-main',
-      name: 'Pretoria Central Main Office',
-      areaId: 'pta-central',
+      id: 'pretoria',
+      name: 'Pretoria',
+      cityId: 'pretoria',
     },
 
-    // Cape Town Central
+    // Cape Town
     {
-      id: 'ct-central-main',
-      name: 'Cape Town Central Main Office',
-      areaId: 'ct-central',
+      id: 'cape-town',
+      name: 'Cape Town',
+      cityId: 'cape-town',
     },
 
     // Bellville
     {
-      id: 'ct-bellville-main',
-      name: 'Bellville Main Office',
-      areaId: 'ct-bellville',
+      id: 'bellville',
+      name: 'Bellville',
+      cityId: 'bellville',
     },
     {
-      id: 'ct-tygervalley-main',
-      name: 'Tygervalley Main Office',
-      areaId: 'ct-bellville',
+      id: 'tygervalley',
+      name: 'Tygervalley',
+      cityId: 'bellville',
     },
 
     // Durbanville
     {
-      id: 'ct-durbanville-main',
-      name: 'Durbanville Main Office',
-      areaId: 'ct-durbanville',
+      id: 'durbanville',
+      name: 'Durbanville',
+      cityId: 'durbanville',
     },
 
-    // Durban Central
+    // Durban
     {
-      id: 'dbn-central-main',
-      name: 'Durban Central Main Office',
-      areaId: 'dbn-central',
+      id: 'durban',
+      name: 'Durban',
+      cityId: 'durban',
     },
 
     // Umhlanga
     {
-      id: 'dbn-umhlanga-main',
-      name: 'Umhlanga Main Office',
-      areaId: 'dbn-umhlanga',
+      id: 'umhlanga',
+      name: 'Umhlanga',
+      cityId: 'umhlanga',
     },
 
-    // Port Elizabeth Central
+    // Port Elizabeth
     {
-      id: 'pe-central-main',
-      name: 'Port Elizabeth Central Main Office',
-      areaId: 'pe-central',
+      id: 'port-elizabeth',
+      name: 'Port Elizabeth',
+      cityId: 'port-elizabeth',
     },
 
     // East London
     {
-      id: 'pe-east-london-main',
-      name: 'East London Main Office',
-      areaId: 'pe-east-london',
+      id: 'east-london',
+      name: 'East London',
+      cityId: 'east-london',
     },
 
-    // Bloemfontein Central
+    // Bloemfontein
     {
-      id: 'bloem-central-main',
-      name: 'Bloemfontein Central Main Office',
-      areaId: 'bloem-central',
+      id: 'bloemfontein',
+      name: 'Bloemfontein',
+      cityId: 'bloemfontein',
     },
 
-    // Nelspruit Central
+    // Nelspruit
     {
-      id: 'nelspruit-central-main',
-      name: 'Nelspruit Central Main Office',
-      areaId: 'nelspruit-central',
+      id: 'nelspruit',
+      name: 'Nelspruit',
+      cityId: 'nelspruit',
     },
 
-    // Polokwane Central
+    // Polokwane
     {
-      id: 'polokwane-central-main',
-      name: 'Polokwane Central Main Office',
-      areaId: 'polokwane-central',
+      id: 'polokwane',
+      name: 'Polokwane',
+      cityId: 'polokwane',
     },
 
-    // Mahikeng Central
+    // Mahikeng
     {
-      id: 'mahikeng-central-main',
-      name: 'Mahikeng Central Main Office',
-      areaId: 'mahikeng-central',
+      id: 'mahikeng',
+      name: 'Mahikeng',
+      cityId: 'mahikeng',
     },
 
-    // Kimberley Central
+    // Kimberley
     {
-      id: 'kimberley-central-main',
-      name: 'Kimberley Central Main Office',
-      areaId: 'kimberley-central',
+      id: 'kimberley',
+      name: 'Kimberley',
+      cityId: 'kimberley',
     },
   ];
 
   constructor(private fb: FormBuilder) {
     this.appointmentForm = this.fb.group({
       province: ['', Validators.required],
-      area: ['', Validators.required],
+      city: ['', Validators.required],
       branch: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
@@ -1242,8 +1216,8 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
         province: this.searchCriteria.branch
           ? this.getProvinceFromBranch(this.searchCriteria.branch)
           : '',
-        area: this.searchCriteria.branch
-          ? this.getAreaFromBranch(this.searchCriteria.branch)
+        city: this.searchCriteria.branch
+          ? this.getCityFromBranch(this.searchCriteria.branch)
           : '',
         branch: this.searchCriteria.branch || '',
         startDate: this.searchCriteria.startDate || '',
@@ -1259,33 +1233,33 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     }
   }
 
-  get filteredAreas() {
+  get filteredCities() {
     const provinceId = this.appointmentForm.get('province')?.value;
-    return this.areas.filter((area) => area.provinceId === provinceId);
+    return this.cities.filter((city) => city.provinceId === provinceId);
   }
 
   get filteredBranches() {
-    const areaId = this.appointmentForm.get('area')?.value;
-    return this.branches.filter((branch) => branch.areaId === areaId);
+    const cityId = this.appointmentForm.get('city')?.value;
+    return this.branches.filter((branch) => branch.cityId === cityId);
   }
 
   getProvinceFromBranch(branchId: string): string {
     const branch = this.branches.find((b) => b.id === branchId);
     if (branch) {
-      const area = this.areas.find((a) => a.id === branch.areaId);
-      return area ? area.provinceId : '';
+      const city = this.cities.find((c) => c.id === branch.cityId);
+      return city ? city.provinceId : '';
     }
     return '';
   }
 
-  getAreaFromBranch(branchId: string): string {
+  getCityFromBranch(branchId: string): string {
     const branch = this.branches.find((b) => b.id === branchId);
-    return branch ? branch.areaId : '';
+    return branch ? branch.cityId : '';
   }
 
   onProvinceChange() {
     this.appointmentForm.patchValue({
-      area: '',
+      city: '',
       branch: '',
     });
 
@@ -1295,13 +1269,13 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     }
   }
 
-  onAreaChange() {
+  onCityChange() {
     this.appointmentForm.patchValue({
       branch: '',
     });
 
-    // Auto-expand location section when area is selected
-    if (this.appointmentForm.get('area')?.value) {
+    // Auto-expand location section when city is selected
+    if (this.appointmentForm.get('city')?.value) {
       this.locationExpanded = true;
     }
   }

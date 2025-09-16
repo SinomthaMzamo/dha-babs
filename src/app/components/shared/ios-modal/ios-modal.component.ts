@@ -5,6 +5,8 @@ import {
   EventEmitter,
   OnInit,
   OnDestroy,
+  OnChanges,
+  SimpleChanges,
   ElementRef,
   ViewChild,
   HostListener,
@@ -419,7 +421,7 @@ import { CommonModule } from '@angular/common';
     `,
   ],
 })
-export class IosModalComponent implements OnInit, OnDestroy {
+export class IosModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() isOpen: boolean = false;
   @Input() title: string = '';
   @Input() showFooter: boolean = true;
@@ -439,6 +441,15 @@ export class IosModalComponent implements OnInit, OnDestroy {
   private originalBodyPosition: string = '';
 
   ngOnInit() {
+    // Always ensure body is clean before opening
+    if (
+      document.body.style.overflow === 'hidden' ||
+      document.body.classList.contains('modal-open')
+    ) {
+      console.warn('Body was already locked on modal init, cleaning up first');
+      this.forceCleanup();
+    }
+
     if (this.isOpen) {
       this.openModal();
     }
@@ -448,15 +459,28 @@ export class IosModalComponent implements OnInit, OnDestroy {
     this.cleanupModal();
   }
 
-  ngOnChanges() {
-    if (this.isOpen) {
-      this.openModal();
-    } else {
-      this.cleanupModal();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['isOpen']) {
+      if (this.isOpen) {
+        this.openModal();
+      } else {
+        this.cleanupModal();
+      }
     }
   }
 
   private openModal() {
+    // Check if body is already locked by another modal
+    if (
+      document.body.style.overflow === 'hidden' ||
+      document.body.classList.contains('modal-open')
+    ) {
+      console.warn(
+        'Body is already locked by another modal, forcing cleanup first'
+      );
+      this.forceCleanup();
+    }
+
     // Prevent body scroll on iOS Safari
     this.originalBodyOverflow = document.body.style.overflow;
     this.originalBodyPosition = document.body.style.position;
@@ -489,7 +513,32 @@ export class IosModalComponent implements OnInit, OnDestroy {
     // Remove escape key listener
     document.removeEventListener('keydown', this.handleEscapeKey);
 
+    // Reset original values to prevent issues
+    this.originalBodyOverflow = '';
+    this.originalBodyPosition = '';
+
     this.modalClosed.emit();
+  }
+
+  /**
+   * Force cleanup of current modal state
+   */
+  private forceCleanup() {
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+    document.body.classList.remove('modal-open');
+  }
+
+  /**
+   * Static method to force cleanup of any stuck modal states
+   * This can be called globally to ensure body styles are restored
+   */
+  static forceCleanup() {
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+    document.body.classList.remove('modal-open');
   }
 
   onOverlayClick(event: Event) {
