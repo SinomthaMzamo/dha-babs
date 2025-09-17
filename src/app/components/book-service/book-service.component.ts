@@ -433,7 +433,18 @@ interface BookingPerson {
               <!-- Booking Reference -->
               <div class="booking-reference-section">
                 <div class="reference-label">Your Booking Reference</div>
-                <div class="reference-number">{{ bookingReference }}</div>
+                <div class="reference-number-container">
+                  <div class="reference-number">{{ bookingReference }}</div>
+                  <button
+                    class="copy-button"
+                    (click)="copyBookingReference()"
+                    title="Copy booking reference"
+                    aria-label="Copy booking reference to clipboard"
+                  >
+                    <i class="fas fa-clone"></i>
+                    Copy
+                  </button>
+                </div>
                 <div class="reference-note">
                   Please save this reference number for your records
                 </div>
@@ -633,6 +644,7 @@ interface BookingPerson {
         --DHAHoverGreen: rgb(1, 73, 38);
         --DHAOrange: #f3801f;
         --DHALightOrange: #f8ab18;
+        --DHALightOrangeLight:rgba(243, 126, 31, 0.2);
         --DHAWhite: #ffffff;
         --DHAOffWhite: #fbfbfb;
         --DHATextGray: #949494;
@@ -2019,13 +2031,53 @@ interface BookingPerson {
         color: var(--DHAOffBlack);
       }
 
+      .reference-number-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
       .reference-number {
         font-size: 1.8rem;
         font-weight: 700;
         font-family: 'Courier New', monospace;
         letter-spacing: 2px;
-        margin-bottom: 8px;
         color: var(--DHAOrange);
+        margin: 0;
+      }
+
+      .copy-button {
+        background: var(--DHAOffWhite);
+        color: var(--DHAOffBlack);
+        border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+      }
+
+      .copy-button:hover {
+        background: var(--DHALightOrangeLight);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .copy-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .copy-button i {
+        font-size: 1rem;
       }
 
       .reference-note {
@@ -2214,8 +2266,22 @@ interface BookingPerson {
           gap: 10px;
         }
 
+        .reference-number-container {
+          gap: 8px;
+        }
+
         .reference-number {
           font-size: 1.4rem;
+        }
+
+        .copy-button {
+          min-width: 36px;
+          height: 36px;
+          padding: 6px 10px;
+        }
+
+        .copy-button i {
+          font-size: 0.9rem;
         }
 
         .applicant-header {
@@ -2225,9 +2291,23 @@ interface BookingPerson {
         }
       }
 
-      @media (max-width: 480px){
-        .reference-number{
+      @media (max-width: 480px) {
+        .reference-number-container {
+          gap: 6px;
+        }
+
+        .reference-number {
           font-size: 1rem;
+        }
+
+        .copy-button {
+          min-width: 32px;
+          height: 32px;
+          padding: 4px 8px;
+        }
+
+        .copy-button i {
+          font-size: 0.8rem;
         }
       }
     `,
@@ -2306,6 +2386,42 @@ export class BookServiceComponent implements OnInit, OnDestroy {
     const timestamp = Date.now().toString(36).toUpperCase();
     const random = Math.random().toString(36).substring(2, 8).toUpperCase();
     return `DHA-${timestamp}-${random}`;
+  }
+
+  copyBookingReference(): void {
+    if (this.bookingReference) {
+      navigator.clipboard
+        .writeText(this.bookingReference)
+        .then(() => {
+          // Optional: Show a brief success message
+          console.log('Booking reference copied to clipboard');
+        })
+        .catch((err) => {
+          console.error('Failed to copy booking reference: ', err);
+          // Fallback for older browsers
+          this.fallbackCopyTextToClipboard(this.bookingReference);
+        });
+    }
+  }
+
+  private fallbackCopyTextToClipboard(text: string): void {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      document.execCommand('copy');
+      console.log('Booking reference copied to clipboard (fallback)');
+    } catch (err) {
+      console.error('Fallback copy failed: ', err);
+    }
+
+    document.body.removeChild(textArea);
   }
 
   toggleSection(section: string): void {
