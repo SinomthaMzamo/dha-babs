@@ -308,7 +308,7 @@ interface BookingPerson {
           </form>
         </app-ios-modal>
 
-        <!-- Person Service Selection Modal -->
+        <!-- additional applicant Service Selection Modal -->
         <div
           *ngIf="showPersonServiceModal"
           class="modal-overlay"
@@ -404,6 +404,55 @@ interface BookingPerson {
           (backToResults)="goBackToResults()"
           (confirmBooking)="confirmBooking()"
         ></app-confirm-booking>
+
+        <!-- Booking Success Modal -->
+        <div
+          *ngIf="showBookingSuccessModal"
+          class="modal-overlay"
+          (click)="closeBookingSuccessModal()"
+        >
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+              <h3>Booking details</h3>
+              <button
+                type="button"
+                (click)="closeBookingSuccessModal()"
+                class="modal-close"
+              >
+                ×
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="details-grid">
+                <div class="detail-item">
+                  <label>Branch</label>
+                  <span>{{ getBranchDisplayName() }}</span>
+                </div>
+                <div class="detail-item">
+                  <label>Appointment Date</label>
+                  <span>{{ getFormattedDate(selectedSlot?.date) }}</span>
+                </div>
+                <div class="detail-item">
+                  <label>Appointment Time</label>
+                  <span>{{ selectedSlot?.time || 'N/A' }}</span>
+                </div>
+                <div class="detail-item">
+                  <label>Total Applicants</label>
+                  <span>{{ bookingPersons.length }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                (click)="closeBookingSuccessModal()"
+                class="btn-primary"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   `,
@@ -1758,6 +1807,7 @@ export class BookServiceComponent implements OnInit, OnDestroy {
   currentStep: 'preview' | 'form' | 'results' | 'confirm' = 'preview';
   stepTitles: string[] = ['Services', 'Details', 'Timeslots', 'Confirm'];
   showServiceModal = false;
+  showBookingSuccessModal = false;
   searchCriteria: SlotSearchCriteria | null = null;
   selectedSlot: any = null;
   personalData: any = null;
@@ -1820,6 +1870,11 @@ export class BookServiceComponent implements OnInit, OnDestroy {
       forenames: [''],
       lastName: [''],
     });
+  }
+
+  closeBookingSuccessModal() {
+    this.showBookingSuccessModal = false;
+    this.router.navigate(['/menu']);
   }
 
   capitaliseWords(str: string) {
@@ -2036,14 +2091,16 @@ export class BookServiceComponent implements OnInit, OnDestroy {
     );
 
     // For now, show a success message
-    alert(
-      `Booking confirmed successfully! Your appointment is scheduled for ${this.getFormattedDate(
-        this.selectedSlot.date
-      )} at ${this.selectedSlot.time}`
-    );
+    // TODO: show a success message in a modal
+    this.showBookingSuccessModal = true;
+    // alert(
+    //   `Booking confirmed successfully! Your appointment is scheduled for ${this.getFormattedDate(
+    //     this.selectedSlot.date
+    //   )} at ${this.selectedSlot.time}`
+    // );
 
     // Navigate back to menu or home
-    this.router.navigate(['/menu']);
+    // this.router.navigate(['/menu']);
   }
 
   private clearExistingAppointments(): void {
