@@ -47,6 +47,7 @@ interface BookingPerson {
                 class="action-btn std"
                 title="Add an accompanying applicant to this booking"
               >
+                <span class="fas fa-plus-circle"></span>
                 <span class="btn-text">Add Applicant</span>
               </button>
               <button
@@ -225,6 +226,7 @@ interface BookingPerson {
       :host {
         --DHAGreen: #016635;
         --DHALightGreen: #018947;
+        --DHALightGreenLight: #ddebe4;
         --DHAOrange: #f3801f;
         --DHALightOrange: #f8ab18;
         --DHAWhite: #ffffff;
@@ -239,6 +241,9 @@ interface BookingPerson {
         --DividerGray: #949494;
         --DHAOffBlack: rgb(42, 41, 41);
         --DHADisabledTextGray: #c4c4c4;
+      }
+
+      .fas.fa-plus-circle {
       }
 
       .card-wrapper {
@@ -459,7 +464,7 @@ interface BookingPerson {
       }
 
       .action-btn.std {
-        color: var(--DHALightGreen);
+        color: var(--DHAGreen);
         border: 1px solid var(--DHAGreen);
         background: var(--DHAWhite);
       }
@@ -475,6 +480,7 @@ interface BookingPerson {
       }
 
       .action-btn.std:hover:not(:disabled) {
+        color: var(--DHALightGreen);
         background: #ddebe4;
         border-color: #ddebe4;
         transform: translateY(-1px);
