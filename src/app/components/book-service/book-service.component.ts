@@ -27,6 +27,7 @@ interface Service {
   name: string;
   description: string;
   checked: boolean;
+  price?: number;
 }
 
 interface BookingPerson {
@@ -411,9 +412,13 @@ interface BookingPerson {
           class="modal-overlay"
           (click)="closeBookingSuccessModal()"
         >
-          <div class="modal-content" (click)="$event.stopPropagation()">
+          <div
+            class="modal-content booking-success-modal"
+            (click)="$event.stopPropagation()"
+          >
             <div class="modal-header">
-              <h3>Booking details</h3>
+              <!-- <div class="success-icon">✅</div> -->
+              <h3>Booking Confirmed Successfully!</h3>
               <button
                 type="button"
                 (click)="closeBookingSuccessModal()"
@@ -422,26 +427,190 @@ interface BookingPerson {
                 ×
               </button>
             </div>
-            <div class="modal-body">
-              <div class="details-grid">
-                <div class="detail-item">
-                  <label>Branch</label>
-                  <span>{{ getBranchDisplayName() }}</span>
+
+            <div class="modal-body confirmed">
+              <!-- Booking Reference -->
+              <div class="booking-reference-section">
+                <div class="reference-label">Your Booking Reference</div>
+                <div class="reference-number">{{ bookingReference }}</div>
+                <div class="reference-note">
+                  Please save this reference number for your records
                 </div>
-                <div class="detail-item">
-                  <label>Appointment Date</label>
-                  <span>{{ getFormattedDate(selectedSlot?.date) }}</span>
+              </div>
+
+              <!-- Expandable Sections -->
+              <div class="expandable-sections">
+                <!-- Appointment Details -->
+                <div class="expandable-section">
+                  <div
+                    class="section-header"
+                    (click)="toggleSection('appointment')"
+                  >
+                    <span class="section-title">📅 Appointment Details</span>
+                    <span
+                      class="expand-icon"
+                      [class.expanded]="expandedSections['appointment']"
+                      >▼</span
+                    >
+                  </div>
+                  <div
+                    class="section-content"
+                    [class.expanded]="expandedSections['appointment']"
+                  >
+                    <div class="details-grid">
+                      <div class="detail-item">
+                        <label>Branch</label>
+                        <span>{{ getBranchDisplayName() }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <label>Appointment Date</label>
+                        <span>{{ getFormattedDate(selectedSlot?.date) }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <label>Appointment Time</label>
+                        <span>{{ selectedSlot?.time || 'N/A' }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <label>Duration</label>
+                        <span>1 Hour</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="detail-item">
-                  <label>Appointment Time</label>
-                  <span>{{ selectedSlot?.time || 'N/A' }}</span>
+
+                <!-- Personal Information -->
+                <div class="expandable-section">
+                  <div
+                    class="section-header"
+                    (click)="toggleSection('personal')"
+                  >
+                    <span class="section-title">👤 Personal Information</span>
+                    <span
+                      class="expand-icon"
+                      [class.expanded]="expandedSections['personal']"
+                      >▼</span
+                    >
+                  </div>
+                  <div
+                    class="section-content"
+                    [class.expanded]="expandedSections['personal']"
+                  >
+                    <div class="details-grid">
+                      <div class="detail-item">
+                        <label>Full Name</label>
+                        <span
+                          >{{ personalData?.forenames }}
+                          {{ personalData?.lastName }}</span
+                        >
+                      </div>
+                      <div class="detail-item">
+                        <label>ID Number</label>
+                        <span>{{ personalData?.idNumber }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <label>Email</label>
+                        <span>{{ personalData?.email }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <label>Phone</label>
+                        <span>{{ personalData?.phone }}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="detail-item">
-                  <label>Total Applicants</label>
-                  <span>{{ bookingPersons.length }}</span>
+
+                <!-- Applicants & Services -->
+                <div class="expandable-section">
+                  <div
+                    class="section-header"
+                    (click)="toggleSection('applicants')"
+                  >
+                    <span class="section-title"
+                      >👥 Applicants & Services ({{
+                        bookingPersons.length
+                      }})</span
+                    >
+                    <span
+                      class="expand-icon"
+                      [class.expanded]="expandedSections['applicants']"
+                      >▼</span
+                    >
+                  </div>
+                  <div
+                    class="section-content"
+                    [class.expanded]="expandedSections['applicants']"
+                  >
+                    <div class="applicants-list">
+                      <div
+                        *ngFor="let person of bookingPersons; let i = index"
+                        class="applicant-item"
+                      >
+                        <div class="applicant-header">
+                          <span class="applicant-name"
+                            >{{ person.name }} ({{ person.type }})</span
+                          >
+                          <span class="applicant-id">{{
+                            person.idNumber
+                          }}</span>
+                        </div>
+                        <div class="services-list">
+                          <div
+                            *ngFor="let service of person.selectedServices"
+                            class="service-item"
+                          >
+                            <span class="service-name">{{ service.name }}</span>
+                            <span class="service-price"
+                              >R{{ service.price || 0 }}</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Booking Summary -->
+                <div class="expandable-section">
+                  <div
+                    class="section-header"
+                    (click)="toggleSection('summary')"
+                  >
+                    <span class="section-title">💰 Booking Summary</span>
+                    <span
+                      class="expand-icon"
+                      [class.expanded]="expandedSections['summary']"
+                      >▼</span
+                    >
+                  </div>
+                  <div
+                    class="section-content"
+                    [class.expanded]="expandedSections['summary']"
+                  >
+                    <div class="summary-details">
+                      <div class="summary-item">
+                        <span class="summary-label">Total Services</span>
+                        <span class="summary-value">{{
+                          getTotalServices()
+                        }}</span>
+                      </div>
+                      <div class="summary-item">
+                        <span class="summary-label">Total Amount</span>
+                        <span class="summary-value"
+                          >R{{ getTotalAmount() }}</span
+                        >
+                      </div>
+                      <div class="summary-item">
+                        <span class="summary-label">Booking Date</span>
+                        <span class="summary-value">{{
+                          getFormattedDate(getCurrentDate())
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+
             <div class="modal-footer">
               <button
                 type="button"
@@ -471,7 +640,7 @@ interface BookingPerson {
         --DHADisabledButtonGray: #e6e6e6;
         --DHABackGroundLightGray: #f4f4f4;
         --DividerGray: #949494;
-        --DHAOffBlack: rgb(42, 41, 41);
+        --DHAOffBlack: rgb(51, 51, 51);
         --DHADisabledTextGray: #c4c4c4;
       }
 
@@ -1403,6 +1572,13 @@ interface BookingPerson {
         min-height: 0;
       }
 
+      .modal-body.confirmed {
+        padding: 0;
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+      }
+
       .modal-description {
         color: var(--DHATextGray);
         margin-bottom: 20px;
@@ -1800,6 +1976,253 @@ interface BookingPerson {
           }
         }
       }
+
+      /* Enhanced Booking Success Modal Styles */
+      .booking-success-modal {
+        max-width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        text-align: center;
+        padding: 20px 20px 10px;
+        border-bottom: 1px solid var(--DHABackGroundLightGray);
+      }
+
+      .success-icon {
+        font-size: 3rem;
+        margin-bottom: 10px;
+      }
+
+      .modal-header h3 {
+        color: var(--DHAGreen);
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .booking-reference-section {
+        color: white;
+        padding: 20px;
+        margin: 20px;
+        border-radius: 12px;
+        text-align: center;
+        background-color: var(--DHAOffWhite);
+      }
+
+      .reference-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-bottom: 8px;
+        color: var(--DHAOffBlack);
+      }
+
+      .reference-number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        color: var(--DHAOrange);
+      }
+
+      .reference-note {
+        font-size: 0.8rem;
+        opacity: 0.8;
+        color: var(--DHATextGray);
+      }
+
+      .expandable-sections {
+        padding: 0 20px 20px;
+      }
+
+      .expandable-section {
+        border: 1px solid var(--DHABackGroundLightGray);
+        border-radius: 8px;
+        margin-bottom: 12px;
+        overflow: hidden;
+      }
+
+      .section-header {
+        background: var(--DHAOffWhite);
+        padding: 15px 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.3s ease;
+        border-bottom: 1px solid var(--DHABackGroundLightGray);
+      }
+
+      .section-header:hover {
+        background: var(--DHABackGroundLightGray);
+      }
+
+      .section-title {
+        font-weight: 600;
+        color: var(--DHAGreen);
+        font-size: 1rem;
+      }
+
+      .expand-icon {
+        transition: transform 0.3s ease;
+        color: var(--DHATextGray);
+        font-size: 0.8rem;
+      }
+
+      .expand-icon.expanded {
+        transform: rotate(180deg);
+      }
+
+      .section-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+
+      .section-content.expanded {
+        max-height: 500px;
+      }
+
+      .details-grid {
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .detail-item label {
+        font-size: 0.8rem;
+        color: var(--DHATextGray);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .detail-item span {
+        font-size: 0.95rem;
+        color: var(--DHATextGrayDark);
+        font-weight: 500;
+      }
+
+      .applicants-list {
+        padding: 20px;
+      }
+
+      .applicant-item {
+        background: var(--DHAOffWhite);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 12px;
+        border: 1px solid var(--DHABackGroundLightGray);
+      }
+
+      .applicant-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--DHABackGroundLightGray);
+      }
+
+      .applicant-name {
+        font-weight: 600;
+        color: var(--DHAGreen);
+      }
+
+      .applicant-id {
+        font-size: 0.8rem;
+        color: var(--DHATextGray);
+        font-family: 'Courier New', monospace;
+      }
+
+      .services-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .service-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+      }
+
+      .service-name {
+        font-size: 0.9rem;
+        color: var(--DHATextGrayDark);
+      }
+
+      .service-price {
+        font-weight: 600;
+        color: var(--DHAGreen);
+        font-size: 0.9rem;
+      }
+
+      .summary-details {
+        padding: 20px;
+      }
+
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--DHABackGroundLightGray);
+      }
+
+      .summary-item:last-child {
+        border-bottom: none;
+      }
+
+      .summary-label {
+        font-size: 0.9rem;
+        color: var(--DHATextGray);
+        font-weight: 500;
+      }
+
+      .summary-value {
+        font-weight: 600;
+        color: var(--DHAGreen);
+        font-size: 1rem;
+      }
+
+      .modal-footer {
+        padding: 20px;
+        border-top: 1px solid var(--DHABackGroundLightGray);
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .booking-success-modal {
+          max-width: 95vw;
+          margin: 10px;
+        }
+
+        .details-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .reference-number {
+          font-size: 1.4rem;
+        }
+
+        .applicant-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 4px;
+        }
+      }
     `,
   ],
 })
@@ -1808,6 +2231,13 @@ export class BookServiceComponent implements OnInit, OnDestroy {
   stepTitles: string[] = ['Services', 'Details', 'Timeslots', 'Confirm'];
   showServiceModal = false;
   showBookingSuccessModal = false;
+  bookingReference: string = '';
+  expandedSections: { [key: string]: boolean } = {
+    appointment: true,
+    personal: false,
+    applicants: false,
+    summary: false,
+  };
   searchCriteria: SlotSearchCriteria | null = null;
   selectedSlot: any = null;
   personalData: any = null;
@@ -1875,6 +2305,39 @@ export class BookServiceComponent implements OnInit, OnDestroy {
   closeBookingSuccessModal() {
     this.showBookingSuccessModal = false;
     this.router.navigate(['/menu']);
+  }
+
+  generateBookingReference(): string {
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+    return `DHA-${timestamp}-${random}`;
+  }
+
+  toggleSection(section: string): void {
+    this.expandedSections[section] = !this.expandedSections[section];
+  }
+
+  getTotalServices(): number {
+    return this.bookingPersons.reduce(
+      (total, person) => total + person.selectedServices.length,
+      0
+    );
+  }
+
+  getTotalAmount(): number {
+    return this.bookingPersons.reduce((total, person) => {
+      return (
+        total +
+        person.selectedServices.reduce(
+          (personTotal, service) => personTotal + (service.price || 0),
+          0
+        )
+      );
+    }, 0);
+  }
+
+  getCurrentDate(): string {
+    return new Date().toISOString();
   }
 
   capitaliseWords(str: string) {
@@ -2089,6 +2552,9 @@ export class BookServiceComponent implements OnInit, OnDestroy {
       `appointment_${this.personalData.idNumber}`,
       JSON.stringify(bookingData)
     );
+
+    // Generate booking reference
+    this.bookingReference = this.generateBookingReference();
 
     // For now, show a success message
     // TODO: show a success message in a modal
