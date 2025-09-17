@@ -1,6 +1,14 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-layout.component';
+import { IosModalComponent } from '../shared/ios-modal/ios-modal.component';
 
 interface BookingPerson {
   id: string;
@@ -13,7 +21,7 @@ interface BookingPerson {
 @Component({
   selector: 'app-booking-preview',
   standalone: true,
-  imports: [CommonModule, FormPageLayoutComponent],
+  imports: [CommonModule, FormPageLayoutComponent, IosModalComponent],
   template: `
     <app-form-page-layout [currentStep]="0" [steps]="stepTitles">
       <h2 class="step-title">Select Required Services</h2>
@@ -43,10 +51,14 @@ interface BookingPerson {
               </button>
               <button
                 type="button"
-                (click)="onRemovePersonFromBooking()"
+                (click)="toggleDeleteMode()"
                 class="action-btn danger"
                 [disabled]="bookingPersons.length <= 1"
-                title="Remove an additional applicant from this booking"
+                [title]="
+                  isDeleteMode
+                    ? 'Exit delete mode'
+                    : 'Remove an additional applicant from this booking'
+                "
               >
                 <span class="btn-text">Remove</span>
               </button>
@@ -74,7 +86,28 @@ interface BookingPerson {
                 *ngFor="let person of bookingPersons; let i = index"
                 class="applicant-card"
                 [class.primary-applicant]="person.type === 'Main Applicant'"
+                [class.delete-mode-highlight]="
+                  isDeleteMode && person.type !== 'Main Applicant'
+                "
+                (click)="onApplicantCardClick(i)"
               >
+                <!-- Wave border SVG for delete mode -->
+                <svg
+                  *ngIf="isDeleteMode && person.type !== 'Main Applicant'"
+                  class="wave-border"
+                  preserveAspectRatio="none"
+                >
+                  <rect
+                    x="0"
+                    y="0"
+                    width="100%"
+                    height="100%"
+                    rx="12"
+                    ry="12"
+                    class="wave-path"
+                  />
+                </svg>
+
                 <div class="applicant-header">
                   <div class="applicant-info">
                     <span class="applicant-name "
@@ -82,7 +115,7 @@ interface BookingPerson {
                     >
                     <span class="applicant-type">{{ person.idNumber }}</span>
                   </div>
-                  <div class="touch-target" (click)="onRemoveSpecificPerson(i)">
+                  <div class="touch-target" (click)="showRemoveConfirmation(i)">
                     <button
                       *ngIf="
                         bookingPersons.length > 1 &&
@@ -158,6 +191,34 @@ interface BookingPerson {
         </div>
       </div>
     </app-form-page-layout>
+
+    <!-- Remove Applicant Confirmation Modal -->
+    <app-ios-modal
+      [isOpen]="showRemoveModal"
+      title="Remove Applicant"
+      [closeOnOverlayClick]="true"
+      [closeOnEscape]="true"
+      cancelText="Cancel"
+      confirmText="Remove"
+      [confirmDisabled]="false"
+      (modalClosed)="closeRemoveModal()"
+      (cancelClicked)="closeRemoveModal()"
+      (confirmClicked)="confirmRemoveApplicant()"
+    >
+      <div class="remove-applicant-content">
+        <div class="warning-icon">⚠️</div>
+        <h3>Remove {{ getApplicantToRemove()?.name }}?</h3>
+        <p>Are you sure you want to remove this applicant from your booking?</p>
+        <div class="remove-details">
+          <p><strong>This will:</strong></p>
+          <ul>
+            <li>Remove {{ getApplicantToRemove()?.name }} from the booking</li>
+            <li>Delete all their selected services</li>
+            <li>This action cannot be undone</li>
+          </ul>
+        </div>
+      </div>
+    </app-ios-modal>
   `,
   styles: [
     `
@@ -526,7 +587,7 @@ interface BookingPerson {
 
         .remove-applicant-btn {
           align-self: flex-end;
-          margin-left: 24px;  /* push the button to the right of the touch target */
+          margin-left: 24px; /* push the button to the right of the touch target */
         }
 
         .header-actions {
@@ -553,10 +614,103 @@ interface BookingPerson {
           width: 100%;
         }
       }
+
+      .remove-applicant-content {
+        text-align: center;
+        padding: 20px;
+      }
+
+      .warning-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+      }
+
+      .remove-applicant-content h3 {
+        color: var(--DHAGreen);
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+
+      .remove-applicant-content p {
+        color: var(--DHATextGrayDark);
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+
+      .remove-details {
+        background: var(--DHAOffWhite);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        text-align: left;
+      }
+
+      .remove-details p {
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: var(--DHAGreen);
+      }
+
+      .remove-details ul {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--DHATextGrayDark);
+      }
+
+      .remove-details li {
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+      }
+
+      /* Wave border styles for delete mode */
+      .wave-border {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+        pointer-events: none;
+        border-radius: 10px;
+        z-index: 1;
+        overflow: hidden;
+      }
+
+      .wave-path {
+        fill: none;
+        stroke: var(--DHADangerColor);
+        stroke-width: 3px;
+        filter: drop-shadow(0 0 6px var(--DHADangerColorLight))
+          drop-shadow(0 0 12px var(--DHADangerColor));
+        stroke-dasharray: 15 5;
+        stroke-dashoffset: 0;
+        animation: waveMove 1.5s linear infinite;
+        transform-origin: center;
+      }
+
+      @keyframes waveMove {
+        0% {
+          stroke-dashoffset: 0;
+        }
+        100% {
+          stroke-dashoffset: -20;
+        }
+      }
+
+      .delete-mode-highlight {
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .delete-mode-highlight:hover {
+        transform: scale(1.02);
+      }
     `,
   ],
 })
-export class BookingPreviewComponent {
+export class BookingPreviewComponent implements OnChanges {
   @Input() stepTitles: string[] = [
     'Services',
     'Details',
@@ -564,6 +718,13 @@ export class BookingPreviewComponent {
     'Confirm',
   ];
   @Input() bookingPersons: BookingPerson[] = [];
+
+  // Modal state properties
+  showRemoveModal: boolean = false;
+  applicantToRemoveIndex: number = -1;
+
+  // Delete mode state
+  isDeleteMode: boolean = false;
 
   @Output() goBack = new EventEmitter<void>();
   @Output() proceedToLocation = new EventEmitter<void>();
@@ -576,6 +737,18 @@ export class BookingPreviewComponent {
     personIndex: number;
     service: any;
   }>();
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Reset delete mode when bookingPersons array changes (add/remove applicants)
+    if (changes['bookingPersons'] && !changes['bookingPersons'].firstChange) {
+      this.resetDeleteMode();
+    }
+
+    // Also reset delete mode if we're in delete mode but there are no deletable applicants
+    if (this.isDeleteMode && this.bookingPersons.length <= 1) {
+      this.resetDeleteMode();
+    }
+  }
 
   hasAnyServicesSelected(): boolean {
     return this.bookingPersons.some(
@@ -592,6 +765,8 @@ export class BookingPreviewComponent {
   }
 
   onAddPersonToBooking(): void {
+    // Reset delete mode when adding a new applicant
+    this.resetDeleteMode();
     this.addPersonToBooking.emit();
   }
 
@@ -600,6 +775,8 @@ export class BookingPreviewComponent {
   }
 
   onClearAllPersons(): void {
+    // Reset delete mode when clearing all persons
+    this.resetDeleteMode();
     this.clearAllPersons.emit();
   }
 
@@ -613,5 +790,58 @@ export class BookingPreviewComponent {
 
   onRemoveServiceFromPerson(personIndex: number, service: any): void {
     this.removeServiceFromPerson.emit({ personIndex, service });
+  }
+
+  showRemoveConfirmation(index: number): void {
+    this.applicantToRemoveIndex = index;
+    this.showRemoveModal = true;
+  }
+
+  closeRemoveModal(): void {
+    this.showRemoveModal = false;
+    this.applicantToRemoveIndex = -1;
+  }
+
+  confirmRemoveApplicant(): void {
+    if (this.applicantToRemoveIndex >= 0) {
+      this.removeSpecificPerson.emit(this.applicantToRemoveIndex);
+      this.closeRemoveModal();
+
+      // Reset delete mode after successful removal
+      this.resetDeleteMode();
+    }
+  }
+
+  getApplicantToRemove(): BookingPerson | null {
+    if (
+      this.applicantToRemoveIndex >= 0 &&
+      this.applicantToRemoveIndex < this.bookingPersons.length
+    ) {
+      return this.bookingPersons[this.applicantToRemoveIndex];
+    }
+    return null;
+  }
+
+  toggleDeleteMode(): void {
+    this.isDeleteMode = !this.isDeleteMode;
+
+    // If exiting delete mode, close any open modals
+    if (!this.isDeleteMode) {
+      this.closeRemoveModal();
+    }
+  }
+
+  resetDeleteMode(): void {
+    this.isDeleteMode = false;
+    this.closeRemoveModal();
+  }
+
+  onApplicantCardClick(index: number): void {
+    const person = this.bookingPersons[index];
+
+    // If in delete mode and not main applicant, show confirmation
+    if (this.isDeleteMode && person.type !== 'Main Applicant') {
+      this.showRemoveConfirmation(index);
+    }
   }
 }

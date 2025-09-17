@@ -8,11 +8,18 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-layout.component';
+import { IosModalComponent } from '../shared/ios-modal/ios-modal.component';
+import { BookingService } from '../../services/booking.service';
 
 @Component({
   selector: 'app-personal-info',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormPageLayoutComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormPageLayoutComponent,
+    IosModalComponent,
+  ],
   template: `
     <app-form-page-layout
       [currentStep]="getProgressStep()"
@@ -89,7 +96,11 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
           </div>
 
           <div class="button-group">
-            <button type="button" (click)="goBack()" class="btn-secondary">
+            <button
+              type="button"
+              (click)="showSignOutConfirmation()"
+              class="btn-sign-out"
+            >
               ← Sign Out
             </button>
             <button
@@ -149,6 +160,37 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
         </div>
       </div>
     </app-form-page-layout>
+
+    <!-- Sign Out Confirmation Modal -->
+    <app-ios-modal
+      [isOpen]="showSignOutModal"
+      title="Confirm Sign Out"
+      [closeOnOverlayClick]="true"
+      [closeOnEscape]="true"
+      cancelText="Cancel"
+      confirmText="Sign Out"
+      [confirmDisabled]="false"
+      (modalClosed)="closeSignOutModal()"
+      (cancelClicked)="closeSignOutModal()"
+      (confirmClicked)="confirmSignOut()"
+    >
+      <div class="sign-out-content">
+        <div class="warning-icon">⚠️</div>
+        <h3>Are you sure you want to sign out?</h3>
+        <p>
+          This will clear all your session data and you'll need to authenticate
+          again.
+        </p>
+        <div class="sign-out-details">
+          <p><strong>This will:</strong></p>
+          <ul>
+            <li>Clear your personal information</li>
+            <li>Remove any saved appointments</li>
+            <li>Sign you out of the system</li>
+          </ul>
+        </div>
+      </div>
+    </app-ios-modal>
   `,
   styles: [
     `
@@ -495,6 +537,73 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
           min-width: 0;
         }
       }
+
+      .btn-sign-out {
+        background: #e74c3c;
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-sign-out:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+      }
+
+      .sign-out-content {
+        text-align: center;
+        padding: 20px;
+      }
+
+      .warning-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+      }
+
+      .sign-out-content h3 {
+        color: var(--DHAGreen);
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+
+      .sign-out-content p {
+        color: var(--DHATextGrayDark);
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+
+      .sign-out-details {
+        background: var(--DHAOffWhite);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        text-align: left;
+      }
+
+      .sign-out-details p {
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: var(--DHAGreen);
+      }
+
+      .sign-out-details ul {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--DHATextGrayDark);
+      }
+
+      .sign-out-details li {
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+      }
     `,
   ],
 })
@@ -508,8 +617,13 @@ export class PersonalInfoComponent implements OnInit {
     'Contact Info',
     'Book Service',
   ];
+  showSignOutModal: boolean = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private bookingService: BookingService
+  ) {
     // Form for personal details verification
     this.verificationForm = this.fb.group({
       forenames: ['', Validators.required],
@@ -606,5 +720,24 @@ export class PersonalInfoComponent implements OnInit {
       return 2; // Contact Info step
     }
     return 1; // Default to Personal Info
+  }
+
+  showSignOutConfirmation() {
+    this.showSignOutModal = true;
+  }
+
+  closeSignOutModal() {
+    this.showSignOutModal = false;
+  }
+
+  confirmSignOut() {
+    // Clear all data using the booking service
+    this.bookingService.clearAllData();
+
+    // Close the modal
+    this.showSignOutModal = false;
+
+    // Navigate to the authenticate page
+    this.router.navigate(['/authenticate']);
   }
 }

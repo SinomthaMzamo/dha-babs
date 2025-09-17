@@ -3,11 +3,18 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
+import { IosModalComponent } from '../shared/ios-modal/ios-modal.component';
+import { BookingService } from '../../services/booking.service';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NavbarComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NavbarComponent,
+    IosModalComponent,
+  ],
   template: `
     <div class="menu-container">
       <app-navbar></app-navbar>
@@ -65,13 +72,45 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
             </div>
           </div>
 
-          <!-- <div class="menu-footer">
-            <button (click)="goBack()" class="btn-secondary">
-              ← Back to Contact Info
+          <!-- Sign Out Button -->
+          <div class="menu-footer">
+            <button (click)="showSignOutConfirmation()" class="btn-sign-out">
+              Sign Out
             </button>
-          </div> -->
+          </div>
         </div>
       </div>
+
+      <!-- Sign Out Confirmation Modal -->
+      <app-ios-modal
+        [isOpen]="showSignOutModal"
+        title="Confirm Sign Out"
+        [closeOnOverlayClick]="true"
+        [closeOnEscape]="true"
+        cancelText="Cancel"
+        confirmText="Sign Out"
+        [confirmDisabled]="false"
+        (modalClosed)="closeSignOutModal()"
+        (cancelClicked)="closeSignOutModal()"
+        (confirmClicked)="confirmSignOut()"
+      >
+        <div class="sign-out-content">
+          <div class="warning-icon">⚠️</div>
+          <h3>Are you sure you want to sign out?</h3>
+          <p>
+            This will clear all your session data and you'll need to
+            authenticate again.
+          </p>
+          <div class="sign-out-details">
+            <p><strong>This will:</strong></p>
+            <ul>
+              <li>Clear your personal information</li>
+              <li>Remove any saved appointments</li>
+              <li>Sign you out of the system</li>
+            </ul>
+          </div>
+        </div>
+      </app-ios-modal>
     </div>
   `,
   styles: [
@@ -230,6 +269,73 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
         transform: translateY(-2px);
       }
 
+      .btn-sign-out {
+        background: #e74c3c;
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-sign-out:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+      }
+
+      .sign-out-content {
+        text-align: center;
+        padding: 20px;
+      }
+
+      .warning-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+      }
+
+      .sign-out-content h3 {
+        color: var(--DHAGreen);
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+
+      .sign-out-content p {
+        color: var(--DHATextGrayDark);
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+
+      .sign-out-details {
+        background: var(--DHAOffWhite);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        text-align: left;
+      }
+
+      .sign-out-details p {
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: var(--DHAGreen);
+      }
+
+      .sign-out-details ul {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--DHATextGrayDark);
+      }
+
+      .sign-out-details li {
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+      }
+
       @media (max-width: 768px) {
         .menu-content {
           padding: 0;
@@ -351,8 +457,9 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
 })
 export class MenuComponent implements OnInit {
   personalData: any;
+  showSignOutModal: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private bookingService: BookingService) {}
 
   ngOnInit() {
     // Get personal data from session storage
@@ -380,8 +487,8 @@ export class MenuComponent implements OnInit {
   }
 
   editContactDetails() {
-    // Navigate to contact info component
-    this.router.navigate(['/contact-info']);
+    // Navigate to edit contact info component
+    this.router.navigate(['/edit-contact-info']);
   }
 
   hasAppointment(): boolean {
@@ -413,5 +520,24 @@ export class MenuComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/contact-info']);
+  }
+
+  showSignOutConfirmation() {
+    this.showSignOutModal = true;
+  }
+
+  closeSignOutModal() {
+    this.showSignOutModal = false;
+  }
+
+  confirmSignOut() {
+    // Clear all data using the booking service
+    this.bookingService.clearAllData();
+
+    // Close the modal
+    this.showSignOutModal = false;
+
+    // Navigate to the authenticate page
+    this.router.navigate(['/authenticate']);
   }
 }

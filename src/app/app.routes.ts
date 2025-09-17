@@ -28,6 +28,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'edit-contact-info',
+    loadComponent: () =>
+      import('./components/edit-contact-info/edit-contact-info.component').then(
+        (m) => m.EditContactInfoComponent
+      ),
+  },
+  {
     path: 'menu',
     loadComponent: () =>
       import('./components/menu/menu.component').then((m) => m.MenuComponent),
