@@ -436,13 +436,13 @@ interface BookingPerson {
                 <div class="reference-number-container">
                   <div class="reference-number">{{ bookingReference }}</div>
                   <button
-                    class="copy-button"
+                    [class]="'copy-button' + (isCopied ? ' copied' : '')"
                     (click)="copyBookingReference()"
                     title="Copy booking reference"
                     aria-label="Copy booking reference to clipboard"
                   >
-                    <i class="fas fa-clone"></i>
-                    Copy
+                    <i [class]="copyButtonIcon"></i>
+                    {{ copyButtonText }}
                   </button>
                 </div>
                 <div class="reference-note">
@@ -644,7 +644,7 @@ interface BookingPerson {
         --DHAHoverGreen: rgb(1, 73, 38);
         --DHAOrange: #f3801f;
         --DHALightOrange: #f8ab18;
-        --DHALightOrangeLight:rgba(243, 126, 31, 0.2);
+        --DHALightOrangeLight: rgba(243, 126, 31, 0.2);
         --DHAWhite: #ffffff;
         --DHAOffWhite: #fbfbfb;
         --DHATextGray: #949494;
@@ -2063,6 +2063,12 @@ interface BookingPerson {
         justify-content: center;
         min-width: 40px;
         height: 40px;
+        font-weight: 500;
+      }
+
+      .copy-button.copied {
+        background: var(--DHAGreen);
+        color: white;
       }
 
       .copy-button:hover {
@@ -2319,6 +2325,9 @@ export class BookServiceComponent implements OnInit, OnDestroy {
   showServiceModal = false;
   showBookingSuccessModal = false;
   bookingReference: string = '';
+  copyButtonText: string = 'Copy';
+  copyButtonIcon: string = 'fas fa-clone';
+  isCopied: boolean = false;
   expandedSections: { [key: string]: boolean } = {
     appointment: true,
     personal: false,
@@ -2393,7 +2402,8 @@ export class BookServiceComponent implements OnInit, OnDestroy {
       navigator.clipboard
         .writeText(this.bookingReference)
         .then(() => {
-          // Optional: Show a brief success message
+          // Show success feedback
+          this.showCopySuccess();
           console.log('Booking reference copied to clipboard');
         })
         .catch((err) => {
@@ -2402,6 +2412,20 @@ export class BookServiceComponent implements OnInit, OnDestroy {
           this.fallbackCopyTextToClipboard(this.bookingReference);
         });
     }
+  }
+
+  private showCopySuccess(): void {
+    // Change button text and icon to show success
+    this.copyButtonText = 'Copied!';
+    this.copyButtonIcon = 'fas fa-check';
+    this.isCopied = true;
+
+    // Reset after 2 seconds
+    setTimeout(() => {
+      this.copyButtonText = 'Copy';
+      this.copyButtonIcon = 'fas fa-clone';
+      this.isCopied = false;
+    }, 2000);
   }
 
   private fallbackCopyTextToClipboard(text: string): void {
@@ -2416,6 +2440,8 @@ export class BookServiceComponent implements OnInit, OnDestroy {
 
     try {
       document.execCommand('copy');
+      // Show success feedback for fallback method too
+      this.showCopySuccess();
       console.log('Booking reference copied to clipboard (fallback)');
     } catch (err) {
       console.error('Fallback copy failed: ', err);

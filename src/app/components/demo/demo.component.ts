@@ -102,7 +102,6 @@ import { Router } from '@angular/router';
       .demo-container {
         display: flex;
         justify-content: center;
-        align-items: center;
         min-height: 100vh;
         background: linear-gradient(
           135deg,
