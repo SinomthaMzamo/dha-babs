@@ -344,7 +344,6 @@ import { BookingService } from '../../services/booking.service';
         .menu-card {
           padding: 10px 8px;
           border-radius: 12px;
-          height: 660px;
           overflow-y: auto;
           box-sizing: border-box;
           margin: 4px auto;

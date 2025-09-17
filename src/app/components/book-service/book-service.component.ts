@@ -392,6 +392,7 @@ interface BookingPerson {
           [searchCriteria]="searchCriteria"
           (editSearchRequested)="onEditSearchRequested()"
           (slotSelected)="onSlotSelected($event)"
+          (alternativeBranchSelected)="onAlternativeBranchSelected($event)"
         ></app-appointment-results>
 
         <!-- Confirm Booking Step -->
@@ -2251,8 +2252,8 @@ export class BookServiceComponent implements OnInit, OnDestroy {
   availableServices: Service[] = [
     {
       id: 'id-card',
-      name: 'ID Card Application',
-      description: 'Apply for a new South African ID card',
+      name: 'Smart ID Card Application',
+      description: 'Apply for a new South African smart ID card',
       checked: false,
     },
     {
@@ -2262,27 +2263,15 @@ export class BookServiceComponent implements OnInit, OnDestroy {
       checked: false,
     },
     {
-      id: 'birth-certificate',
-      name: 'Birth Certificate',
-      description: 'Apply for a birth certificate',
+      id: 'ehome-affairs',
+      name: 'eHomeAffairs Application',
+      description: 'Schedule an appointment for your eHomeAffairs application',
       checked: false,
     },
     {
-      id: 'marriage-certificate',
-      name: 'Marriage Certificate',
-      description: 'Apply for a marriage certificate',
-      checked: false,
-    },
-    {
-      id: 'death-certificate',
-      name: 'Death Certificate',
-      description: 'Apply for a death certificate',
-      checked: false,
-    },
-    {
-      id: 'citizenship',
-      name: 'Citizenship Application',
-      description: 'Apply for South African citizenship',
+      id: 'collection',
+      name: 'Collection of ID or Passport',
+      description: 'Collect your smart ID or Passport',
       checked: false,
     },
   ];
@@ -2522,6 +2511,20 @@ export class BookServiceComponent implements OnInit, OnDestroy {
     this.selectedSlot = slot;
     this.currentStep = 'confirm';
     window.scrollTo(0, 0);
+  }
+
+  onAlternativeBranchSelected(branchId: string): void {
+    // Update the search criteria with the new branch
+    if (this.searchCriteria) {
+      // Create a new object reference to trigger change detection
+      this.searchCriteria = {
+        ...this.searchCriteria,
+        branch: branchId,
+      };
+      // Ensure we're on the results step to show the new search
+      this.currentStep = 'results';
+      window.scrollTo(0, 0);
+    }
   }
 
   goBackToResults(): void {

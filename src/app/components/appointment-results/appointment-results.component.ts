@@ -1,4 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -36,6 +44,16 @@ interface SlotSearchCriteria {
   services: string[];
 }
 
+interface AlternativeSuggestion {
+  branchId: string;
+  branchName: string;
+  cityName: string;
+  provinceName: string;
+  distance: 'same-city' | 'same-province' | 'neighboring-province';
+  availableSlots: number;
+  nextAvailableDate?: string;
+}
+
 @Component({
   selector: 'app-appointment-results',
   standalone: true,
@@ -57,8 +75,9 @@ interface SlotSearchCriteria {
       <p>
         We couldn't find any available appointment slots for your selected
         criteria. <br />
-        <br />Try editing your search or try again later.
+        <br />Try a different branch, edit your search or try again later.
       </p>
+
       <hr class="summary-divider" />
       <!-- Booking Summary - Always Visible -->
       <div class="booking-summary">
@@ -84,6 +103,78 @@ interface SlotSearchCriteria {
             <span class="btn-text">Edit Search</span>
           </div>
         </button>
+      </div>
+
+      <hr class="summary-divider" />
+      <!-- Alternative Suggestions -->
+      <div
+        *ngIf="alternativeSuggestions.length > 0"
+        class="alternative-suggestions"
+      >
+        <h4>📍 Alternative Locations Available</h4>
+        <p class="suggestions-intro">
+          We found available slots at these nearby branches:
+        </p>
+
+        <div class="suggestions-list">
+          <div
+            *ngFor="let suggestion of alternativeSuggestions; let i = index"
+            class="suggestion-card"
+            [class.same-city]="suggestion.distance === 'same-city'"
+            [class.same-province]="suggestion.distance === 'same-province'"
+            [class.neighboring-province]="
+              suggestion.distance === 'neighboring-province'
+            "
+          >
+            <div class="suggestion-header">
+              <div class="suggestion-location">
+                <h5>{{ suggestion.branchName }}</h5>
+                <p class="location-details">
+                  {{ suggestion.cityName }}, {{ suggestion.provinceName }}
+                </p>
+              </div>
+              <div class="suggestion-badge">
+                <span
+                  *ngIf="suggestion.distance === 'same-city'"
+                  class="badge same-city-badge"
+                >
+                  Same City
+                </span>
+                <span
+                  *ngIf="suggestion.distance === 'same-province'"
+                  class="badge same-province-badge"
+                >
+                  Same Province
+                </span>
+                <span
+                  *ngIf="suggestion.distance === 'neighboring-province'"
+                  class="badge neighboring-badge"
+                >
+                  Nearby Province
+                </span>
+              </div>
+            </div>
+
+            <div class="suggestion-details">
+              <div class="availability-info">
+                <span class="slots-count"
+                  >{{ suggestion.availableSlots }} slots available</span
+                >
+                <span *ngIf="suggestion.nextAvailableDate" class="next-date">
+                  Next: {{ getFormattedDate(suggestion.nextAvailableDate) }}
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              (click)="selectAlternativeSuggestion(suggestion)"
+              class="btn-select-alternative"
+            >
+              Select This Branch
+            </button>
+          </div>
+        </div>
       </div>
     </app-form-page-layout>
 
@@ -297,6 +388,7 @@ interface SlotSearchCriteria {
       .booking-summary h3 {
         color: var(--DHAGreen);
         margin-bottom: 15px;
+        margin-top: 0;
         font-size: 1.2rem;
         text-align: left;
       }
@@ -619,10 +711,189 @@ interface SlotSearchCriteria {
           width: 100%;
         }
       }
+
+      /* Alternative Suggestions Styles */
+      .alternative-suggestions {
+        margin: 20px 0;
+        border-radius: 12px;
+      }
+
+      .alternative-suggestions h4 {
+        color: var(--DHAGreen);
+        margin: 0 0 10px 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .suggestions-intro {
+        color: var(--DHATextGrayDark);
+        margin: 0 0 20px 0;
+        font-size: 0.95rem;
+      }
+
+      .suggestions-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .suggestion-card {
+        background: white;
+        border: 2px solid var(--DHABackGroundLightGray);
+        border-radius: 10px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .suggestion-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .suggestion-card.same-city {
+        border-color: var(--DHAGreen);
+        background: linear-gradient(
+          135deg,
+          #f8f9fa 0%,
+          rgba(1, 102, 53, 0.05) 100%
+        );
+      }
+
+      .suggestion-card.same-province {
+        border-color: var(--DHAOrange);
+        background: linear-gradient(
+          135deg,
+          #f8f9fa 0%,
+          rgba(243, 128, 31, 0.05) 100%
+        );
+      }
+
+      .suggestion-card.neighboring-province {
+        border-color: var(--DHATextGray);
+        background: linear-gradient(
+          135deg,
+          #f8f9fa 0%,
+          rgba(148, 148, 148, 0.05) 100%
+        );
+      }
+
+      .suggestion-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+      }
+
+      .suggestion-location h5 {
+        color: var(--DHAGreen);
+        margin: 0 0 5px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .location-details {
+        color: var(--DHATextGrayDark);
+        margin: 0;
+        font-size: 0.9rem;
+      }
+
+      .suggestion-badge {
+        flex-shrink: 0;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .same-city-badge {
+        background: var(--DHAGreen);
+        color: white;
+      }
+
+      .same-province-badge {
+        background: var(--DHAOrange);
+        color: white;
+      }
+
+      .neighboring-badge {
+        background: var(--DHATextGray);
+        color: white;
+      }
+
+      .suggestion-details {
+        margin-bottom: 15px;
+      }
+
+      .availability-info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .slots-count {
+        color: var(--DHAGreen);
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .next-date {
+        color: var(--DHATextGray);
+        font-size: 0.85rem;
+      }
+
+      .btn-select-alternative {
+        background: var(--DHAGreen);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+      }
+
+      .btn-select-alternative:hover {
+        background: var(--DHALightGreen);
+        color: var(--DHAGreen);
+        text-decoration: underline;
+        transform: translateY(-1px);
+      }
+
+      @media (max-width: 768px) {
+        .alternative-suggestions {
+          margin: 15px 0;
+        }
+
+        .suggestion-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .suggestion-badge {
+          align-self: flex-start;
+        }
+
+        .availability-info {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+      }
     `,
   ],
 })
-export class AppointmentResultsComponent implements OnInit {
+export class AppointmentResultsComponent implements OnInit, OnChanges {
   @Input() searchCriteria: SlotSearchCriteria | null = null;
   @Input() stepTitles: string[] = [
     'Services',
@@ -632,8 +903,10 @@ export class AppointmentResultsComponent implements OnInit {
   ];
   @Output() editSearchRequested = new EventEmitter<void>();
   @Output() slotSelected = new EventEmitter<AvailableSlot>();
+  @Output() alternativeBranchSelected = new EventEmitter<string>();
 
   availableSlots: AvailableSlot[] = [];
+  alternativeSuggestions: AlternativeSuggestion[] = [];
   isLoading = false;
   noSlotsAvailable = false;
   currentPage = 0;
@@ -812,25 +1085,37 @@ export class AppointmentResultsComponent implements OnInit {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // Check if searchCriteria has changed
+    if (changes['searchCriteria'] && this.searchCriteria) {
+      this.searchSlots();
+    }
+  }
+
   searchSlots(): void {
     if (!this.searchCriteria) return;
 
     this.isLoading = true;
     this.noSlotsAvailable = false;
+    this.alternativeSuggestions = [];
 
-    // Simulate API call
-    this.slotService.searchAvailableSlots(this.searchCriteria!).subscribe({
-      next: (slots) => {
-        this.availableSlots = slots;
-        this.isLoading = false;
-        this.noSlotsAvailable = this.availableSlots.length === 0;
-      },
-      error: (error) => {
-        console.error('Error searching slots:', error);
-        this.isLoading = false;
-        this.noSlotsAvailable = true;
-      },
-    });
+    // Use the new service method that returns alternatives
+    this.slotService
+      .searchAvailableSlotsWithAlternatives(this.searchCriteria!)
+      .subscribe({
+        next: (result) => {
+          this.availableSlots = result.slots;
+          this.alternativeSuggestions = result.alternatives;
+          this.isLoading = false;
+          this.noSlotsAvailable = this.availableSlots.length === 0;
+        },
+        error: (error) => {
+          console.error('Error searching slots:', error);
+          this.isLoading = false;
+          this.noSlotsAvailable = true;
+          this.alternativeSuggestions = [];
+        },
+      });
   }
 
   getBranchDisplayName(): string {
@@ -1031,5 +1316,10 @@ export class AppointmentResultsComponent implements OnInit {
     if (this.currentPage < totalPages - 1) {
       this.currentPage++;
     }
+  }
+
+  selectAlternativeSuggestion(suggestion: AlternativeSuggestion): void {
+    // Emit the selected alternative branch ID
+    this.alternativeBranchSelected.emit(suggestion.branchId);
   }
 }

@@ -241,8 +241,8 @@ interface SelectedSlot {
       .service-item {
         background: var(--DHAGreen);
         color: var(--DHAWhite);
-        padding: 2px 6px;
-        border-radius: 4px;
+        padding: 4px 8px;
+        border-radius: 12px;
         font-size: 10px;
         font-weight: 500;
         white-space: nowrap;

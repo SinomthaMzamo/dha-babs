@@ -66,12 +66,10 @@ import { Router } from '@angular/router';
         <div class="info-section">
           <h3>Available Services</h3>
           <ul class="services-list">
-            <li>Smart ID Card application/renewal</li>
-            <li>ID Book application/renewal</li>
-            <li>Passport application/renewal</li>
-            <li>Birth, Marriage & Death Certificates</li>
-            <li>Citizenship & Naturalization</li>
-            <li>Visa Services</li>
+            <li>Smart ID Card application</li>
+            <li>Passport application</li>
+            <li>eHomeAffairs application</li>
+            <li>Collection of ID or Passport</li>
           </ul>
         </div>
       </div>

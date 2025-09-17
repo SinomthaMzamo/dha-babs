@@ -45,8 +45,8 @@ import { NavbarComponent } from '../navbar/navbar.component';
       .form-page-container {
         display: flex;
         justify-content: center;
-        align-items: center;
-        min-height: calc(100vh - 73px);
+        align-items: flex-start;
+        min-height: 100vh;
         background: linear-gradient(
           135deg,
           var(--DHAOffWhite) 0%,
@@ -61,11 +61,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
         gap: var(--step-form-gap);
         width: 100%;
         max-width: var(--form-width);
-        position: absolute;
-        top: 0;
         margin-top: 88px;
-        left: 50%;
-        transform: translateX(-50%);
         padding: 0 20px;
         box-sizing: border-box;
       }
@@ -76,11 +72,8 @@ import { NavbarComponent } from '../navbar/navbar.component';
         padding: 40px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         max-width: var(--form-width);
-        /* max-height: calc(100vh - 150px); */
-        overflow-y: auto;
         width: 100%;
         box-sizing: border-box;
-        height: 100%;
       }
 
       h2 {
@@ -101,11 +94,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 
         .form-page-content-wrapper {
           padding: 0 8px;
-          position: absolute;
-          top: 0;
           margin-top: 88px;
-          left: 0;
-          transform: none;
           width: 100%;
           max-width: none;
           align-items: center;
@@ -114,8 +103,6 @@ import { NavbarComponent } from '../navbar/navbar.component';
         .form-page-card {
           padding: 25px 20px;
           min-width: unset;
-          /* height: 600px; */
-          overflow-y: auto;
           width: 100%;
         }
       }
@@ -127,15 +114,12 @@ import { NavbarComponent } from '../navbar/navbar.component';
 
         .form-page-content-wrapper {
           padding: 0 4px;
-          left: 0;
-          transform: none;
           width: 100%;
           max-width: none;
         }
 
         .form-page-card {
           padding: 20px 15px;
-          /* height: 550px; */
         }
       }
     `,
