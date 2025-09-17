@@ -204,7 +204,6 @@ interface BookingPerson {
       }
 
       .applicants-list {
-        margin-bottom: 20px;
       }
 
       .applicants-grid {
