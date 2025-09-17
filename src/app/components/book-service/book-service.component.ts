@@ -2224,6 +2224,12 @@ interface BookingPerson {
           gap: 4px;
         }
       }
+
+      @media (max-width: 480px){
+        .reference-number{
+          font-size: 1rem;
+        }
+      }
     `,
   ],
 })
