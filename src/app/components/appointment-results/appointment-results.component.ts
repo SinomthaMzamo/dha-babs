@@ -79,33 +79,6 @@ interface AlternativeSuggestion {
       </p>
 
       <hr class="summary-divider" />
-      <!-- Booking Summary - Always Visible -->
-      <div class="booking-summary">
-        <h3>Booking Summary</h3>
-        <div class="summary-grid">
-          <div class="summary-item">
-            <span class="summary-label">📍 Branch:</span>
-            <span class="summary-value">{{ getBranchDisplayName() }}</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-label">📅 Date Range:</span>
-            <span class="summary-value">{{ getDateRangeDisplay() }}</span>
-          </div>
-        </div>
-        <button
-          type="button"
-          (click)="editSearch()"
-          class="action-btn std"
-          title="Add an accompanying applicant to this booking"
-        >
-          <div class="btn-contents">
-            <span class="btn-icon"></span>
-            <span class="btn-text">Edit Search</span>
-          </div>
-        </button>
-      </div>
-
-      <hr class="summary-divider" />
       <!-- Alternative Suggestions -->
       <div
         *ngIf="alternativeSuggestions.length > 0"
@@ -175,6 +148,33 @@ interface AlternativeSuggestion {
             </button>
           </div>
         </div>
+      </div>
+
+      <hr class="summary-divider" />
+      <!-- Booking Summary - Always Visible -->
+      <div class="booking-summary">
+        <h3>Booking Summary</h3>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="summary-label">📍 Branch:</span>
+            <span class="summary-value">{{ getBranchDisplayName() }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">📅 Date Range:</span>
+            <span class="summary-value">{{ getDateRangeDisplay() }}</span>
+          </div>
+        </div>
+        <button
+          type="button"
+          (click)="editSearch()"
+          class="action-btn std"
+          title="Add an accompanying applicant to this booking"
+        >
+          <div class="btn-contents">
+            <span class="btn-icon"></span>
+            <span class="btn-text">Edit Search</span>
+          </div>
+        </button>
       </div>
     </app-form-page-layout>
 

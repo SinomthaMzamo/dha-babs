@@ -57,6 +57,7 @@ export class SlotService {
       { id: 'johannesburg', name: 'Johannesburg', provinceId: 'gauteng' },
       { id: 'sandton', name: 'Sandton', provinceId: 'gauteng' },
       { id: 'pretoria', name: 'Pretoria', provinceId: 'gauteng' },
+      
       // Western Cape
       { id: 'cape-town', name: 'Cape Town', provinceId: 'western-cape' },
       { id: 'bellville', name: 'Bellville', provinceId: 'western-cape' },
