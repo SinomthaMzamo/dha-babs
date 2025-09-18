@@ -571,9 +571,9 @@ interface BookingPerson {
                             class="service-item"
                           >
                             <span class="service-name">{{ service.name }}</span>
-                            <span class="service-price"
-                              >R{{ service.price || 0 }}</span
-                            >
+                            <span class="service-price">{{
+                              getServicePriceDescription(service)
+                            }}</span>
                           </div>
                         </div>
                       </div>
@@ -599,23 +599,52 @@ interface BookingPerson {
                     [class.expanded]="expandedSections['summary']"
                   >
                     <div class="summary-details">
-                      <div class="summary-item">
-                        <span class="summary-label">Total Services</span>
-                        <span class="summary-value">{{
-                          getTotalServices()
-                        }}</span>
+                      <!-- Service Breakdown -->
+                      <div class="service-breakdown">
+                        <h4 class="breakdown-title">Service Breakdown</h4>
+                        <div class="breakdown-list">
+                          <div
+                            *ngFor="let person of bookingPersons"
+                            class="person-breakdown"
+                          >
+                            <div class="person-name">{{ person.name }}</div>
+                            <div class="person-services">
+                              <div
+                                *ngFor="let service of person.selectedServices"
+                                class="service-breakdown-item"
+                              >
+                                <span class="service-name">{{
+                                  service.name
+                                }}</span>
+                                <span class="service-price">{{
+                                  getServicePriceDescription(service)
+                                }}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div class="summary-item">
-                        <span class="summary-label">Total Amount</span>
-                        <span class="summary-value"
-                          >R{{ getTotalAmount() }}</span
-                        >
-                      </div>
-                      <div class="summary-item">
-                        <span class="summary-label">Booking Date</span>
-                        <span class="summary-value">{{
-                          getFormattedDate(getCurrentDate())
-                        }}</span>
+
+                      <!-- Summary Totals -->
+                      <div class="summary-totals">
+                        <div class="summary-item">
+                          <span class="summary-label">Total Services</span>
+                          <span class="summary-value">{{
+                            getTotalServices()
+                          }}</span>
+                        </div>
+                        <div class="summary-item total-amount">
+                          <span class="summary-label">Total Amount</span>
+                          <span class="summary-value"
+                            >R{{ getTotalAmount() }}</span
+                          >
+                        </div>
+                        <div class="summary-item">
+                          <span class="summary-label">Booking Date</span>
+                          <span class="summary-value">{{
+                            getFormattedDate(getCurrentDate())
+                          }}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2212,19 +2241,23 @@ interface BookingPerson {
       .service-item {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         padding: 6px 0;
+        gap: 8px;
       }
 
       .service-name {
         font-size: 0.9rem;
         color: var(--DHATextGrayDark);
+        flex: 1;
       }
 
       .service-price {
         font-weight: 600;
         color: var(--DHAGreen);
-        font-size: 0.9rem;
+        font-size: 0.8rem;
+        text-align: right;
+        white-space: nowrap;
       }
 
       .summary-details {
@@ -2253,6 +2286,64 @@ interface BookingPerson {
         font-weight: 600;
         color: var(--DHAGreen);
         font-size: 1rem;
+      }
+
+      .summary-item.total-amount {
+        border-top: 2px solid var(--DHAGreen);
+        margin-top: 12px;
+        padding-top: 12px;
+        font-size: 1.1rem;
+      }
+
+      .service-breakdown {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--DHABackGroundLightGray);
+      }
+
+      .breakdown-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--DHAGreen);
+        margin-bottom: 12px;
+      }
+
+      .person-breakdown {
+        margin-bottom: 12px;
+        padding: 8px 0;
+      }
+
+      .person-name {
+        font-weight: 600;
+        color: var(--DHATextGrayDark);
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+      }
+
+      .person-services {
+        margin-left: 12px;
+      }
+
+      .service-breakdown-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 4px 0;
+        font-size: 0.85rem;
+        gap: 8px;
+      }
+
+      .service-breakdown-item .service-name {
+        color: var(--DHATextGrayDark);
+        flex: 1;
+      }
+
+      .service-breakdown-item .service-price {
+        font-weight: 600;
+        color: var(--DHAGreen);
+        text-align: right;
+        font-size: 0.8rem;
+        white-space: nowrap;
       }
 
       .modal-footer {
@@ -2348,26 +2439,33 @@ export class BookServiceComponent implements OnInit, OnDestroy {
     {
       id: 'id-card',
       name: 'Smart ID Card Application',
-      description: 'Apply for a new South African smart ID card',
+      description:
+        'Apply for a new South African smart ID card (Free for first time, R140 for replacement)',
       checked: false,
+      price: 140, // R140 for replacement, free for first time
     },
     {
       id: 'passport',
       name: 'Passport Application',
-      description: 'Apply for a new South African passport',
+      description:
+        'Apply for a new South African passport (R600 for 32 pages, R1200 for 48 pages)',
       checked: false,
+      price: 600, // R600 for 32 pages, R1200 for 48 pages (default to 32 pages)
     },
     {
       id: 'ehome-affairs',
       name: 'eHomeAffairs Application',
-      description: 'Schedule an appointment for your eHomeAffairs application',
+      description:
+        'Schedule an appointment for your eHomeAffairs application (Prepaid - R0)',
       checked: false,
+      price: 0, // Prepaid (R0)
     },
     {
       id: 'collection',
       name: 'Collection of ID or Passport',
-      description: 'Collect your smart ID or Passport',
+      description: 'Collect your smart ID or Passport (Prepaid - R0)',
       checked: false,
+      price: 0, // Prepaid (R0)
     },
   ];
 
@@ -2466,11 +2564,47 @@ export class BookServiceComponent implements OnInit, OnDestroy {
       return (
         total +
         person.selectedServices.reduce(
-          (personTotal, service) => personTotal + (service.price || 0),
+          (personTotal, service) => personTotal + this.getServicePrice(service),
           0
         )
       );
     }, 0);
+  }
+
+  getServicePrice(service: Service): number {
+    // Return the base price from service definition
+    // For Smart ID: R140 (replacement price, free for first time)
+    // For Passport: R600 (32 pages default, R1200 for 48 pages)
+    // For eHomeAffairs & Collection: R0 (prepaid)
+
+    switch (service.id) {
+      case 'passport':
+        return 600; // Default to 32 pages, could be enhanced to ask user for page count
+      case 'id-card':
+        return 140; // Replacement price, free for first time
+      case 'ehome-affairs':
+        return 0; // Always prepaid
+      case 'collection':
+        return 0; // Always prepaid
+      default:
+        return service.price || 0;
+    }
+  }
+
+  getServicePriceDescription(service: Service): string {
+    // Return a description of the pricing conditions
+    switch (service.id) {
+      case 'passport':
+        return 'R600 (32 pages) / R1200 (48 pages)';
+      case 'id-card':
+        return 'R140 (replacement) / Free (first time)';
+      case 'ehome-affairs':
+        return 'R0 (prepaid)';
+      case 'collection':
+        return 'R0 (prepaid)';
+      default:
+        return `R${service.price || 0}`;
+    }
   }
 
   getCurrentDate(): string {
