@@ -328,11 +328,37 @@ export class EditContactInfoComponent implements OnInit {
         phone: this.contactForm.value.phone,
       };
 
-      // Save updated data to session storage
+      // 1. Update personalData in session storage
       sessionStorage.setItem(
         'personalData',
         JSON.stringify(updatedPersonalData)
       );
+
+      // 2. Update confirmedAppointment if it exists
+      const confirmedAppointmentStr = sessionStorage.getItem(
+        'confirmedAppointment'
+      );
+      if (confirmedAppointmentStr) {
+        const confirmedAppointment = JSON.parse(confirmedAppointmentStr);
+        confirmedAppointment.personalData = updatedPersonalData;
+        sessionStorage.setItem(
+          'confirmedAppointment',
+          JSON.stringify(confirmedAppointment)
+        );
+      }
+
+      // 3. Update ID-specific appointment if it exists
+      const idSpecificAppointmentStr = sessionStorage.getItem(
+        `appointment_${this.personalData.idNumber}`
+      );
+      if (idSpecificAppointmentStr) {
+        const idSpecificAppointment = JSON.parse(idSpecificAppointmentStr);
+        idSpecificAppointment.personalData = updatedPersonalData;
+        sessionStorage.setItem(
+          `appointment_${this.personalData.idNumber}`,
+          JSON.stringify(idSpecificAppointment)
+        );
+      }
 
       // Navigate back to menu
       this.router.navigate(['/menu']);
