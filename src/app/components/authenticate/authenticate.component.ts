@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  FormsModule,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-layout.component';
@@ -15,12 +16,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
+interface Country {
+  code: string;
+  name: string;
+}
+
 @Component({
   selector: 'app-authenticate',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     FormPageLayoutComponent,
     MatFormFieldModule,
     MatInputModule,
@@ -59,7 +66,11 @@ import { MatInputModule } from '@angular/material/input';
           </div>
         </div>
 
-        <div class="form-group floating-label-group">
+        <!-- ID Number Field (shown when ID is selected) -->
+        <div
+          class="form-group floating-label-group"
+          *ngIf="authForm.get('idType')?.value === 'id'"
+        >
           <input
             type="text"
             id="idNumber"
@@ -82,6 +93,116 @@ import { MatInputModule } from '@angular/material/input';
             </div>
             <div *ngIf="authForm.get('idNumber')?.errors?.['pattern']">
               ID number must be exactly 13 digits
+            </div>
+          </div>
+        </div>
+
+        <!-- Country Dropdown (shown when Passport is selected) -->
+        <div
+          class="form-group floating-label-group"
+          *ngIf="authForm.get('idType')?.value === 'passport'"
+        >
+          <div class="searchable-dropdown">
+            <input
+              type="text"
+              id="countrySearch"
+              class="floating-input"
+              placeholder=""
+              [ngModel]="getDisplayValue()"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onSearchInputChange($event)"
+              (focus)="onCountryInputFocus()"
+              [class.has-value]="selectedCountry"
+              autocomplete="off"
+            />
+            <label for="countrySearch" class="floating-label">Country *</label>
+            <div class="dropdown-controls">
+              <div
+                class="clear-button"
+                *ngIf="selectedCountry"
+                (click)="clearCountrySelection()"
+                title="Clear selection"
+              >
+                <i class="fas fa-times"></i>
+              </div>
+              <div class="dropdown-arrow" (click)="toggleCountryDropdown()">
+                <i
+                  class="fas fa-chevron-down"
+                  [class.rotated]="showCountryDropdown"
+                ></i>
+              </div>
+            </div>
+
+            <!-- Country Dropdown List -->
+            <div
+              class="dropdown-list"
+              *ngIf="showCountryDropdown && filteredCountries.length > 0"
+            >
+              <div
+                *ngFor="let country of filteredCountries"
+                class="dropdown-item"
+                (click)="selectCountry(country)"
+              >
+                {{ country.name }}
+              </div>
+            </div>
+
+            <!-- No results message -->
+            <div
+              class="dropdown-list no-results"
+              *ngIf="
+                showCountryDropdown &&
+                filteredCountries.length === 0 &&
+                countrySearchTerm
+              "
+            >
+              <div class="dropdown-item">No countries found</div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="
+              authForm.get('country')?.invalid &&
+              authForm.get('country')?.touched
+            "
+            class="error-message"
+          >
+            <div *ngIf="authForm.get('country')?.errors?.['required']">
+              Please select a country
+            </div>
+          </div>
+        </div>
+
+        <!-- Passport Number Field (shown when Passport is selected) -->
+        <div
+          class="form-group floating-label-group"
+          *ngIf="authForm.get('idType')?.value === 'passport'"
+        >
+          <input
+            type="text"
+            id="passportNumber"
+            formControlName="passportNumber"
+            class="floating-input"
+            maxlength="20"
+            autocomplete="username"
+            [class.has-value]="authForm.get('passportNumber')?.value"
+            placeholder=""
+          />
+          <label for="passportNumber" class="floating-label"
+            >Passport Number *</label
+          >
+          <div
+            *ngIf="
+              authForm.get('passportNumber')?.invalid &&
+              authForm.get('passportNumber')?.touched
+            "
+            class="error-message"
+          >
+            <div *ngIf="authForm.get('passportNumber')?.errors?.['required']">
+              Passport number is required
+            </div>
+            <div *ngIf="authForm.get('passportNumber')?.errors?.['pattern']">
+              Please enter a valid passport number
             </div>
           </div>
         </div>
@@ -286,6 +407,117 @@ import { MatInputModule } from '@angular/material/input';
         cursor: not-allowed;
       }
 
+      /* Searchable Dropdown Styles */
+      .searchable-dropdown {
+        position: relative;
+        width: 100%;
+      }
+
+      .dropdown-controls {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        z-index: 2;
+      }
+
+      .clear-button {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--DHATextGray);
+        color: var(--DHAWhite);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 10px;
+      }
+
+      .clear-button:hover {
+        background: var(--DHARed);
+        transform: scale(1.1);
+      }
+
+      .dropdown-arrow {
+        color: var(--DHATextGray);
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        padding: 4px;
+      }
+
+      .dropdown-arrow i {
+        font-size: 14px;
+      }
+
+      .dropdown-arrow i.rotated {
+        transform: rotate(180deg);
+      }
+
+      .dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--DHAWhite);
+        border: 1px solid var(--DividerGray);
+        border-top: none;
+        border-radius: 0 0 6px 6px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .dropdown-item {
+        padding: 12px 16px;
+        cursor: pointer;
+        border-bottom: 1px solid var(--DHABackGroundLightGray);
+        transition: background-color 0.2s ease;
+        font-size: 14px;
+        color: var(--DHATextGrayDark);
+      }
+
+      .dropdown-item:last-child {
+        border-bottom: none;
+      }
+
+      .dropdown-item:hover {
+        background-color: var(--DHABackGroundLightGray);
+      }
+
+      .dropdown-list.no-results .dropdown-item {
+        color: var(--DHATextGray);
+        font-style: italic;
+        cursor: default;
+      }
+
+      .dropdown-list.no-results .dropdown-item:hover {
+        background-color: transparent;
+      }
+
+      /* Custom scrollbar for dropdown */
+      .dropdown-list::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .dropdown-list::-webkit-scrollbar-track {
+        background: var(--DHABackGroundLightGray);
+      }
+
+      .dropdown-list::-webkit-scrollbar-thumb {
+        background: var(--DHATextGray);
+        border-radius: 3px;
+      }
+
+      .dropdown-list::-webkit-scrollbar-thumb:hover {
+        background: var(--DHATextGrayDark);
+      }
+
       .demo-section {
         margin-top: 20px;
         text-align: center;
@@ -371,21 +603,348 @@ export class AuthenticateComponent implements OnInit {
     'Book Service',
   ];
 
+  // Country dropdown properties
+  countries: Country[] = []; // is this what we initialise?
+  filteredCountries: Country[] = [];
+  selectedCountry: Country | null = null;
+  countrySearchTerm: string = '';
+  showCountryDropdown: boolean = false;
+
   constructor(private fb: FormBuilder, private router: Router) {
     this.authForm = this.fb.group({
       idType: ['', Validators.required],
       idNumber: ['', [Validators.required, Validators.pattern(/^\d{13}$/)]],
+      country: ['', Validators.required],
+      passportNumber: [
+        '',
+        [Validators.required, Validators.pattern(/^[A-Z0-9]{6,20}$/)],
+      ],
     });
+
+    this.initializeCountries();
   }
+
+  displayValue() {
+    return this.selectedCountry?.name || this.countrySearchTerm;
+  }
+
   ngOnInit() {
     // Scroll to top when component loads
     window.scrollTo(0, 0);
+
+    // Watch for ID type changes to update validation
+    this.authForm.get('idType')?.valueChanges.subscribe((value) => {
+      this.updateFormValidation(value);
+    });
+  }
+
+  initializeCountries() {
+    // Initialize with comprehensive list of countries, prioritizing African and West Asian countries
+    this.countries = [
+      // African Countries (All 54 countries)
+      { code: 'DZ', name: 'Algeria' },
+      { code: 'AO', name: 'Angola' },
+      { code: 'BJ', name: 'Benin' },
+      { code: 'BW', name: 'Botswana' },
+      { code: 'BF', name: 'Burkina Faso' },
+      { code: 'BI', name: 'Burundi' },
+      { code: 'CV', name: 'Cape Verde' },
+      { code: 'CM', name: 'Cameroon' },
+      { code: 'CF', name: 'Central African Republic' },
+      { code: 'TD', name: 'Chad' },
+      { code: 'KM', name: 'Comoros' },
+      { code: 'CG', name: 'Republic of the Congo' },
+      { code: 'CD', name: 'Democratic Republic of the Congo' },
+      { code: 'CI', name: "Côte d'Ivoire" },
+      { code: 'DJ', name: 'Djibouti' },
+      { code: 'EG', name: 'Egypt' },
+      { code: 'GQ', name: 'Equatorial Guinea' },
+      { code: 'ER', name: 'Eritrea' },
+      { code: 'SZ', name: 'Eswatini' },
+      { code: 'ET', name: 'Ethiopia' },
+      { code: 'GA', name: 'Gabon' },
+      { code: 'GM', name: 'Gambia' },
+      { code: 'GH', name: 'Ghana' },
+      { code: 'GN', name: 'Guinea' },
+      { code: 'GW', name: 'Guinea-Bissau' },
+      { code: 'KE', name: 'Kenya' },
+      { code: 'LS', name: 'Lesotho' },
+      { code: 'LR', name: 'Liberia' },
+      { code: 'LY', name: 'Libya' },
+      { code: 'MG', name: 'Madagascar' },
+      { code: 'MW', name: 'Malawi' },
+      { code: 'ML', name: 'Mali' },
+      { code: 'MR', name: 'Mauritania' },
+      { code: 'MU', name: 'Mauritius' },
+      { code: 'MA', name: 'Morocco' },
+      { code: 'MZ', name: 'Mozambique' },
+      { code: 'NA', name: 'Namibia' },
+      { code: 'NE', name: 'Niger' },
+      { code: 'NG', name: 'Nigeria' },
+      { code: 'RW', name: 'Rwanda' },
+      { code: 'ST', name: 'São Tomé and Príncipe' },
+      { code: 'SN', name: 'Senegal' },
+      { code: 'SC', name: 'Seychelles' },
+      { code: 'SL', name: 'Sierra Leone' },
+      { code: 'SO', name: 'Somalia' },
+      { code: 'ZA', name: 'South Africa' },
+      { code: 'SS', name: 'South Sudan' },
+      { code: 'SD', name: 'Sudan' },
+      { code: 'TZ', name: 'Tanzania' },
+      { code: 'TG', name: 'Togo' },
+      { code: 'TN', name: 'Tunisia' },
+      { code: 'UG', name: 'Uganda' },
+      { code: 'ZM', name: 'Zambia' },
+      { code: 'ZW', name: 'Zimbabwe' },
+
+      // West Asian Countries (Middle East)
+      { code: 'AF', name: 'Afghanistan' },
+      { code: 'AM', name: 'Armenia' },
+      { code: 'AZ', name: 'Azerbaijan' },
+      { code: 'BH', name: 'Bahrain' },
+      { code: 'CY', name: 'Cyprus' },
+      { code: 'GE', name: 'Georgia' },
+      { code: 'IR', name: 'Iran' },
+      { code: 'IQ', name: 'Iraq' },
+      { code: 'IL', name: 'Israel' },
+      { code: 'JO', name: 'Jordan' },
+      { code: 'KW', name: 'Kuwait' },
+      { code: 'LB', name: 'Lebanon' },
+      { code: 'OM', name: 'Oman' },
+      { code: 'PS', name: 'Palestine' },
+      { code: 'QA', name: 'Qatar' },
+      { code: 'SA', name: 'Saudi Arabia' },
+      { code: 'SY', name: 'Syria' },
+      { code: 'TR', name: 'Turkey' },
+      { code: 'AE', name: 'United Arab Emirates' },
+      { code: 'YE', name: 'Yemen' },
+
+      // Other Major Countries
+      { code: 'US', name: 'United States' },
+      { code: 'GB', name: 'United Kingdom' },
+      { code: 'CA', name: 'Canada' },
+      { code: 'AU', name: 'Australia' },
+      { code: 'NZ', name: 'New Zealand' },
+      { code: 'DE', name: 'Germany' },
+      { code: 'FR', name: 'France' },
+      { code: 'IT', name: 'Italy' },
+      { code: 'ES', name: 'Spain' },
+      { code: 'NL', name: 'Netherlands' },
+      { code: 'BE', name: 'Belgium' },
+      { code: 'CH', name: 'Switzerland' },
+      { code: 'AT', name: 'Austria' },
+      { code: 'SE', name: 'Sweden' },
+      { code: 'NO', name: 'Norway' },
+      { code: 'DK', name: 'Denmark' },
+      { code: 'FI', name: 'Finland' },
+      { code: 'IE', name: 'Ireland' },
+      { code: 'PT', name: 'Portugal' },
+      { code: 'GR', name: 'Greece' },
+      { code: 'PL', name: 'Poland' },
+      { code: 'CZ', name: 'Czech Republic' },
+      { code: 'HU', name: 'Hungary' },
+      { code: 'RO', name: 'Romania' },
+      { code: 'BG', name: 'Bulgaria' },
+      { code: 'HR', name: 'Croatia' },
+      { code: 'SI', name: 'Slovenia' },
+      { code: 'SK', name: 'Slovakia' },
+      { code: 'LT', name: 'Lithuania' },
+      { code: 'LV', name: 'Latvia' },
+      { code: 'EE', name: 'Estonia' },
+      { code: 'JP', name: 'Japan' },
+      { code: 'KR', name: 'South Korea' },
+      { code: 'CN', name: 'China' },
+      { code: 'IN', name: 'India' },
+      { code: 'PK', name: 'Pakistan' },
+      { code: 'BD', name: 'Bangladesh' },
+      { code: 'LK', name: 'Sri Lanka' },
+      { code: 'MV', name: 'Maldives' },
+      { code: 'NP', name: 'Nepal' },
+      { code: 'BT', name: 'Bhutan' },
+      { code: 'MM', name: 'Myanmar' },
+      { code: 'TH', name: 'Thailand' },
+      { code: 'LA', name: 'Laos' },
+      { code: 'KH', name: 'Cambodia' },
+      { code: 'VN', name: 'Vietnam' },
+      { code: 'MY', name: 'Malaysia' },
+      { code: 'SG', name: 'Singapore' },
+      { code: 'ID', name: 'Indonesia' },
+      { code: 'PH', name: 'Philippines' },
+      { code: 'BN', name: 'Brunei' },
+      { code: 'TL', name: 'East Timor' },
+      { code: 'BR', name: 'Brazil' },
+      { code: 'AR', name: 'Argentina' },
+      { code: 'MX', name: 'Mexico' },
+      { code: 'CL', name: 'Chile' },
+      { code: 'PE', name: 'Peru' },
+      { code: 'CO', name: 'Colombia' },
+      { code: 'VE', name: 'Venezuela' },
+      { code: 'EC', name: 'Ecuador' },
+      { code: 'UY', name: 'Uruguay' },
+      { code: 'PY', name: 'Paraguay' },
+      { code: 'BO', name: 'Bolivia' },
+      { code: 'GY', name: 'Guyana' },
+      { code: 'SR', name: 'Suriname' },
+      { code: 'RU', name: 'Russia' },
+      { code: 'UA', name: 'Ukraine' },
+      { code: 'BY', name: 'Belarus' },
+      { code: 'MD', name: 'Moldova' },
+      { code: 'KZ', name: 'Kazakhstan' },
+      { code: 'UZ', name: 'Uzbekistan' },
+      { code: 'TM', name: 'Turkmenistan' },
+      { code: 'TJ', name: 'Tajikistan' },
+      { code: 'KG', name: 'Kyrgyzstan' },
+      { code: 'MN', name: 'Mongolia' },
+    ];
+
+    // Sort countries alphabetically by name
+    this.countries.sort((a, b) => a.name.localeCompare(b.name));
+    this.filteredCountries = [...this.countries];
+  }
+
+  updateFormValidation(idType: string) {
+    if (idType === 'id') {
+      // Clear passport fields and set ID validation
+      this.authForm.get('country')?.clearValidators();
+      this.authForm.get('passportNumber')?.clearValidators();
+      this.authForm
+        .get('idNumber')
+        ?.setValidators([Validators.required, Validators.pattern(/^\d{13}$/)]);
+    } else if (idType === 'passport') {
+      // Clear ID field and set passport validation
+      this.authForm.get('idNumber')?.clearValidators();
+      this.authForm.get('country')?.setValidators([Validators.required]);
+      this.authForm
+        .get('passportNumber')
+        ?.setValidators([
+          Validators.required,
+          Validators.pattern(/^[A-Z0-9]{6,20}$/),
+        ]);
+    }
+
+    // Update validation for all fields
+    this.authForm.get('idNumber')?.updateValueAndValidity();
+    this.authForm.get('country')?.updateValueAndValidity();
+    this.authForm.get('passportNumber')?.updateValueAndValidity();
+  }
+
+  filterCountries() {
+    if (!this.countrySearchTerm || this.countrySearchTerm.trim() === '') {
+      this.filteredCountries = [...this.countries];
+    } else {
+      const searchTerm = this.countrySearchTerm.toLowerCase().trim();
+      this.filteredCountries = this.countries.filter((country) => {
+        const countryName = country.name.toLowerCase();
+        // Search by full name or partial matches
+        return (
+          countryName.includes(searchTerm) ||
+          countryName.startsWith(searchTerm) ||
+          // Also search by common alternative names
+          this.getAlternativeNames(country.name).some((alt) =>
+            alt.toLowerCase().includes(searchTerm)
+          )
+        );
+      });
+    }
+  }
+
+  getAlternativeNames(countryName: string): string[] {
+    // Add common alternative names for better search
+    const alternatives: { [key: string]: string[] } = {
+      'United States': ['USA', 'US', 'America'],
+      'United Kingdom': ['UK', 'Britain', 'Great Britain'],
+      'South Africa': ['SA', 'RSA'],
+      'United Arab Emirates': ['UAE', 'Emirates'],
+      'Saudi Arabia': ['KSA'],
+      'South Korea': ['Korea'],
+      'North Korea': ['DPRK'],
+      'Democratic Republic of the Congo': ['DRC', 'Congo-Kinshasa'],
+      'Republic of the Congo': ['Congo-Brazzaville'],
+      "Côte d'Ivoire": ['Ivory Coast'],
+      Eswatini: ['Swaziland'],
+      'East Timor': ['Timor-Leste'],
+      Myanmar: ['Burma'],
+      'Czech Republic': ['Czechia'],
+      Macedonia: ['North Macedonia'],
+    };
+    return alternatives[countryName] || [];
+  }
+
+  selectCountry(country: Country) {
+    this.selectedCountry = country;
+    this.countrySearchTerm = country.name;
+    this.authForm.get('country')?.setValue(country.code);
+    this.showCountryDropdown = false;
+    // Mark the field as touched to show validation
+    this.authForm.get('country')?.markAsTouched();
+    // Update the filtered countries to show the selected country
+    this.filteredCountries = [country];
+  }
+
+  toggleCountryDropdown() {
+    this.showCountryDropdown = !this.showCountryDropdown;
+    if (this.showCountryDropdown) {
+      // Show all countries when dropdown is opened
+      this.filteredCountries = [...this.countries];
+      // Focus the input when dropdown opens
+      setTimeout(() => {
+        const input = document.getElementById(
+          'countrySearch'
+        ) as HTMLInputElement;
+        if (input) {
+          input.focus();
+        }
+      }, 100);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+    const dropdown = document.querySelector('.searchable-dropdown');
+
+    // Close dropdown if click is outside the dropdown
+    if (dropdown && !dropdown.contains(target)) {
+      this.showCountryDropdown = false;
+    }
+  }
+
+  onCountryInputFocus() {
+    this.showCountryDropdown = true;
+  }
+
+  clearCountrySelection() {
+    this.selectedCountry = null;
+    this.countrySearchTerm = '';
+    this.authForm.get('country')?.setValue('');
+    this.filterCountries();
+  }
+
+  getDisplayValue(): string {
+    if (this.selectedCountry) {
+      return this.selectedCountry.name;
+    }
+    return this.countrySearchTerm;
+  }
+
+  onSearchInputChange(value: string) {
+    this.countrySearchTerm = value;
+    // If user is typing and it doesn't match the selected country, clear selection
+    if (this.selectedCountry && this.selectedCountry.name !== value) {
+      this.selectedCountry = null;
+      this.authForm.get('country')?.setValue('');
+    }
+    this.filterCountries();
   }
 
   onSubmit() {
     if (this.authForm.valid) {
       // Store authentication data in session storage
-      sessionStorage.setItem('authData', JSON.stringify(this.authForm.value));
+      const authData = {
+        ...this.authForm.value,
+        countryName: this.selectedCountry?.name,
+      };
+      sessionStorage.setItem('authData', JSON.stringify(authData));
 
       // Navigate to next step
       this.router.navigate(['/personal-info']);
