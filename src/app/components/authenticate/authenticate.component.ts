@@ -62,6 +62,7 @@ interface Country {
             "
             class="error-message"
           >
+            <span class="fas fa-exclamation-circle"></span>
             Please select an ID type
           </div>
         </div>
@@ -88,10 +89,18 @@ interface Country {
             "
             class="error-message"
           >
-            <div *ngIf="authForm.get('idNumber')?.errors?.['required']">
+            <div
+              *ngIf="authForm.get('idNumber')?.errors?.['required']"
+              class="error-message-container"
+            >
+              <span class="fas fa-exclamation-circle"></span>
               ID number is required
             </div>
-            <div *ngIf="authForm.get('idNumber')?.errors?.['pattern']">
+            <div
+              *ngIf="authForm.get('idNumber')?.errors?.['pattern']"
+              class="error-message-container"
+            >
+              <span class="fas fa-times"></span>
               ID number must be exactly 13 digits
             </div>
           </div>
@@ -167,7 +176,11 @@ interface Country {
             "
             class="error-message"
           >
-            <div *ngIf="authForm.get('country')?.errors?.['required']">
+            <div
+              *ngIf="authForm.get('country')?.errors?.['required']"
+              class="error-message-container"
+            >
+              <span class="fas fa-exclamation-circle"></span>
               Please select a country
             </div>
           </div>
@@ -198,10 +211,18 @@ interface Country {
             "
             class="error-message"
           >
-            <div *ngIf="authForm.get('passportNumber')?.errors?.['required']">
+            <div
+              *ngIf="authForm.get('passportNumber')?.errors?.['required']"
+              class="error-message-container"
+            >
+              <span class="fas fa-exclamation-circle"></span>
               Passport number is required
             </div>
-            <div *ngIf="authForm.get('passportNumber')?.errors?.['pattern']">
+            <div
+              *ngIf="authForm.get('passportNumber')?.errors?.['pattern']"
+              class="error-message-container"
+            >
+              <span class="fas fa-times"></span>
               Please enter a valid passport number
             </div>
           </div>

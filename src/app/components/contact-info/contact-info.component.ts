@@ -47,9 +47,11 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
               class="error-message"
             >
               <div *ngIf="contactForm.get('email')?.errors?.['required']">
+                <span class="fas fa-exclamation-circle"></span>
                 Email is required
               </div>
               <div *ngIf="contactForm.get('email')?.errors?.['email']">
+                <span class="fas fa-times"></span>
                 Please enter a valid email address
               </div>
             </div>
@@ -73,9 +75,11 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
               class="error-message"
             >
               <div *ngIf="contactForm.get('phone')?.errors?.['required']">
+                <span class="fas fa-exclamation-circle"></span>
                 Phone number is required
               </div>
               <div *ngIf="contactForm.get('phone')?.errors?.['pattern']">
+                <span class="fas fa-times"></span>
                 Please enter a valid phone number
               </div>
             </div>

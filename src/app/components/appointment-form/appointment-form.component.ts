@@ -230,6 +230,7 @@ interface Branch {
                   "
                   class="error-message"
                 >
+                  <span class="fas fa-exclamation-circle"></span>
                   Province is required
                 </div>
               </div>
@@ -258,6 +259,7 @@ interface Branch {
                   "
                   class="error-message"
                 >
+                  <span class="fas fa-exclamation-circle"></span>
                   City is required
                 </div>
               </div>
@@ -290,6 +292,7 @@ interface Branch {
                   "
                   class="error-message"
                 >
+                  <span class="fas fa-exclamation-circle"></span>
                   Branch is required
                 </div>
               </div>

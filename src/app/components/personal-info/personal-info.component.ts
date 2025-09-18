@@ -70,6 +70,7 @@ import { BookingService } from '../../services/booking.service';
               "
               class="error-message"
             >
+              <span class="fas fa-exclamation-circle"></span>
               Forenames are required
             </div>
           </div>
@@ -91,6 +92,7 @@ import { BookingService } from '../../services/booking.service';
               "
               class="error-message"
             >
+              <span class="fas fa-exclamation-circle"></span>
               Last name is required
             </div>
           </div>
