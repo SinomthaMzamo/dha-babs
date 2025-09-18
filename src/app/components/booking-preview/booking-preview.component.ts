@@ -53,7 +53,10 @@ interface BookingPerson {
               <button
                 type="button"
                 (click)="toggleDeleteMode()"
-                class="action-btn danger"
+                [class]="
+                  'action-btn danger' +
+                  (isDeleteMode ? ' delete-mode-active' : '')
+                "
                 [disabled]="bookingPersons.length <= 1"
                 [title]="
                   isDeleteMode
@@ -61,7 +64,9 @@ interface BookingPerson {
                     : 'Remove an additional applicant from this booking'
                 "
               >
-                <span class="btn-text">Remove</span>
+                <span class="btn-text">{{
+                  isDeleteMode ? 'Exit Delete Mode' : 'Remove'
+                }}</span>
               </button>
               <button
                 type="button"
@@ -461,6 +466,7 @@ interface BookingPerson {
         display: flex;
         align-items: center;
         gap: 4px;
+        touch-action: manipulation;
       }
 
       .action-btn.std {
@@ -503,6 +509,27 @@ interface BookingPerson {
         border-color: var(--DHADangerColor);
         transform: translateY(-1px);
         color: var(--DHAWhite);
+      }
+
+      .action-btn.danger:active:not(:disabled) {
+        background: var(--DHADangerColor);
+        border-color: var(--DHADangerColor);
+        transform: translateY(0);
+        color: var(--DHAWhite);
+      }
+
+      /* State-based styling for delete mode */
+      .action-btn.danger.delete-mode-active {
+        background: var(--DHADangerColor);
+        color: var(--DHAWhite);
+        border-color: var(--DHADangerColor);
+      }
+
+      .action-btn.danger.delete-mode-active:hover:not(:disabled) {
+        background: var(--DHADangerColor);
+        color: var(--DHAWhite);
+        border-color: var(--DHADangerColor);
+        transform: translateY(-1px);
       }
 
       .action-btn.white:hover:not(:disabled) {
@@ -618,6 +645,37 @@ interface BookingPerson {
         .btn-primary,
         .btn-secondary {
           width: 100%;
+        }
+      }
+
+      /* Touch device specific overrides */
+      @media (hover: none) and (pointer: coarse) {
+        .action-btn.danger:hover:not(:disabled) {
+          background: var(--DHADangerColorLight);
+          color: var(--DHADangerColor);
+          transform: none;
+          border-color: var(--DHADangerColor);
+        }
+
+        .action-btn.danger.delete-mode-active:hover:not(:disabled) {
+          background: var(--DHADangerColor);
+          color: var(--DHAWhite);
+          transform: none;
+          border-color: var(--DHADangerColor);
+        }
+
+        .action-btn.std:hover:not(:disabled) {
+          background: var(--DHAWhite);
+          color: var(--DHAGreen);
+          transform: none;
+          border-color: var(--DHAGreen);
+        }
+
+        .action-btn.white:hover:not(:disabled) {
+          background: var(--DHAWhite);
+          color: var(--DHATextGrayDark);
+          transform: none;
+          border-color: var(--DHABackGroundLightGray);
         }
       }
 
