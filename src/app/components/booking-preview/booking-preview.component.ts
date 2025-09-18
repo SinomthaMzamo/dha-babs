@@ -815,8 +815,10 @@ export class BookingPreviewComponent implements OnChanges {
   }
 
   hasAnyServicesSelected(): boolean {
-    return this.bookingPersons.some(
-      (person) => person.selectedServices.length > 0
+    // Check if ALL applicants have at least one service selected
+    return (
+      this.bookingPersons.length > 0 &&
+      this.bookingPersons.every((person) => person.selectedServices.length > 0)
     );
   }
 
