@@ -929,13 +929,79 @@ export class AppointmentResultsComponent implements OnInit, OnChanges {
   cities: City[] = [
     // Gauteng
     { id: 'johannesburg', name: 'Johannesburg', provinceId: 'gauteng' },
-    { id: 'sandton', name: 'Sandton', provinceId: 'gauteng' },
+    { id: 'pretoria-menlyn', name: 'Pretoria Menlyn', provinceId: 'gauteng' },
     { id: 'pretoria', name: 'Pretoria', provinceId: 'gauteng' },
+    { id: 'soweto', name: 'Soweto', provinceId: 'gauteng' },
+    { id: 'springs', name: 'Springs', provinceId: 'gauteng' },
+    { id: 'vereeniging', name: 'Vereeniging', provinceId: 'gauteng' },
+    { id: 'alberton', name: 'Alberton', provinceId: 'gauteng' },
+    { id: 'benoni', name: 'Benoni', provinceId: 'gauteng' },
+    { id: 'brakpan', name: 'Brakpan', provinceId: 'gauteng' },
+    { id: 'boksburg', name: 'Boksburg', provinceId: 'gauteng' },
+    { id: 'carletonville', name: 'Carletonville', provinceId: 'gauteng' },
+    { id: 'edenvale', name: 'Edenvale', provinceId: 'gauteng' },
+    { id: 'ga-rankawa', name: 'Ga-Rankuwa', provinceId: 'gauteng' },
+    { id: 'heidelberg', name: 'Heidelberg', provinceId: 'gauteng' },
+    { id: 'kempton-park', name: 'Kempton Park', provinceId: 'gauteng' },
+    { id: 'mogale-city', name: 'Mogale City', provinceId: 'gauteng' },
+    {
+      id: 'hammanskraal-temba',
+      name: 'Hammanskraal Temba',
+      provinceId: 'gauteng',
+    },
+    { id: 'nigel', name: 'Nigel', provinceId: 'gauteng' },
+    {
+      id: 'medium-office-randburg',
+      name: 'Medium Office Randburg',
+      provinceId: 'gauteng',
+    },
+    { id: 'pretoria-north', name: 'Pretoria North', provinceId: 'gauteng' },
+    {
+      id: 'johannesburg-metro-municipality',
+      name: 'Johannesburg Metro Municipality',
+      provinceId: 'gauteng',
+    },
+    { id: 'vanderbijlpark', name: 'Vanderbijlpark', provinceId: 'gauteng' },
+    { id: 'tshwane', name: 'Tshwane', provinceId: 'gauteng' },
+    { id: 'randfontein', name: 'Randfontein', provinceId: 'gauteng' },
+    { id: 'centurion', name: 'Centurion', provinceId: 'gauteng' },
+    { id: 'mamelodi-east', name: 'Mamelodi East', provinceId: 'gauteng' },
+    { id: 'evaton', name: 'Evaton', provinceId: 'gauteng' },
+    { id: 'bronkhorstspruit', name: 'Bronkhorstspruit', provinceId: 'gauteng' },
 
     // Western Cape
-    { id: 'cape-town', name: 'Cape Town', provinceId: 'western-cape' },
+    {
+      id: 'epping-goodwood',
+      name: 'Epping Goodwood',
+      provinceId: 'western-cape',
+    },
     { id: 'bellville', name: 'Bellville', provinceId: 'western-cape' },
-    { id: 'durbanville', name: 'Durbanville', provinceId: 'western-cape' },
+    { id: 'vredendal', name: 'Vredendal', provinceId: 'western-cape' },
+    { id: 'grabouw', name: 'Grabouw', provinceId: 'western-cape' },
+    { id: 'george', name: 'George', provinceId: 'western-cape' },
+    { id: 'cape-town', name: 'Cape Town', provinceId: 'western-cape' },
+    { id: 'paarl', name: 'Paarl', provinceId: 'western-cape' },
+    { id: 'beaufort-west', name: 'Beaufort West', provinceId: 'western-cape' },
+    { id: 'caledon', name: 'Caledon', provinceId: 'western-cape' },
+    {
+      id: 'mitchells-plain',
+      name: 'Mitchells Plain',
+      provinceId: 'western-cape',
+    },
+    { id: 'malmesbury', name: 'Malmesbury', provinceId: 'western-cape' },
+    { id: 'oudtshoorn', name: 'Oudtshoorn', provinceId: 'western-cape' },
+    { id: 'worcester', name: 'Worcester', provinceId: 'western-cape' },
+    { id: 'stellenbosch', name: 'Stellenbosch', provinceId: 'western-cape' },
+    { id: 'kwanonqaba', name: 'Kwanonqaba', provinceId: 'western-cape' },
+    { id: 'prince-albert', name: 'Prince Albert', provinceId: 'western-cape' },
+    { id: 'bredasdorp', name: 'Bredasdorp', provinceId: 'western-cape' },
+    { id: 'robertson', name: 'Robertson', provinceId: 'western-cape' },
+    { id: 'ceres', name: 'Ceres', provinceId: 'western-cape' },
+    {
+      id: 'plettenburg-bay',
+      name: 'Plettenburg Bay',
+      provinceId: 'western-cape',
+    },
 
     // KwaZulu-Natal
     { id: 'durban', name: 'Durban', provinceId: 'kwazulu-natal' },
@@ -966,18 +1032,28 @@ export class AppointmentResultsComponent implements OnInit, OnChanges {
   ];
 
   branches: Branch[] = [
-    // Johannesburg
+    // Johannesburg branches
+    {
+      id: 'cresta',
+      name: 'Cresta',
+      cityId: 'johannesburg',
+    },
     {
       id: 'johannesburg',
       name: 'Johannesburg',
       cityId: 'johannesburg',
     },
-
-    // Sandton
     {
-      id: 'sandton',
-      name: 'Sandton',
-      cityId: 'sandton',
+      id: 'roodepoort',
+      name: 'Roodepoort',
+      cityId: 'johannesburg',
+    },
+
+    // Pretoria Menlyn
+    {
+      id: 'pretoria-menlyn',
+      name: 'Pretoria Menlyn',
+      cityId: 'pretoria-menlyn',
     },
 
     // Pretoria
@@ -987,14 +1063,214 @@ export class AppointmentResultsComponent implements OnInit, OnChanges {
       cityId: 'pretoria',
     },
 
-    // Cape Town
+    // Soweto
+    {
+      id: 'soweto',
+      name: 'Soweto',
+      cityId: 'soweto',
+    },
+
+    // Springs
+    {
+      id: 'springs',
+      name: 'Springs',
+      cityId: 'springs',
+    },
+
+    // Vereeniging
+    {
+      id: 'vereeniging',
+      name: 'Vereeniging',
+      cityId: 'vereeniging',
+    },
+
+    // Alberton
+    {
+      id: 'alberton',
+      name: 'Alberton',
+      cityId: 'alberton',
+    },
+
+    // Benoni
+    {
+      id: 'benoni',
+      name: 'Benoni',
+      cityId: 'benoni',
+    },
+
+    // Brakpan
+    {
+      id: 'brakpan',
+      name: 'Brakpan',
+      cityId: 'brakpan',
+    },
+
+    // Boksburg
+    {
+      id: 'boksburg',
+      name: 'Boksburg',
+      cityId: 'boksburg',
+    },
+
+    // Carletonville
+    {
+      id: 'carletonville',
+      name: 'Carletonville',
+      cityId: 'carletonville',
+    },
+
+    // Edenvale
+    {
+      id: 'edenvale',
+      name: 'Edenvale',
+      cityId: 'edenvale',
+    },
+
+    // Ga-Rankuwa
+    {
+      id: 'ga-rankawa',
+      name: 'Ga-Rankuwa',
+      cityId: 'ga-rankawa',
+    },
+
+    // Heidelberg
+    {
+      id: 'heidelberg',
+      name: 'Heidelberg',
+      cityId: 'heidelberg',
+    },
+
+    // Kempton Park
+    {
+      id: 'kempton-park',
+      name: 'Kempton Park',
+      cityId: 'kempton-park',
+    },
+
+    // Mogale City
+    {
+      id: 'mogale-city',
+      name: 'Mogale City',
+      cityId: 'mogale-city',
+    },
+
+    // Hammanskraal Temba
+    {
+      id: 'hammanskraal-temba',
+      name: 'Hammanskraal Temba',
+      cityId: 'hammanskraal-temba',
+    },
+
+    // Nigel
+    {
+      id: 'nigel',
+      name: 'Nigel',
+      cityId: 'nigel',
+    },
+
+    // Medium Office Randburg
+    {
+      id: 'medium-office-randburg',
+      name: 'Medium Office Randburg',
+      cityId: 'medium-office-randburg',
+    },
+
+    // Pretoria North
+    {
+      id: 'pretoria-north',
+      name: 'Pretoria North',
+      cityId: 'pretoria-north',
+    },
+
+    // Johannesburg Metro Municipality
+    {
+      id: 'johannesburg-metro-municipality',
+      name: 'Johannesburg Metro Municipality',
+      cityId: 'johannesburg-metro-municipality',
+    },
+
+    // Vanderbijlpark
+    {
+      id: 'vanderbijlpark',
+      name: 'Vanderbijlpark',
+      cityId: 'vanderbijlpark',
+    },
+
+    // Tshwane
+    {
+      id: 'tshwane',
+      name: 'Tshwane',
+      cityId: 'tshwane',
+    },
+
+    // Randfontein
+    {
+      id: 'randfontein',
+      name: 'Randfontein',
+      cityId: 'randfontein',
+    },
+
+    // Centurion
+    {
+      id: 'centurion',
+      name: 'Centurion',
+      cityId: 'centurion',
+    },
+
+    // Mamelodi East
+    {
+      id: 'mamelodi-east',
+      name: 'Mamelodi East',
+      cityId: 'mamelodi-east',
+    },
+
+    // Evaton
+    {
+      id: 'evaton',
+      name: 'Evaton',
+      cityId: 'evaton',
+    },
+
+    // Bronkhorstspruit
+    {
+      id: 'bronkhorstspruit',
+      name: 'Bronkhorstspruit',
+      cityId: 'bronkhorstspruit',
+    },
+
+    // Cape Town branches
     {
       id: 'cape-town',
       name: 'Cape Town',
       cityId: 'cape-town',
     },
+    {
+      id: 'khayelitsha',
+      name: 'Khayelitsha',
+      cityId: 'cape-town',
+    },
+    {
+      id: 'nyanga',
+      name: 'Nyanga',
+      cityId: 'cape-town',
+    },
+    {
+      id: 'wynberg',
+      name: 'Wynberg',
+      cityId: 'cape-town',
+    },
+    {
+      id: 'somerset-west',
+      name: 'Somerset West',
+      cityId: 'cape-town',
+    },
+    {
+      id: 'vredenburg',
+      name: 'Vredenburg',
+      cityId: 'cape-town',
+    },
 
-    // Bellville
+    // Bellville branches
     {
       id: 'bellville',
       name: 'Bellville',
@@ -1006,11 +1282,96 @@ export class AppointmentResultsComponent implements OnInit, OnChanges {
       cityId: 'bellville',
     },
 
-    // Durbanville
+    // Other Western Cape cities (one branch each)
     {
-      id: 'durbanville',
-      name: 'Durbanville',
-      cityId: 'durbanville',
+      id: 'epping-goodwood',
+      name: 'Epping Goodwood',
+      cityId: 'epping-goodwood',
+    },
+    {
+      id: 'vredendal',
+      name: 'Vredendal',
+      cityId: 'vredendal',
+    },
+    {
+      id: 'grabouw',
+      name: 'Grabouw',
+      cityId: 'grabouw',
+    },
+    {
+      id: 'george',
+      name: 'George',
+      cityId: 'george',
+    },
+    {
+      id: 'paarl',
+      name: 'Paarl',
+      cityId: 'paarl',
+    },
+    {
+      id: 'beaufort-west',
+      name: 'Beaufort West',
+      cityId: 'beaufort-west',
+    },
+    {
+      id: 'caledon',
+      name: 'Caledon',
+      cityId: 'caledon',
+    },
+    {
+      id: 'mitchells-plain',
+      name: 'Mitchells Plain',
+      cityId: 'mitchells-plain',
+    },
+    {
+      id: 'malmesbury',
+      name: 'Malmesbury',
+      cityId: 'malmesbury',
+    },
+    {
+      id: 'oudtshoorn',
+      name: 'Oudtshoorn',
+      cityId: 'oudtshoorn',
+    },
+    {
+      id: 'worcester',
+      name: 'Worcester',
+      cityId: 'worcester',
+    },
+    {
+      id: 'stellenbosch',
+      name: 'Stellenbosch',
+      cityId: 'stellenbosch',
+    },
+    {
+      id: 'kwanonqaba',
+      name: 'Kwanonqaba',
+      cityId: 'kwanonqaba',
+    },
+    {
+      id: 'prince-albert',
+      name: 'Prince Albert',
+      cityId: 'prince-albert',
+    },
+    {
+      id: 'bredasdorp',
+      name: 'Bredasdorp',
+      cityId: 'bredasdorp',
+    },
+    {
+      id: 'robertson',
+      name: 'Robertson',
+      cityId: 'robertson',
+    },
+    {
+      id: 'ceres',
+      name: 'Ceres',
+      cityId: 'ceres',
+    },
+    {
+      id: 'plettenburg-bay',
+      name: 'Plettenburg Bay',
+      cityId: 'plettenburg-bay',
     },
 
     // Durban
