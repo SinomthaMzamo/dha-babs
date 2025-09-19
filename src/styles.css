@@ -12,7 +12,8 @@
   --form-width: 500px;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -25,7 +26,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   display: block;
   margin: 0;
-  background: inear-gradient(135deg, var(--DHAOffWhite) 0%, #e8f5e8 100%);
+  background: linear-gradient(135deg, var(--DHAOffWhite) 0%, #e8f5e8 100%);
 }
 
 /* For Chrome/Safari/Edge (WebKit) */
@@ -56,9 +57,6 @@ th {
   font-family: var(--font-family-sans-serif);
 }
 
-body {
-}
-
 /* Keep button fonts as they are (they should inherit from their component styles) */
 .capitalised {
   text-transform: capitalize;
@@ -72,25 +70,25 @@ body {
   box-sizing: border-box;
 }
 
- .mat-calendar{
+.mat-calendar {
   background: aliceblue;
   border: 2px solid aliceblue;
   border-radius: 8px;
 }
 
 .mat-calendar-body-cell.mat-calendar-body-disabled {
-    cursor: not-allowed;
-    color: gainsboro;
+  cursor: not-allowed;
+  color: gainsboro;
 }
 
-.mat-mdc-form-field{
+.mat-mdc-form-field {
   width: 100%;
 }
 
 /* Apply globally to all MDC outlined form fields */
 .mat-mdc-form-field-appearance-outline .mdc-notched-outline {
-  border-radius: 16px;      /* Rounded corners */
-  border-color: gainsboro;  /* Default border color */
+  border-radius: 16px; /* Rounded corners */
+  border-color: gainsboro; /* Default border color */
 }
 
 /* On focus */
@@ -103,30 +101,44 @@ body {
   border-color: lightgray;
 }
 
-.mdc-text-field--outlined .mat-mdc-form-field-infix, .mdc-text-field--no-label .mat-mdc-form-field-infix {
-    padding-top: var(--mat-form-field-container-vertical-padding, 16px);
-    padding-bottom: var(--mat-form-field-container-vertical-padding, 16px);
-    padding-left: var(--mat-form-field-container-vertical-padding, 12px);
-    padding-right: var(--mat-form-field-container-vertical-padding, 12px);
+.mdc-text-field--outlined .mat-mdc-form-field-infix,
+.mdc-text-field--no-label .mat-mdc-form-field-infix {
+  padding-top: var(--mat-form-field-container-vertical-padding, 16px);
+  padding-bottom: var(--mat-form-field-container-vertical-padding, 16px);
+  padding-left: var(--mat-form-field-container-vertical-padding, 12px);
+  padding-right: var(--mat-form-field-container-vertical-padding, 12px);
 }
 
-label.mdc-floating-label{
-  color: var(--DHATextGray);;
+label.mdc-floating-label {
+  color: var(--DHATextGray);
   /* padding-left: 12px; */
 }
 
-.mat-mdc-form-field-icon-suffix, [dir=rtl] .mat-mdc-form-field-icon-prefix{
-  /* padding: 0 4px 0 4px !important; */
-}
-
-body > app-root > app-book-service > div > div > app-appointment-form > div > div > div > form > div:nth-child(3) > div.section-content.expanded > div > div:nth-child(3) > mat-form-field > div.mat-mdc-text-field-wrapper.mdc-text-field.mdc-text-field--outlined > div > div.mdc-notched-outline.mdc-notched-outline--upgraded{
+body
+  > app-root
+  > app-book-service
+  > div
+  > div
+  > app-appointment-form
+  > div
+  > div
+  > div
+  > form
+  > div:nth-child(3)
+  > div.section-content.expanded
+  > div
+  > div:nth-child(3)
+  > mat-form-field
+  > div.mat-mdc-text-field-wrapper.mdc-text-field.mdc-text-field--outlined
+  > div
+  > div.mdc-notched-outline.mdc-notched-outline--upgraded {
   border: 1px solid var(--DividerGray);
 }
 
 /* Target outlined form fields */
 .mat-mdc-form-field-appearance-outline .mdc-notched-outline {
-  border-radius: 16px;      /* Your custom radius */
-  border-color: gainsboro;  /* Your custom color */
+  border-radius: 16px; /* Your custom radius */
+  border-color: gainsboro; /* Your custom color */
 }
 
 /* On focus */
@@ -136,7 +148,7 @@ body > app-root > app-book-service > div > div > app-appointment-form > div > di
 
 /* Optional: on hover */
 .mat-mdc-form-field-appearance-outline:hover .mdc-notched-outline {
-  border-color: lightgray; 
+  border-color: lightgray;
 }
 
 .modal-overlay {
@@ -170,13 +182,7 @@ body > app-root > app-book-service > div > div > app-appointment-form > div > di
 
 .touch-target {
   cursor: pointer;
-  
 }
-
-.touch-target:hover {
-}
-
-
 
 @media (max-width: 768px) {
   .content-wrapper {

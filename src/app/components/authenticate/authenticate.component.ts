@@ -237,6 +237,25 @@ interface Country {
             Sign In
           </button>
         </div>
+
+        <!-- Demo Mode Section -->
+        <div class="demo-section" *ngIf="showDemoMode">
+          <hr class="demo-divider" />
+          <h4>🎬 Demo Mode</h4>
+          <p class="demo-description">Quick fill for demo purposes</p>
+          <div class="demo-buttons">
+            <button type="button" (click)="fillDemoData('id')" class="btn-demo">
+              Fill SA ID Demo
+            </button>
+            <button
+              type="button"
+              (click)="fillDemoData('passport')"
+              class="btn-demo"
+            >
+              Fill Passport Demo
+            </button>
+          </div>
+        </div>
       </form>
     </app-form-page-layout>
   `,
@@ -540,8 +559,58 @@ interface Country {
       }
 
       .demo-section {
-        margin-top: 20px;
+        margin-top: 30px;
         text-align: center;
+        background: var(--DHAOffWhite);
+        border-radius: 8px;
+        padding: 20px;
+        border: 2px dashed var(--DHAGreen);
+      }
+
+      .demo-divider {
+        border: none;
+        height: 1px;
+        background: var(--DHABackGroundLightGray);
+        margin: 0 0 15px 0;
+      }
+
+      .demo-section h4 {
+        color: var(--DHAGreen);
+        margin: 0 0 8px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .demo-description {
+        color: var(--DHATextGray);
+        font-size: 14px;
+        margin: 0 0 15px 0;
+      }
+
+      .demo-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn-demo {
+        background: var(--DHAOrange);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 6px;
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 140px;
+      }
+
+      .btn-demo:hover {
+        background: var(--DHALightOrange);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(243, 128, 31, 0.3);
       }
 
       .modal-demo-content {
@@ -617,6 +686,7 @@ interface Country {
 export class AuthenticateComponent implements OnInit {
   authForm: FormGroup;
   showDemoModal: boolean = false;
+  showDemoMode: boolean = false;
   stepTitles: string[] = [
     'Sign In',
     'Personal Info',
@@ -657,6 +727,9 @@ export class AuthenticateComponent implements OnInit {
     this.authForm.get('idType')?.valueChanges.subscribe((value) => {
       this.updateFormValidation(value);
     });
+
+    // Check for demo mode from URL or localStorage
+    this.checkDemoMode();
   }
 
   initializeCountries() {
@@ -978,5 +1051,76 @@ export class AuthenticateComponent implements OnInit {
 
   closeDemoModal() {
     this.showDemoModal = false;
+  }
+
+  // Demo Mode Methods
+  checkDemoMode() {
+    // Check URL parameters for demo mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const demoParam = urlParams.get('demo');
+
+    // Check localStorage for demo mode
+    const demoMode = localStorage.getItem('dha-demo-mode');
+
+    this.showDemoMode = demoParam === 'true' || demoMode === 'true';
+
+    // If demo mode is enabled via URL, persist it to localStorage
+    if (demoParam === 'true') {
+      localStorage.setItem('dha-demo-mode', 'true');
+    }
+  }
+
+  fillDemoData(type: 'id' | 'passport') {
+    if (type === 'id') {
+      // Fill with realistic SA ID data
+      this.authForm.patchValue({
+        idType: 'id',
+        idNumber: '9001015009087', // Valid SA ID number
+        country: '',
+        passportNumber: '',
+      });
+
+      // Clear passport-related fields
+      this.selectedCountry = null;
+      this.countrySearchTerm = '';
+      this.filteredCountries = [...this.countries];
+    } else {
+      // Fill with passport data
+      this.authForm.patchValue({
+        idType: 'passport',
+        idNumber: '',
+        country: 'US', // United States
+        passportNumber: 'A12345678',
+      });
+
+      // Set country selection
+      const usCountry = this.countries.find((c) => c.code === 'US');
+      if (usCountry) {
+        this.selectedCountry = usCountry;
+        this.countrySearchTerm = usCountry.name;
+        this.filteredCountries = [usCountry];
+      }
+    }
+
+    // Update form validation
+    this.updateFormValidation(type);
+
+    // Mark all fields as touched to show validation
+    Object.keys(this.authForm.controls).forEach((key) => {
+      this.authForm.get(key)?.markAsTouched();
+    });
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    // Toggle demo mode with Ctrl+Shift+D
+    if (event.ctrlKey && event.shiftKey && event.key === 'D') {
+      event.preventDefault();
+      this.showDemoMode = !this.showDemoMode;
+      localStorage.setItem('dha-demo-mode', this.showDemoMode.toString());
+
+      // Show a brief notification
+      console.log(`Demo mode ${this.showDemoMode ? 'enabled' : 'disabled'}`);
+    }
   }
 }

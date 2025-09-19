@@ -97,6 +97,18 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
               Submit
             </button>
           </div>
+
+          <!-- Demo Mode Section -->
+          <div class="demo-section" *ngIf="showDemoMode">
+            <hr class="demo-divider" />
+            <h4>🎬 Demo Mode</h4>
+            <p class="demo-description">Quick fill for demo purposes</p>
+            <div class="demo-buttons">
+              <button type="button" (click)="fillDemoData()" class="btn-demo">
+                Fill Demo Data
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     </app-form-page-layout>
@@ -350,12 +362,69 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
           min-width: 0;
         }
       }
+
+      /* Demo Mode Styles */
+      .demo-section {
+        margin-top: 30px;
+        text-align: center;
+        background: var(--DHAOffWhite);
+        border-radius: 8px;
+        padding: 20px;
+        border: 2px dashed var(--DHAGreen);
+      }
+
+      .demo-divider {
+        border: none;
+        height: 1px;
+        background: var(--DHABackGroundLightGray);
+        margin: 0 0 15px 0;
+      }
+
+      .demo-section h4 {
+        color: var(--DHAGreen);
+        margin: 0 0 8px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .demo-description {
+        color: var(--DHATextGray);
+        font-size: 14px;
+        margin: 0 0 15px 0;
+      }
+
+      .demo-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn-demo {
+        background: var(--DHAOrange);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 6px;
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 140px;
+      }
+
+      .btn-demo:hover {
+        background: var(--DHALightOrange);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(243, 128, 31, 0.3);
+      }
     `,
   ],
 })
 export class ContactInfoComponent implements OnInit {
   contactForm: FormGroup;
   personalData: any;
+  showDemoMode: boolean = false;
   stepTitles: string[] = [
     'Sign In',
     'Personal Info',
@@ -398,6 +467,9 @@ export class ContactInfoComponent implements OnInit {
         phone: this.personalData.phone,
       });
     }
+
+    // Check for demo mode
+    this.checkDemoMode();
   }
 
   getProgressStep(): number {
@@ -430,5 +502,35 @@ export class ContactInfoComponent implements OnInit {
   goBack() {
     // Navigate back to personal info verification
     this.router.navigate(['/personal-info']);
+  }
+
+  // Demo Mode Methods
+  checkDemoMode() {
+    // Check URL parameters for demo mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const demoParam = urlParams.get('demo');
+
+    // Check localStorage for demo mode
+    const demoMode = localStorage.getItem('dha-demo-mode');
+
+    this.showDemoMode = demoParam === 'true' || demoMode === 'true';
+
+    // If demo mode is enabled via URL, persist it to localStorage
+    if (demoParam === 'true') {
+      localStorage.setItem('dha-demo-mode', 'true');
+    }
+  }
+
+  fillDemoData() {
+    // Fill with realistic South African contact data
+    this.contactForm.patchValue({
+      email: 'thabo.mthembu@example.com',
+      phone: '0821234567',
+    });
+
+    // Mark fields as touched to show validation
+    Object.keys(this.contactForm.controls).forEach((key) => {
+      this.contactForm.get(key)?.markAsTouched();
+    });
   }
 }

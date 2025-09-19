@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-layout.component';
 
@@ -42,7 +42,8 @@ interface SelectedSlot {
               <div class="info-item">
                 <span class="info-label">Full Name:</span>
                 <span class="info-value">{{
-                  personalData?.forenames + ' ' + personalData?.lastName || 'N/A'
+                  personalData?.forenames + ' ' + personalData?.lastName ||
+                    'N/A'
                 }}</span>
               </div>
               <div class="info-item">
@@ -53,11 +54,15 @@ interface SelectedSlot {
               </div>
               <div class="info-item">
                 <span class="info-label">Phone:</span>
-                <span class="info-value">{{ personalData?.phone || 'N/A' }}</span>
+                <span class="info-value">{{
+                  personalData?.phone || 'N/A'
+                }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">Email:</span>
-                <span class="info-value">{{ personalData?.email || 'N/A' }}</span>
+                <span class="info-value">{{
+                  personalData?.email || 'N/A'
+                }}</span>
               </div>
             </div>
           </div>
@@ -133,6 +138,18 @@ interface SelectedSlot {
         <button type="button" (click)="onConfirmBooking()" class="btn-primary">
           Confirm
         </button>
+      </div>
+
+      <!-- Demo Mode Section -->
+      <div class="demo-section" *ngIf="showDemoMode">
+        <hr class="demo-divider" />
+        <h4>🎬 Demo Mode</h4>
+        <p class="demo-description">Quick confirm for demo purposes</p>
+        <div class="demo-buttons">
+          <button type="button" (click)="confirmDemoBooking()" class="btn-demo">
+            Confirm Demo Booking
+          </button>
+        </div>
       </div>
     </app-form-page-layout>
   `,
@@ -315,10 +332,66 @@ interface SelectedSlot {
           margin-bottom: 20px;
         }
       }
+
+      /* Demo Mode Styles */
+      .demo-section {
+        margin-top: 30px;
+        text-align: center;
+        background: var(--DHAOffWhite);
+        border-radius: 8px;
+        padding: 20px;
+        border: 2px dashed var(--DHAGreen);
+      }
+
+      .demo-divider {
+        border: none;
+        height: 1px;
+        background: var(--DHABackGroundLightGray);
+        margin: 0 0 15px 0;
+      }
+
+      .demo-section h4 {
+        color: var(--DHAGreen);
+        margin: 0 0 8px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .demo-description {
+        color: var(--DHATextGray);
+        font-size: 14px;
+        margin: 0 0 15px 0;
+      }
+
+      .demo-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn-demo {
+        background: var(--DHAOrange);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 6px;
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 140px;
+      }
+
+      .btn-demo:hover {
+        background: var(--DHALightOrange);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(243, 128, 31, 0.3);
+      }
     `,
   ],
 })
-export class ConfirmBookingComponent {
+export class ConfirmBookingComponent implements OnInit {
   @Input() stepTitles: string[] = [
     'Services',
     'Details',
@@ -332,6 +405,8 @@ export class ConfirmBookingComponent {
 
   @Output() backToResults = new EventEmitter<void>();
   @Output() confirmBooking = new EventEmitter<void>();
+
+  showDemoMode: boolean = false;
 
   getFormattedDate(dateString: string | undefined): string {
     if (!dateString) return 'N/A';
@@ -355,5 +430,32 @@ export class ConfirmBookingComponent {
 
   onConfirmBooking(): void {
     this.confirmBooking.emit();
+  }
+
+  // Demo Mode Methods
+  checkDemoMode() {
+    // Check URL parameters for demo mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const demoParam = urlParams.get('demo');
+
+    // Check localStorage for demo mode
+    const demoMode = localStorage.getItem('dha-demo-mode');
+
+    this.showDemoMode = demoParam === 'true' || demoMode === 'true';
+
+    // If demo mode is enabled via URL, persist it to localStorage
+    if (demoParam === 'true') {
+      localStorage.setItem('dha-demo-mode', 'true');
+    }
+  }
+
+  confirmDemoBooking() {
+    // Simulate confirming the booking for demo purposes
+    this.onConfirmBooking();
+  }
+
+  ngOnInit() {
+    // Check for demo mode when component initializes
+    this.checkDemoMode();
   }
 }

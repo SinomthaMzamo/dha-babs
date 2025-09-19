@@ -355,6 +355,18 @@ interface Branch {
             Search
           </button>
         </div>
+
+        <!-- Demo Mode Section -->
+        <div class="demo-section" *ngIf="showDemoMode">
+          <hr class="demo-divider" />
+          <h4>🎬 Demo Mode</h4>
+          <p class="demo-description">Quick fill for demo purposes</p>
+          <div class="demo-buttons">
+            <button type="button" (click)="fillDemoData()" class="btn-demo">
+              Fill Demo Data
+            </button>
+          </div>
+        </div>
       </form>
     </app-form-page-layout>
   `,
@@ -990,6 +1002,62 @@ interface Branch {
           padding: 15px 8px;
         }
       }
+
+      /* Demo Mode Styles */
+      .demo-section {
+        margin-top: 30px;
+        text-align: center;
+        background: var(--DHAOffWhite);
+        border-radius: 8px;
+        padding: 20px;
+        border: 2px dashed var(--DHAGreen);
+      }
+
+      .demo-divider {
+        border: none;
+        height: 1px;
+        background: var(--DHABackGroundLightGray);
+        margin: 0 0 15px 0;
+      }
+
+      .demo-section h4 {
+        color: var(--DHAGreen);
+        margin: 0 0 8px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .demo-description {
+        color: var(--DHATextGray);
+        font-size: 14px;
+        margin: 0 0 15px 0;
+      }
+
+      .demo-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn-demo {
+        background: var(--DHAOrange);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 6px;
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 140px;
+      }
+
+      .btn-demo:hover {
+        background: var(--DHALightOrange);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(243, 128, 31, 0.3);
+      }
     `,
   ],
 })
@@ -1004,6 +1072,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
   appointmentForm: FormGroup;
   today: string;
   maxDate: string;
+  showDemoMode: boolean = false;
 
   // Section expansion state
   selectedServicesExpanded = true;
@@ -1562,6 +1631,9 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
 
     // Pre-fill form if searchCriteria is provided (when editing search)
     this.prefillFormFromSearchCriteria();
+
+    // Check for demo mode
+    this.checkDemoMode();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -1790,5 +1862,44 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  // Demo Mode Methods
+  checkDemoMode() {
+    // Check URL parameters for demo mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const demoParam = urlParams.get('demo');
+
+    // Check localStorage for demo mode
+    const demoMode = localStorage.getItem('dha-demo-mode');
+
+    this.showDemoMode = demoParam === 'true' || demoMode === 'true';
+
+    // If demo mode is enabled via URL, persist it to localStorage
+    if (demoParam === 'true') {
+      localStorage.setItem('dha-demo-mode', 'true');
+    }
+  }
+
+  fillDemoData() {
+    // Fill with realistic demo data for appointment booking
+    const today = new Date();
+    const nextWeek = new Date(today);
+    nextWeek.setDate(today.getDate() + 7);
+    const twoWeeksLater = new Date(today);
+    twoWeeksLater.setDate(today.getDate() + 14);
+
+    this.appointmentForm.patchValue({
+      province: 'gauteng',
+      city: 'johannesburg',
+      branch: 'cresta',
+      startDate: nextWeek.toISOString().split('T')[0],
+      endDate: twoWeeksLater.toISOString().split('T')[0],
+    });
+
+    // Mark fields as touched to show validation
+    Object.keys(this.appointmentForm.controls).forEach((key) => {
+      this.appointmentForm.get(key)?.markAsTouched();
+    });
   }
 }

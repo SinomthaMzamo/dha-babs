@@ -113,6 +113,18 @@ import { BookingService } from '../../services/booking.service';
               Verify
             </button>
           </div>
+
+          <!-- Demo Mode Section -->
+          <div class="demo-section" *ngIf="showDemoMode">
+            <hr class="demo-divider" />
+            <h4>🎬 Demo Mode</h4>
+            <p class="demo-description">Quick fill for demo purposes</p>
+            <div class="demo-buttons">
+              <button type="button" (click)="fillDemoData()" class="btn-demo">
+                Fill Demo Data
+              </button>
+            </div>
+          </div>
         </form>
       </div>
 
@@ -606,6 +618,62 @@ import { BookingService } from '../../services/booking.service';
         margin-bottom: 5px;
         font-size: 0.9rem;
       }
+
+      /* Demo Mode Styles */
+      .demo-section {
+        margin-top: 30px;
+        text-align: center;
+        background: var(--DHAOffWhite);
+        border-radius: 8px;
+        padding: 20px;
+        border: 2px dashed var(--DHAGreen);
+      }
+
+      .demo-divider {
+        border: none;
+        height: 1px;
+        background: var(--DHABackGroundLightGray);
+        margin: 0 0 15px 0;
+      }
+
+      .demo-section h4 {
+        color: var(--DHAGreen);
+        margin: 0 0 8px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .demo-description {
+        color: var(--DHATextGray);
+        font-size: 14px;
+        margin: 0 0 15px 0;
+      }
+
+      .demo-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn-demo {
+        background: var(--DHAOrange);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 6px;
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 140px;
+      }
+
+      .btn-demo:hover {
+        background: var(--DHALightOrange);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(243, 128, 31, 0.3);
+      }
     `,
   ],
 })
@@ -613,6 +681,7 @@ export class PersonalInfoComponent implements OnInit {
   verificationForm: FormGroup;
   authData: any;
   currentStep: number = 1;
+  showDemoMode: boolean = false;
   stepTitles: string[] = [
     'Sign In',
     'Personal Info',
@@ -667,6 +736,9 @@ export class PersonalInfoComponent implements OnInit {
         }
       });
     });
+
+    // Check for demo mode
+    this.checkDemoMode();
   }
 
   onVerificationSubmit() {
@@ -741,5 +813,35 @@ export class PersonalInfoComponent implements OnInit {
 
     // Navigate to the authenticate page
     this.router.navigate(['/authenticate']);
+  }
+
+  // Demo Mode Methods
+  checkDemoMode() {
+    // Check URL parameters for demo mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const demoParam = urlParams.get('demo');
+
+    // Check localStorage for demo mode
+    const demoMode = localStorage.getItem('dha-demo-mode');
+
+    this.showDemoMode = demoParam === 'true' || demoMode === 'true';
+
+    // If demo mode is enabled via URL, persist it to localStorage
+    if (demoParam === 'true') {
+      localStorage.setItem('dha-demo-mode', 'true');
+    }
+  }
+
+  fillDemoData() {
+    // Fill with realistic South African names
+    this.verificationForm.patchValue({
+      forenames: 'Thabo Mpho',
+      lastName: 'Mthembu',
+    });
+
+    // Mark fields as touched to show validation
+    Object.keys(this.verificationForm.controls).forEach((key) => {
+      this.verificationForm.get(key)?.markAsTouched();
+    });
   }
 }

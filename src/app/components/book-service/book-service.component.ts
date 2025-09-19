@@ -72,6 +72,7 @@ interface BookingPerson {
           (removeServiceFromPerson)="
             removeServiceFromPerson($event.personIndex, $event.service)
           "
+          (addDemoApplicantEvent)="addDemoApplicant($event)"
         ></app-booking-preview>
 
         <!-- Add Applicant Modal -->
@@ -2911,6 +2912,12 @@ export class BookServiceComponent implements OnInit, OnDestroy {
   addPersonToBooking(): void {
     this.addApplicantForm.reset();
     this.showAddApplicantModal = true;
+  }
+
+  addDemoApplicant(person: BookingPerson): void {
+    // Add the demo applicant directly to the booking without showing modal
+    this.bookingPersons.push(person);
+    console.log(`🎬 Demo applicant added: ${person.name} (${person.type})`);
   }
 
   removePersonFromBooking(): void {

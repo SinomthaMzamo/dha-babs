@@ -5,6 +5,7 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-layout.component';
@@ -194,6 +195,36 @@ interface BookingPerson {
           >
             Continue
           </button>
+        </div>
+
+        <!-- Demo Mode Section -->
+        <div class="demo-section" *ngIf="showDemoMode">
+          <hr class="demo-divider" />
+          <h4>🎬 Demo Mode</h4>
+          <p class="demo-description">Quick demo setup</p>
+          <div class="demo-buttons">
+            <button
+              type="button"
+              (click)="addDemoApplicant()"
+              class="btn-demo"
+              [disabled]="demoStep >= 1"
+            >
+              Add Demo Applicant
+            </button>
+            <button
+              type="button"
+              (click)="proceedToBooking()"
+              class="btn-demo"
+              [disabled]="demoStep < 1 || !allApplicantsHaveServices()"
+            >
+              Proceed to Booking
+            </button>
+          </div>
+          <div class="demo-progress" *ngIf="demoStep > 0">
+            <p class="demo-step-info">
+              Demo applicant added with services - Ready to proceed
+            </p>
+          </div>
         </div>
       </div>
     </app-form-page-layout>
@@ -648,6 +679,86 @@ interface BookingPerson {
         }
       }
 
+      /* Demo Mode Styles */
+      .demo-section {
+        margin-top: 30px;
+        text-align: center;
+        background: var(--DHAOffWhite);
+        border-radius: 8px;
+        padding: 20px;
+        border: 2px dashed var(--DHAGreen);
+      }
+
+      .demo-divider {
+        border: none;
+        height: 1px;
+        background: var(--DHABackGroundLightGray);
+        margin: 0 0 15px 0;
+      }
+
+      .demo-section h4 {
+        color: var(--DHAGreen);
+        margin: 0 0 8px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .demo-description {
+        color: var(--DHATextGray);
+        font-size: 14px;
+        margin: 0 0 15px 0;
+      }
+
+      .demo-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn-demo {
+        background: var(--DHAOrange);
+        color: var(--DHAWhite);
+        border: none;
+        border-radius: 6px;
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 140px;
+      }
+
+      .btn-demo:hover:not(:disabled) {
+        background: var(--DHALightOrange);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(243, 128, 31, 0.3);
+      }
+
+      .btn-demo:disabled {
+        background: var(--DHADisabledButtonGray);
+        color: var(--DHADisabledTextGray);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .demo-progress {
+        margin-top: 15px;
+        padding: 10px;
+        background: rgba(1, 102, 53, 0.1);
+        border-radius: 6px;
+        border: 1px solid var(--DHAGreen);
+      }
+
+      .demo-step-info {
+        color: var(--DHAGreen);
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+        text-align: center;
+      }
+
       /* Touch device specific overrides */
       @media (hover: none) and (pointer: coarse) {
         .action-btn.danger:hover:not(:disabled) {
@@ -774,7 +885,7 @@ interface BookingPerson {
     `,
   ],
 })
-export class BookingPreviewComponent implements OnChanges {
+export class BookingPreviewComponent implements OnChanges, OnInit {
   @Input() stepTitles: string[] = [
     'Services',
     'Details',
@@ -790,6 +901,10 @@ export class BookingPreviewComponent implements OnChanges {
   // Delete mode state
   isDeleteMode: boolean = false;
 
+  // Demo mode state
+  showDemoMode: boolean = false;
+  demoStep: number = 0;
+
   @Output() goBack = new EventEmitter<void>();
   @Output() proceedToLocation = new EventEmitter<void>();
   @Output() addPersonToBooking = new EventEmitter<void>();
@@ -801,6 +916,7 @@ export class BookingPreviewComponent implements OnChanges {
     personIndex: number;
     service: any;
   }>();
+  @Output() addDemoApplicantEvent = new EventEmitter<BookingPerson>();
 
   ngOnChanges(changes: SimpleChanges): void {
     // Reset delete mode when bookingPersons array changes (add/remove applicants)
@@ -909,5 +1025,131 @@ export class BookingPreviewComponent implements OnChanges {
     if (this.isDeleteMode && person.type !== 'Main Applicant') {
       this.showRemoveConfirmation(index);
     }
+  }
+
+  ngOnInit(): void {
+    // Check for demo mode when component initializes
+    this.checkDemoMode();
+  }
+
+  // Demo Mode Methods
+  checkDemoMode() {
+    // Check URL parameters for demo mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const demoParam = urlParams.get('demo');
+
+    // Check localStorage for demo mode
+    const demoMode = localStorage.getItem('dha-demo-mode');
+
+    this.showDemoMode = demoParam === 'true' || demoMode === 'true';
+
+    // If demo mode is enabled via URL, persist it to localStorage
+    if (demoParam === 'true') {
+      localStorage.setItem('dha-demo-mode', 'true');
+    }
+  }
+
+  addDemoApplicant() {
+    console.log('🎬 Adding demo applicant...');
+
+    // Add one Child applicant automatically (bypass modal)
+    this.addDemoApplicantData('Child', 'id', '9001011234567', 'John', 'Smith');
+
+    // Automatically select services for all applicants
+    setTimeout(() => {
+      this.selectDemoServices();
+    }, 500);
+
+    console.log('🎬 Demo applicant added with services');
+    this.demoStep = 1;
+  }
+
+  private addDemoApplicantData(
+    applicantType: 'Child' | 'Friend' | 'Family Member' | 'Other',
+    validationType: 'id' | 'passport' | 'names',
+    idOrPassport: string,
+    forenames: string,
+    lastName: string
+  ) {
+    // Create a new applicant directly without showing the modal
+    let personName: string;
+    let idNumber: string | undefined;
+
+    if (validationType === 'id') {
+      personName = `${forenames} ${lastName}`.trim();
+      idNumber = idOrPassport;
+    } else if (validationType === 'passport') {
+      personName = `${forenames} ${lastName}`.trim();
+      idNumber = undefined;
+    } else {
+      personName = `${forenames} ${lastName}`.trim();
+      idNumber = undefined;
+    }
+
+    const newPerson: BookingPerson = {
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+      name: this.capitaliseWords(personName),
+      type: applicantType,
+      idNumber: idNumber,
+      selectedServices: [],
+    };
+
+    // Emit the new person to be added to the booking
+    this.addDemoApplicantEvent.emit(newPerson);
+
+    console.log(`🎬 Added ${applicantType}: ${personName}`);
+  }
+
+  private capitaliseWords(str: string): string {
+    return str.replace(/\w\S*/g, (txt) => {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  }
+
+  proceedToBooking() {
+    console.log('🎬 Proceeding to booking details...');
+    this.proceedToLocation.emit();
+    this.demoStep = 2;
+  }
+
+  private selectDemoServices() {
+    console.log('🎬 Selecting demo services for all applicants...');
+
+    // Define demo services
+    const demoServices = [
+      {
+        id: 'id-card',
+        name: 'Smart ID Card Application',
+        description: 'Apply for a new Smart ID Card',
+      },
+      {
+        id: 'passport',
+        name: 'Passport Application',
+        description: 'Apply for a new passport',
+      },
+    ];
+
+    // Add services to all applicants
+    this.bookingPersons.forEach((person, index) => {
+      // Add different services to different applicants for variety
+      const serviceToAdd = demoServices[index % demoServices.length];
+
+      // Check if service is not already added
+      const serviceExists = person.selectedServices.some(
+        (service) => service.id === serviceToAdd.id
+      );
+
+      if (!serviceExists) {
+        person.selectedServices.push(serviceToAdd);
+        console.log(`🎬 Added ${serviceToAdd.name} to ${person.name}`);
+      }
+    });
+  }
+
+  allApplicantsHaveServices(): boolean {
+    // Check if all applicants have at least one service selected
+    return this.bookingPersons.every(
+      (person) => person.selectedServices.length > 0
+    );
   }
 }
