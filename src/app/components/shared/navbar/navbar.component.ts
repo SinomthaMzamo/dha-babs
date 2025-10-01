@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
           </button>
           <!-- <span class="logo-text">Branch Appointment Booking System</span> -->
         </div>
-        <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
+        <img src="assets/Logo_DHA_wecare.png" alt="DHA Logo" class="logo-icon" />
       </div>
     </div>
   `,

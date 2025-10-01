@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
     <div class="demo-container">
       <div class="demo-card">
         <div class="header-section">
-          <img src="/Logo_DHA_wecare.png" alt="DHA Logo" class="demo-logo" />
+          <img src="assets/Logo_DHA_wecare.png" alt="DHA Logo" class="demo-logo" />
           <!-- <h4>Department of Home Affairs</h4> -->
         </div>
         <h1>Branch Appointment Booking System</h1>
