@@ -14,6 +14,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-layout.component';
 import { CustomDateInputComponent } from '../shared/custom-date-input/custom-date-input.component';
 
@@ -47,6 +48,7 @@ interface Branch {
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    NgSelectModule,
     FormPageLayoutComponent,
     CustomDateInputComponent,
   ],
@@ -188,7 +190,7 @@ interface Branch {
           </div>
         </div>
 
-        <!-- Location Selection -->
+        <!-- Location Selection: make dropdowns searchable -->
         <div class="form-section collapsible" data-section="location">
           <div
             class="section-header"
@@ -205,21 +207,21 @@ interface Branch {
 
             <div class="location-grid">
               <div class="form-group floating-label-group">
-                <select
+                <ng-select
                   id="province"
                   formControlName="province"
-                  (change)="onProvinceChange()"
+                  [items]="provinces"
+                  bindLabel="name"
+                  bindValue="id"
+                  [searchable]="true"
+                  [clearable]="true"
+                  placeholder=""
                   class="floating-input"
                   [class.has-value]="appointmentForm.get('province')?.value"
+                  (change)="onProvinceChange()"
                 >
-                  <option value=""></option>
-                  <option
-                    *ngFor="let province of provinces"
-                    [value]="province.id"
-                  >
-                    {{ province.name }}
-                  </option>
-                </select>
+                </ng-select>
+
                 <label for="province" class="floating-label"
                   >Select province *</label
                 >
@@ -235,22 +237,27 @@ interface Branch {
                 </div>
               </div>
 
+              <!-- city selector -->
+
               <div
                 class="form-group floating-label-group"
                 *ngIf="appointmentForm.get('province')?.value"
               >
-                <select
+                <ng-select
                   id="city"
                   formControlName="city"
-                  (change)="onCityChange()"
+                  [items]="filteredCities"
+                  bindLabel="name"
+                  bindValue="id"
+                  [searchable]="true"
+                  [clearable]="true"
+                  placeholder=""
                   class="floating-input"
                   [class.has-value]="appointmentForm.get('city')?.value"
+                  (change)="onCityChange()"
                 >
-                  <option value=""></option>
-                  <option *ngFor="let city of filteredCities" [value]="city.id">
-                    {{ city.name }}
-                  </option>
-                </select>
+                </ng-select>
+
                 <label for="city" class="floating-label">Select city *</label>
                 <div
                   *ngIf="
@@ -264,27 +271,30 @@ interface Branch {
                 </div>
               </div>
 
+              <!-- branch selector -->
+
               <div
                 class="form-group floating-label-group"
                 *ngIf="appointmentForm.get('city')?.value"
               >
-                <select
+                <ng-select
                   id="branch"
                   formControlName="branch"
+                  [items]="filteredBranches"
+                  bindLabel="name"
+                  bindValue="id"
+                  [searchable]="true"
+                  [clearable]="true"
+                  placeholder=""
                   class="floating-input"
                   [class.has-value]="appointmentForm.get('branch')?.value"
                 >
-                  <option value=""></option>
-                  <option
-                    *ngFor="let branch of filteredBranches"
-                    [value]="branch.id"
-                  >
-                    {{ branch.name }}
-                  </option>
-                </select>
+                </ng-select>
+
                 <label for="branch" class="floating-label"
                   >Select branch *</label
                 >
+
                 <div
                   *ngIf="
                     appointmentForm.get('branch')?.invalid &&
@@ -449,7 +459,9 @@ interface Branch {
 
       .expand-icon {
         font-size: 1.2rem;
-        transition: transform 0.3s ease, color 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          color 0.3s ease;
         color: var(--DHAOffBlack);
       }
 
@@ -464,7 +476,9 @@ interface Branch {
       .section-content {
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease, padding 0.3s ease;
+        transition:
+          max-height 0.3s ease,
+          padding 0.3s ease;
         padding: 0 25px;
       }
 
@@ -881,6 +895,121 @@ interface Branch {
         font-size: 14px;
         margin-top: 5px;
         font-weight: 500;
+      }
+
+      /* Make ng-select visually match the old select */
+      :host ::ng-deep .floating-input.ng-select {
+        display: block;
+        padding: 0;
+        border: none;
+      }
+
+      /* Style the visible ng-select container like your inputs */
+      :host ::ng-deep .floating-input.ng-select .ng-select-container {
+        min-height: 52px; /* matches your padding/height feel */
+        border: 1px solid var(--DHAGrayLight);
+        border-radius: 6px;
+        background: var(--DHAWhite);
+        padding: 6px 8px;
+        box-shadow: none;
+      }
+
+      /* Focus look */
+      :host
+        ::ng-deep
+        .floating-input.ng-select.ng-select-focused
+        .ng-select-container {
+        border-color: var(--DHAGreen);
+        box-shadow: 0 0 0 3px rgba(1, 102, 53, 0.1);
+      }
+
+      /* When it has a value, float the label (same behavior as .has-value) */
+      .floating-input.has-value + .floating-label {
+        top: -8px;
+        left: 8px;
+        font-size: 12px;
+        color: var(--DHAGreen);
+        font-weight: 600;
+      }
+
+      /* Also float label when ng-select is focused */
+      :host
+        ::ng-deep
+        .floating-input.ng-select.ng-select-focused
+        + .floating-label {
+        top: -8px;
+        left: 8px;
+        font-size: 12px;
+        color: var(--DHAGreen);
+        font-weight: 600;
+      }
+
+      /* Ensure the wrapper is the stacking context */
+      .floating-label-group {
+        position: relative;
+      }
+
+      /* Label should always be above ng-select content */
+      .floating-label {
+        z-index: 5;
+      }
+
+      /* ng-select internal container should sit under the label */
+      :host ::ng-deep .floating-input.ng-select .ng-select-container {
+        position: relative;
+        z-index: 1;
+        padding-top: 14px; /* gives space so label doesn't overlap text */
+      }
+
+      /* Ensure selected value text doesn't overlap label */
+      :host
+        ::ng-deep
+        .floating-input.ng-select
+        .ng-select-container
+        .ng-value-container {
+        padding-top: 6px;
+      }
+
+      /* Float label when ng-select has a value */
+      .floating-input.has-value + .floating-label {
+        top: -8px;
+        left: 8px;
+        font-size: 12px;
+        color: var(--DHAGreen);
+        font-weight: 600;
+      }
+
+      /* Float label when ng-select is focused */
+      :host
+        ::ng-deep
+        .floating-input.ng-select.ng-select-focused
+        + .floating-label {
+        top: -8px;
+        left: 8px;
+        font-size: 12px;
+        color: var(--DHAGreen);
+        font-weight: 600;
+      }
+
+      /* Hide any old select arrow rules from affecting ng-select host */
+      :host ::ng-deep .floating-input.ng-select {
+        background-image: none !important;
+      }
+
+      /* Style ng-select arrow + rotate when open */
+      :host ::ng-deep .floating-input.ng-select .ng-arrow-wrapper {
+        padding-right: 10px;
+      }
+
+      :host ::ng-deep .floating-input.ng-select .ng-arrow {
+        border-color: var(--DHATextGray) transparent transparent;
+        border-style: solid;
+        border-width: 6px 6px 0;
+        transition: transform 0.2s ease;
+      }
+
+      :host ::ng-deep .floating-input.ng-select.ng-select-opened .ng-arrow {
+        transform: rotate(180deg);
       }
 
       .button-group {
@@ -1707,7 +1836,9 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     }
 
     // Check if click is on a form control
-    const clickedFormControl = target.closest('select, input, textarea');
+    const clickedFormControl = target.closest(
+      'select, input, textarea, .ng-select, .ng-dropdown-panel, .ng-option, .ng-clear-wrapper',
+    );
     if (clickedFormControl) {
       return; // Don't interfere with form control interactions
     }
