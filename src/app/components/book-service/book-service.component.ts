@@ -87,7 +87,7 @@ interface BookingPerson {
           (cancelClicked)="closeAddApplicantModal()"
           (confirmClicked)="saveNewApplicant()"
         >
-          <form [formGroup]="addApplicantForm" (ngSubmit)="saveNewApplicant()">
+          <form [formGroup]="addApplicantForm" (ngSubmit)="saveNewApplicant()" autocomplete="off">
             <!-- relationship to the main applicant -->
             <div class="form-group">
               <label>Applicant Type *</label>

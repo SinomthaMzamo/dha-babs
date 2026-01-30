@@ -64,7 +64,7 @@ interface Branch {
       <form
         [formGroup]="appointmentForm"
         (ngSubmit)="onSubmit()"
-        autocomplete="on"
+        autocomplete="off"
       >
         <!-- Collapse/Expand All Buttons -->
         <div class="section-controls">

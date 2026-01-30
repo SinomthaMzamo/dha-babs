@@ -43,7 +43,7 @@ interface Country {
         Please note that this service is only available for individuals who have
         a South African ID Number or a Passport registered on our system.
       </p>
-      <form [formGroup]="authForm" (ngSubmit)="onSubmit()" autocomplete="on">
+      <form [formGroup]="authForm" (ngSubmit)="onSubmit()" autocomplete="off">
         <div class="form-group floating-label-group">
           <select
             id="idType"

@@ -5,9 +5,26 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  ValidatorFn,
+  ValidationErrors,
+  AbstractControl,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-layout.component';
+
+
+
+function matchFields(a: string, b: string): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const av = group.get(a)?.value;
+    const bv = group.get(b)?.value;
+
+    // don't show mismatch when either is empty; let "required" handle that
+    if (!av || !bv) return null;
+
+    return av === bv ? null : { mismatch: true };
+  };
+}
 
 @Component({
   selector: 'app-contact-info',
@@ -27,7 +44,7 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
         <form
           [formGroup]="contactForm"
           (ngSubmit)="onContactSubmit()"
-          autocomplete="on"
+          autocomplete="off"
         >
           <div class="form-group floating-label-group">
             <input
@@ -59,6 +76,51 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
 
           <div class="form-group floating-label-group">
             <input
+              type="email"
+              id="confirmEmail"
+              formControlName="confirmEmail"
+              class="floating-input"
+              autocomplete="off"
+              [class.has-value]="contactForm.get('confirmEmail')?.value"
+            />
+            <label for="confirmEmail" class="floating-label"
+              >Confirm Email Address *</label
+            >
+
+            <div
+              *ngIf="
+                contactForm.get('confirmEmail')?.touched &&
+                (contactForm.get('confirmEmail')?.invalid ||
+                  contactForm.errors?.['mismatch'])
+              "
+              class="error-message"
+            >
+              <div
+                *ngIf="contactForm.get('confirmEmail')?.errors?.['required']"
+              >
+                <span class="fas fa-exclamation-circle"></span>
+                Confirmation email is required
+              </div>
+
+              <div *ngIf="contactForm.get('confirmEmail')?.errors?.['email']">
+                <span class="fas fa-times"></span>
+                Please enter a valid email address
+              </div>
+
+              <div
+                *ngIf="
+                  !contactForm.get('confirmEmail')?.errors &&
+                  contactForm.errors?.['mismatch']
+                "
+              >
+                <span class="fas fa-times"></span>
+                Email addresses do not match
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group floating-label-group">
+            <input
               type="tel"
               id="phone"
               formControlName="phone"
@@ -81,6 +143,51 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
               <div *ngIf="contactForm.get('phone')?.errors?.['pattern']">
                 <span class="fas fa-times"></span>
                 Please enter a valid phone number
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group floating-label-group">
+            <input
+              type="tel"
+              id="confirmPhone"
+              formControlName="confirmPhone"
+              class="floating-input"
+              autocomplete="off"
+              [class.has-value]="contactForm.get('confirmPhone')?.value"
+            />
+            <label for="confirmPhone" class="floating-label"
+              >Confirm Phone Number *</label
+            >
+
+            <div
+              *ngIf="
+                contactForm.get('confirmPhone')?.touched &&
+                (contactForm.get('confirmPhone')?.invalid ||
+                  contactForm.errors?.['mismatch'])
+              "
+              class="error-message"
+            >
+              <div
+                *ngIf="contactForm.get('confirmPhone')?.errors?.['required']"
+              >
+                <span class="fas fa-exclamation-circle"></span>
+                Confirmation phone number is required
+              </div>
+
+              <div *ngIf="contactForm.get('confirmPhone')?.errors?.['pattern']">
+                <span class="fas fa-times"></span>
+                Please enter a valid phone number
+              </div>
+
+              <div
+                *ngIf="
+                  !contactForm.get('confirmPhone')?.errors &&
+                  contactForm.errors?.['mismatch']
+                "
+              >
+                <span class="fas fa-times"></span>
+                Phone numbers do not match
               </div>
             </div>
           </div>
@@ -199,7 +306,7 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
         left: 8px;
         font-size: 12px;
         font-weight: 600;
-        color: var(--DHAGreen)
+        color: var(--DHAGreen);
       }
 
       /* Legacy styles for non-floating inputs */
@@ -364,15 +471,32 @@ export class ContactInfoComponent implements OnInit {
     'Book Service',
   ];
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+  ) {
     // Form for contact information
-    this.contactForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      phone: [
-        '',
-        [Validators.required, Validators.pattern(/^(\+27|0)[6-8][0-9]{8}$/)],
-      ],
-    });
+    this.contactForm = this.fb.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        confirmEmail: ['', [Validators.required, Validators.email]],
+
+        phone: [
+          '',
+          [Validators.required, Validators.pattern(/^(\+27|0)[6-8][0-9]{8}$/)],
+        ],
+        confirmPhone: [
+          '',
+          [Validators.required, Validators.pattern(/^(\+27|0)[6-8][0-9]{8}$/)],
+        ],
+      },
+      {
+        validators: [
+          matchFields('email', 'confirmEmail'),
+          matchFields('phone', 'confirmPhone'),
+        ],
+      },
+    );
   }
 
   ngOnInit() {
@@ -417,7 +541,7 @@ export class ContactInfoComponent implements OnInit {
       // Save to session storage
       sessionStorage.setItem(
         'personalData',
-        JSON.stringify(completePersonalData)
+        JSON.stringify(completePersonalData),
       );
 
       // Clean up temporary verification data if it exists

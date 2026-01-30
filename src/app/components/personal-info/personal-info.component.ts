@@ -36,7 +36,7 @@ import { BookingService } from '../../services/booking.service';
         <form
           [formGroup]="verificationForm"
           (ngSubmit)="onVerificationSubmit()"
-          autocomplete="on"
+          autocomplete="off"
         >
           <div class="form-group floating-label-group">
             <div class="field-info">

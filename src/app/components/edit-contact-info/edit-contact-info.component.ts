@@ -27,7 +27,7 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
         <form
           [formGroup]="contactForm"
           (ngSubmit)="onContactSubmit()"
-          autocomplete="on"
+          autocomplete="off"
         >
           <div class="form-group floating-label-group">
             <input
@@ -151,8 +151,8 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
       .floating-input {
         width: 100%;
         padding: 16px 12px;
-        border: 1px solid #e0e0e0;
-        border-radius: 12px;
+        border: 1px solid var(--DividerGray);
+        border-radius: 6px;
         font-size: 16px;
         background: var(--DHAWhite);
         transition: all 0.3s ease;
