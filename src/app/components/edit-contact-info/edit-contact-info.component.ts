@@ -150,8 +150,8 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
 
       .floating-input {
         width: 100%;
-        padding: 16px 20px;
-        border: 2px solid #e0e0e0;
+        padding: 16px 12px;
+        border: 1px solid #e0e0e0;
         border-radius: 12px;
         font-size: 16px;
         background: var(--DHAWhite);
@@ -161,14 +161,14 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
 
       .floating-input:focus {
         outline: none;
-        border-color: var(--DHAOrange);
-        box-shadow: 0 0 0 3px rgba(243, 128, 31, 0.1);
+        border-color: var(--DHAGreen);
+        box-shadow: 0 0 0 3px rgba(1, 102, 53, 0.1);
       }
 
       .floating-input.has-value,
       .floating-input:focus {
         padding-top: 24px;
-        padding-bottom: 8px;
+        padding-bottom: 16px;
       }
 
       .floating-label {
@@ -187,7 +187,7 @@ import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-la
       .floating-input:focus + .floating-label {
         top: -8px;
         font-size: 12px;
-        color: var(--DHAOrange);
+        color: var(--DHAGreen);
         font-weight: 500;
       }
 

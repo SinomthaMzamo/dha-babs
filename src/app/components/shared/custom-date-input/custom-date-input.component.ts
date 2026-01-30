@@ -131,7 +131,7 @@ import { CustomDatePickerComponent } from '../custom-date-picker/custom-date-pic
       .floating-input {
         width: 100%;
         padding: 16px 12px;
-        border: 2px solid var(--DHAGrayLight);
+        border: 1px solid var(--DividerGray);
         border-radius: 6px;
         font-size: 16px;
         background-color: var(--DHAWhite);

@@ -364,6 +364,7 @@ interface Country {
         left: 8px;
         font-size: 12px;
         font-weight: 600;
+        color: var(--DHAGreen)
       }
 
       /* Legacy styles for non-floating inputs */

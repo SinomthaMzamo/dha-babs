@@ -6,6 +6,7 @@ import {
   Input,
   Output,
   EventEmitter,
+  HostListener,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -17,6 +18,7 @@ import {
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormPageLayoutComponent } from '../shared/form-page-layout/form-page-layout.component';
 import { CustomDateInputComponent } from '../shared/custom-date-input/custom-date-input.component';
+import { LocationSelectorComponent } from "../location-selector/location-selector.component";
 
 interface Service {
   id: string;
@@ -51,6 +53,7 @@ interface Branch {
     NgSelectModule,
     FormPageLayoutComponent,
     CustomDateInputComponent,
+    LocationSelectorComponent,
   ],
   template: `
     <app-form-page-layout [currentStep]="1" [steps]="stepTitles">
@@ -204,9 +207,18 @@ interface Branch {
           </div>
           <div class="section-content" [class.expanded]="locationExpanded">
             <p class="section-description">Choose your preferred branch</p>
+            <app-location-selector
+              [form]="appointmentForm"
+              [provinces]="provinces"
+              [cities]="cities"
+              [branches]="branches"
+              (provinceChange)="onProvinceChange()"
+              (cityChange)="onCityChange()"
+            >
+            </app-location-selector>
 
             <div class="location-grid">
-              <div class="form-group floating-label-group">
+              <!-- <div class="form-group floating-label-group">
                 <ng-select
                   id="province"
                   formControlName="province"
@@ -236,11 +248,11 @@ interface Branch {
                   <span class="fas fa-exclamation-circle"></span>
                   Province is required
                 </div>
-              </div>
+              </div> -->
 
               <!-- city selector -->
 
-              <div
+              <!-- <div
                 class="form-group floating-label-group"
                 *ngIf="appointmentForm.get('province')?.value"
               >
@@ -271,11 +283,11 @@ interface Branch {
                   <span class="fas fa-exclamation-circle"></span>
                   City is required
                 </div>
-              </div>
+              </div> -->
 
               <!-- branch selector -->
 
-              <div
+              <!-- <div
                 class="form-group floating-label-group"
                 *ngIf="appointmentForm.get('city')?.value"
               >
@@ -308,7 +320,7 @@ interface Branch {
                   <span class="fas fa-exclamation-circle"></span>
                   Branch is required
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -1829,32 +1841,38 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     this.dateRangeExpanded = false;
   }
 
-  onDocumentClick(event: Event) {
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
+    if (!target) return;
 
-    // Check if click is on a section header
-    const clickedHeader = target.closest('.section-header');
-    if (clickedHeader) {
-      return; // Let the click event handle the toggle
+    // 1) If you clicked a section header, let toggleSection handle it
+    if (target.closest('.section-header')) return;
+
+    // 2) If you clicked inside ANY ng-select UI (including dropdown panel appended to body), ignore
+    if (
+      target.closest('ng-select') ||
+      target.closest('.ng-select') ||
+      target.closest('.ng-dropdown-panel') ||
+      target.closest('.ng-option') ||
+      target.closest('.ng-clear-wrapper') ||
+      target.closest('.ng-input') ||
+      target.closest('.ng-value') ||
+      target.closest('.ng-value-container') ||
+      target.closest('.ng-arrow-wrapper')
+    ) {
+      return;
     }
 
-    // Check if click is on a form control
-    const clickedFormControl = target.closest(
-      'select, input, textarea, .ng-select, .ng-dropdown-panel, .ng-option, .ng-clear-wrapper',
-    );
-    if (clickedFormControl) {
-      return; // Don't interfere with form control interactions
-    }
+    // 3) If you clicked inside any form control (inputs, etc), ignore
+    if (target.closest('input, select, textarea, button')) return;
 
-    // Check if click is outside any section
+    // 4) Clicked outside sections -> collapse all
     const clickedSection = target.closest('[data-section]');
     if (!clickedSection) {
-      // Clicked outside all sections, collapse all sections
-      setTimeout(() => {
-        this.selectedServicesExpanded = false;
-        this.locationExpanded = false;
-        this.dateRangeExpanded = false;
-      }, 100);
+      this.selectedServicesExpanded = false;
+      this.locationExpanded = false;
+      this.dateRangeExpanded = false;
     }
   }
 
